@@ -1,5 +1,6 @@
 import 'package:afalagi/bloc/verification/verification_bloc.dart';
 import 'package:afalagi/views/common/values/colors.dart';
+import 'package:afalagi/views/common/widgets/build_pin_code_field.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
 
 import 'package:flutter/material.dart';
@@ -18,15 +19,27 @@ class _SignUpVerificationState extends State<SignUpVerification> {
   late VerificationBloc _verificationBloc;
   final TextEditingController _pinCodeController = TextEditingController();
   final String? title = "Sign up Verification";
-  late String email;
+  late String? email;
+  @override
+  void initState() {
+    super.initState();
+    // Initialize email with a default value
+    email = '';
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _verificationBloc = BlocProvider.of<VerificationBloc>(context);
-    final args = ModalRoute.of(context)!.settings.arguments as String;
-    setState(() {
+    final args = ModalRoute.of(context)!.settings.arguments as String?;
+    if (args == null) {
+      print("Email is not sent");
+    } else {
       email = args;
-    });
+    }
+    // setState(() {
+    //   email = args;
+    // });
   }
 
   @override
@@ -54,7 +67,23 @@ class _SignUpVerificationState extends State<SignUpVerification> {
             Container(
                 padding: const EdgeInsets.all(20.0),
                 margin: const EdgeInsets.all(8.0),
-                child: buildPinCodeField(context, title, _pinCodeController)),
+                child: BlocBuilder<VerificationBloc, VerificationState>(
+                  builder: (context, state) {
+                    if (state is VerificationFailure) {
+                      return Center(
+                          child: Text('Error: ${state.error}',
+                              style: const TextStyle(color: Colors.red)));
+                    }
+                    if (state is VerificationSuccess) {
+                      // Navigate to the next page after successful verification
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.of(context).pushNamed("/create_profile");
+                        return;
+                      });
+                    }
+                    return PinCodeFieldWidget(controller: _pinCodeController);
+                  },
+                )),
             const SizedBox(
               height: 15,
             ),
@@ -72,7 +101,7 @@ class _SignUpVerificationState extends State<SignUpVerification> {
                       ),
                     ),
                     onTap: () {
-                      _verificationBloc.add(ResendCode(email));
+                      _verificationBloc.add(ResendCode(email!));
                     },
                   )
                 ],
@@ -81,12 +110,19 @@ class _SignUpVerificationState extends State<SignUpVerification> {
             BlocBuilder<VerificationBloc, VerificationState>(
               builder: (context, state) {
                 bool isButtonEnabled = state is VerificationCodeValid;
-                return buildLogInAndRegButton("Verify", isButtonEnabled, () {
-                  // final code = (state as VerificationCodeValid).code;
-                  // context.read<VerificationBloc>().add(SubmitCode(code));
+                return state is VerificationLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : buildLogInAndRegButton("Verify", isButtonEnabled, () {
+                        // final code = (state as VerificationCodeValid).code;
+                        context.read<VerificationBloc>().add(SubmitCode(
+                            code: int.parse(_pinCodeController.text),
+                            email: email));
+                        print("No error");
+                        print("Email sent is  $email");
+                        print("code sent is ${_pinCodeController.text}");
 
-                  // context.read<VerificationBloc>().add(CodeChanged(code));
-                });
+                        // context.read<VerificationBloc>().add(CodeChanged(code));
+                      });
               },
             )
           ],
