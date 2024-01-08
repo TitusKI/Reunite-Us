@@ -15,7 +15,7 @@ class CodeChanged extends VerificationEvent {
 }
 
 class SubmitCode extends VerificationEvent {
-  final String? code;
+  final int? code;
   final String? email;
   const SubmitCode({this.code, this.email});
   @override

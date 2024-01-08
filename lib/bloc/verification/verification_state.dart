@@ -42,9 +42,15 @@ class VerificationFailure extends VerificationState {
 
 class VerificationSubmitted extends VerificationState {
   final String code;
-  const VerificationSubmitted(this.code);
+  final String email;
+  const VerificationSubmitted({required this.code, required this.email});
   @override
   List<Object> get props => [code];
+}
+
+class VerificationResetSubmitted extends VerificationState {
+  final String email;
+  const VerificationResetSubmitted({required this.email});
 }
 
 class VerificationReset extends VerificationState {}
