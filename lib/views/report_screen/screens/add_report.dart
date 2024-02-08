@@ -1,7 +1,11 @@
 // ignore_for_file: unused_field
 
 import 'package:afalagi/bloc/report_form/report_form_bloc.dart';
+import 'package:afalagi/bloc/report_form/report_form_event.dart';
+import 'package:afalagi/bloc/report_form/report_form_state.dart';
+import 'package:afalagi/model/missing_person.dart';
 import 'package:afalagi/routes/routes.dart';
+import 'package:afalagi/utils/controller/enum_extensions.dart';
 
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
@@ -15,31 +19,100 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 PageController _pageController = PageController(initialPage: 0);
 
 // ignore: must_be_immutable
-class AddReport extends StatelessWidget {
+class AddReport extends StatefulWidget {
   const AddReport({super.key});
+
+  @override
+  State<AddReport> createState() => _AddReportState();
+}
+
+class _AddReportState extends State<AddReport> {
+  late ReportFormBloc _reportFormBloc;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    //   final UserRepository repository = UserRepository();
+    _reportFormBloc = BlocProvider.of<ReportFormBloc>(context);
+    // _createProfileBloc = CreateProfileBloc(widget.userRepository);
+  }
+
+  // @override
+  // void dispose() {
+  //   _reportFormBloc.close();
+  //   super.dispose();
+  // }
+
+  void _handleMissingPost() {
+    final missingPerson = MissingPerson(
+        maritalStatus: _reportFormBloc.state.maritalStatus!,
+        posterRelation: _reportFormBloc.state.posterRelation!,
+        dateOfBirth: _reportFormBloc.state.dateOfBirth,
+        firstName: _reportFormBloc.state.firstName,
+        middleName: _reportFormBloc.state.middleName,
+        lastName: _reportFormBloc.state.lastName,
+        description: _reportFormBloc.state.description,
+        lastSeenLocation: _reportFormBloc.state.location,
+        lastSeenDate: _reportFormBloc.state.dateOfDisappearance,
+        languageSpoken: _reportFormBloc.state.languageSpoken!,
+        nationality: _reportFormBloc.state.nationality,
+        hairColor: _reportFormBloc.state.hairColor!,
+        skinColor: _reportFormBloc.state.skinColor!,
+        recognizableFeatures: _reportFormBloc.state.recognizableFeature,
+        physicalDisability: _reportFormBloc.state.selectedPhysicalDisability,
+        otherPhysicalDisability: _reportFormBloc.state.otherPhysicalDisability,
+        mentalDisability: _reportFormBloc.state.selectedMentalDisability,
+        otherMentalDisability: _reportFormBloc.state.otherMentalDisability,
+        medicalIssues: _reportFormBloc.state.selectedMedicalIssues,
+        otherMedicalIssue: _reportFormBloc.state.otherMedicalIssues,
+        gender: _reportFormBloc.state.gender!,
+        educationalLevel: _reportFormBloc.state.educationalLevel!);
+    final postImages = _reportFormBloc.state.postImages;
+    final legalDocs = _reportFormBloc.state.legalDocuments;
+    // final videoMessage = _reportFormBloc.state
+    _reportFormBloc.add(MissingPersonPost(
+        missingPerson: missingPerson,
+        postImages: postImages!,
+        legalDocs: legalDocs!));
+    // _createProfileBloc
+    //     .add(ProfileSubmitEvent(userProfile: userProfile, file: file!));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.primaryBackground,
         appBar: buildAppBarLarge("Report Missing Person"),
-        body: BlocBuilder<ReportFormBloc, ReportFormState>(
-          builder: (context, state) {
-            return Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                PageView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    state.page = index;
-                    context.read<ReportFormBloc>().add(const ReportFormEvent());
-                  },
-                  children: const [FormPageOneWidget(), FormPageTwoWidget()],
-                ),
-              ],
-            );
+        body: BlocListener<ReportFormBloc, ReportFormState>(
+          listener: (context, state) {
+            if (state.isMissingSuccess!) {
+              print("Successfuly post missing");
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppRoutes.MAIN, (Route<dynamic> route) => false);
+            }
+            if (state.missingFailure != null) {
+              print("ERROR ON CREATING POST${state.missingFailure}");
+            }
           },
+          child: BlocBuilder<ReportFormBloc, ReportFormState>(
+            builder: (context, state) {
+              return Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  PageView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      state.page = index;
+                      context
+                          .read<ReportFormBloc>()
+                          .add(const ReportFormEvent());
+                    },
+                    children: const [FormPageOneWidget(), FormPageTwoWidget()],
+                  ),
+                ],
+              );
+            },
+          ),
         ));
   }
 }
@@ -48,7 +121,9 @@ ElevatedButton pageViewButton(
     {required BuildContext context,
     required int index,
     required String buttonName,
-    required formKey}) {
+    required formKey,
+    void Function()? func}) {
+  func = func;
   return ElevatedButton(
     style: ButtonStyle(
         alignment: Alignment.centerRight,
@@ -66,8 +141,11 @@ ElevatedButton pageViewButton(
       } else {
         if (formKey.currentState!.validate()) {
           formKey.currentState!.save();
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              AppRoutes.SIGN_IN, (Route<dynamic> route) => false);
+          final state = context.read<ReportFormBloc>().state;
+          state.isMissingLoading! ? const CircularProgressIndicator() : func!;
+          //  _handleMissingPost();
+          // Navigator.of(context).pushNamedAndRemoveUntil(
+          //     AppRoutes.SIGN_IN, (Route<dynamic> route) => false);
         }
       }
     },
