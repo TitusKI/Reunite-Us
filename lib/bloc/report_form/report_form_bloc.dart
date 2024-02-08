@@ -1,22 +1,53 @@
 import 'dart:io';
+
+import 'package:afalagi/bloc/profile/create_profile/create_profile_state.dart';
+import 'package:afalagi/bloc/report_form/report_form_event.dart';
+import 'package:afalagi/bloc/report_form/report_form_state.dart';
 import 'package:afalagi/bloc/shared_event.dart';
-import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
+import 'package:afalagi/repository/user_repository.dart';
+import 'package:afalagi/utils/controller/enums.dart';
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
-part 'report_form_event.dart';
-part 'report_form_state.dart';
+// Ensure this imports your enums
 
 class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
+  final UserRepository? _repository;
   final ImagePicker _picker = ImagePicker();
-  ReportFormBloc() : super(ReportFormState()) {
+
+  ReportFormBloc(this._repository) : super(ReportFormState()) {
     on<ReportFormEvent>(_reportFormEvent);
     on<NameChangedEvent>(_nameChangedEvent);
-    on<GenderEvent>((event, emit) {
-      emit(state.copyWith(selected: event.gender));
-    });
+
     on<PickImage>(_pickImageEvent);
     on<LocationEvent>(_locationEvent);
     on<DateEvent>(_dateOfBirthEvent);
+    on<MissingPersonPost>(_missingPersonPost);
+  }
+
+  Future<void> _missingPersonPost(
+      MissingPersonPost event, Emitter<ReportFormState> emit) async {
+    emit(state.copyWith(isMissingLoading: true));
+
+    try {
+      await _repository!.createPost(
+          missingPerson: event.missingPerson,
+          legalDocs: event.legalDocs,
+          postImages: event.postImages,
+          videoMessage: event.videoMessage);
+      // On successful Profile-creation, update the state
+      emit(state.copyWith(
+        //  user: event.user, // Use the user returned from the repository
+        isMissingLoading: false,
+        isMissingSuccess: true, // Set to true on success
+        missingFailure: '', // Clear any previous failure message
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        isMissingLoading: false,
+        isMissingSuccess: false,
+        missingFailure: e.toString(),
+      ));
+    }
   }
 
   void _reportFormEvent(
@@ -24,56 +55,73 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
     Emitter<ReportFormState> emit,
   ) async {
     emit(state.copyWith(
-      page: state.page,
       age: event.onAge,
       height: event.onHeight,
       hairColor: event.onHairColor,
       skinColor: event.onSkinColor,
       description: event.onDescription,
-      recongnizableFeature: event.onRecongnizableFeature,
       educationalLevel: event.onEducationalLevel,
       videoLink: event.onVideoLink,
       selected: event.selected,
+      maritalStatus: event.onMaritalStatus,
+      gender: event.onGender,
     ));
 
     // Update physical disabilities
-    List<String> updatedPhysicalDisabilities = _updateDisabilities(
+    List<PhysicalDisability> updatedPhysicalDisabilities = _updateDisabilities(
       state.selectedPhysicalDisability,
       event.physicalDisability,
       event.otherPhysicalDisability,
     );
     emit(state.copyWith(
       selectedPhysicalDisability: updatedPhysicalDisabilities,
-      otherPhysicalDisability: event.otherPhysicalDisability,
+      otherPhysicalDisability:
+          event.otherPhysicalDisability ?? state.otherPhysicalDisability,
     ));
+
     // Update mental disabilities
-    List<String> updatedMentalDisabilities = _updateDisabilities(
+    List<MentalDisability> updatedMentalDisabilities = _updateDisabilities(
       state.selectedMentalDisability,
       event.mentalDisability,
       event.otherMentalDisability,
     );
-
     emit(state.copyWith(
       selectedMentalDisability: updatedMentalDisabilities,
-      otherMentalDisability: event.otherMentalDisability,
+      otherMentalDisability:
+          event.otherMentalDisability ?? state.otherMentalDisability,
+    ));
+
+    // Update medical issues
+    List<MedicalIssues> updatedMedicalIssues = _updateDisabilities(
+      state.selectedMedicalIssues,
+      event.medicalIssues,
+      event.otherMedicalIssues,
+    );
+    emit(state.copyWith(
+      selectedMedicalIssues: updatedMedicalIssues,
+      otherMedicalIssues: event.otherMedicalIssues ?? state.otherMedicalIssues,
     ));
   }
 
-  List<String> _updateDisabilities(
-    List<String?> currentDisabilities,
-    String? newDisability,
+  List<T> _updateDisabilities<T>(
+    List<T> currentDisabilities,
+    T? newDisability,
     String? otherDisability,
   ) {
-    List<String> updatedDisabilities = List.from(currentDisabilities);
+    List<T> updatedDisabilities = List.from(currentDisabilities);
+
+    if (newDisability == null) {
+      return updatedDisabilities;
+    }
 
     if (newDisability == 'None') {
-      updatedDisabilities = ['None'];
+      updatedDisabilities = [newDisability];
     } else if (newDisability == 'Other') {
       if (updatedDisabilities.contains('Other')) {
         updatedDisabilities.remove('Other');
-        updatedDisabilities.add(otherDisability!);
+        updatedDisabilities.add(otherDisability! as T);
       } else {
-        updatedDisabilities.add('Other');
+        updatedDisabilities.add(newDisability);
       }
     } else {
       if (updatedDisabilities.contains('None')) {
@@ -82,7 +130,7 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
       if (updatedDisabilities.contains(newDisability)) {
         updatedDisabilities.remove(newDisability);
       } else {
-        updatedDisabilities.add(newDisability!);
+        updatedDisabilities.add(newDisability);
       }
     }
 
@@ -98,7 +146,7 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
     ));
   }
 
-  Stream<SignUpStates> _locationEvent(
+  Stream<CreateProfileState> _locationEvent(
       LocationEvent event, Emitter<ReportFormState> emit) async* {
     emit(
       state.copyWith(
@@ -112,26 +160,27 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
 
   void _dateOfBirthEvent(DateEvent event, Emitter<ReportFormState> emit) {
     emit(state.copyWith(
-        dateOfDisapperance: event.dateOfDisapperance,
+        dateOfDisappearance: event.dateOfDisapperance,
         dateOfBirth: event.dateOfBirth));
   }
 
   Future<void> _pickImageEvent(
       PickImage event, Emitter<ReportFormState> emit) async {
     try {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         emit(
           state.copyWith(
-              profileImage: File(
+              postImages: XFile(
                 pickedFile.path,
               ),
-              imagePickState: ImagePickState.picked),
+              imagePickState: MissignImagePickState.picked),
         );
       } else {
         emit(
           state.copyWith(
-            imagePickState: ImagePickState.failed,
+            imagePickState: MissignImagePickState.failed,
             errorImage: "No image selected",
           ),
         );
@@ -139,7 +188,7 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
     } catch (e) {
       emit(
         state.copyWith(
-          imagePickState: ImagePickState.failed,
+          imagePickState: MissignImagePickState.failed,
           errorImage: e.toString(),
         ),
       );
