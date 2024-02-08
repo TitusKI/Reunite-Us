@@ -1,7 +1,11 @@
 // ignore_for_file: unused_field
 
 import 'package:afalagi/bloc/report_form/report_form_bloc.dart';
+import 'package:afalagi/bloc/report_form/report_form_event.dart';
+import 'package:afalagi/bloc/report_form/report_form_state.dart';
 import 'package:afalagi/bloc/shared_event.dart';
+import 'package:afalagi/utils/controller/enum_utility.dart';
+import 'package:afalagi/utils/controller/enums.dart';
 
 import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/widgets/date_of_birth_field.dart';
@@ -32,14 +36,11 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
 
   String? _city;
 
-  final List<String> hairColor = ["black", "white", "brown", "blonde"];
-  final List<String> skinColor = ["black", "brown", "white"];
-
   final SignUpController _signUpController = SignUpController();
 
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
-
+  // final SkinColor skinColor = Skincolor;
   final AddReport _addReport = const AddReport();
   final formKey = GlobalKey<FormState>();
 
@@ -48,10 +49,16 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
     return SingleChildScrollView(
       child: BlocBuilder<ReportFormBloc, ReportFormState>(
         builder: (context, state) {
-          String dateOfDisapperance = state.dateOfDisapperance;
+          String dateOfDisapperance = state.dateOfDisappearance;
           String dateOfBirth = state.dateOfBirth;
-          String selectedHairColor = state.hairColor;
-          String selectedSkinColor = state.skinColor;
+          String selectedHairColor = state.hairColor != null
+              ? hairColorToString(state.hairColor!)
+              : '';
+          String selectedSkinColor = state.skinColor != null
+              ? skinColorToString(state.skinColor!)
+              : '';
+          String selectedGender =
+              state.gender != null ? genderToString(state.gender!) : '';
 
           return Form(
             key: formKey,
@@ -112,6 +119,16 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         },
                         formType: "report form",
                         context: context),
+                  ),
+                  reusableText("Gender:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: dropDownField(
+                        selected: selectedGender,
+                        dropDown: Gender.values,
+                        context: context,
+                        hintText: "Select gender",
+                        keyName: "genderR"),
                   ),
                   reusableText("Last Name:"),
                   SizedBox(
@@ -193,6 +210,44 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         formType: "report form",
                         context: context),
                   ),
+
+                  reusableText("Nationality:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: formField(
+                        fieldName: "nationality",
+                        value: state.nationality,
+                        controller: _signUpController.nationalityController,
+                        hintText: "Enter missing person nationality",
+                        prefixIcon: const Icon(Icons.flag_rounded),
+                        inputType: TextInputType.multiline,
+                        func: (value) {
+                          context
+                              .read<ReportFormBloc>()
+                              .add(ReportFormEvent(onNationality: value));
+                        },
+                        formType: "report form",
+                        context: context),
+                  ),
+                  reusableText("Language Spoken:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: formField(
+                        fieldName: "language",
+                        value: state.languageSpoken,
+                        controller: _signUpController.languageSpokenController,
+                        hintText: "Enter language spoken by missing person",
+                        prefixIcon: const Icon(Icons.flag_rounded),
+                        inputType: TextInputType.multiline,
+                        func: (value) {
+                          context
+                              .read<ReportFormBloc>()
+                              .add(ReportFormEvent(onLanguageSpoken: value));
+                        },
+                        formType: "report form",
+                        context: context),
+                  ),
+
                   reusableText("Height:"),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
@@ -218,7 +273,7 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: dropDownField(
                         selected: selectedHairColor,
-                        dropDown: hairColor,
+                        dropDown: HairColor.values,
                         context: context,
                         hintText: "Select hair color",
                         keyName: "hairColor"),
@@ -228,7 +283,7 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: dropDownField(
                         selected: selectedSkinColor,
-                        dropDown: skinColor,
+                        dropDown: SkinColor.values,
                         context: context,
                         hintText: "Select skin color",
                         keyName: 'skinColor'),
