@@ -47,7 +47,7 @@ class MyTextField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
-      onTap: onTap,
+      // onTap: onTap,
       textInputAction: TextInputAction.next,
       validator: validator,
       style: TextStyle(color: textColor),

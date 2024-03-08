@@ -38,10 +38,10 @@ class LanguageDropdown extends StatelessWidget {
               const Text('Amharic', style: TextStyle(color: Colors.white)),
             ];
           },
-          hint: const Text(
-            "Language",
-            style: TextStyle(color: Colors.white),
-          ),
+          // hint: const Text(
+          //   "Language",
+          //   style: TextStyle(color: Colors.white),
+          // ),
         );
       },
     );

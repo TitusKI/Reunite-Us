@@ -1,12 +1,16 @@
+import 'package:afalagi/bloc/profile/create_profile/create_profile_bloc.dart';
+import 'package:afalagi/bloc/profile/create_profile/create_profile_event.dart';
 import 'package:afalagi/bloc/report_form/report_form_bloc.dart';
-import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
+import 'package:afalagi/bloc/report_form/report_form_event.dart';
+import 'package:afalagi/utils/controller/enum_utility.dart';
+import 'package:afalagi/utils/controller/enums.dart';
 import 'package:afalagi/views/common/widgets/build_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget dropDownField(
+Widget dropDownField<T extends Enum>(
     {String? selected,
-    List<String>? dropDown,
+    List<T>? dropDown,
     BuildContext? context,
     String? hintText,
     required String keyName}) {
@@ -21,31 +25,47 @@ Widget dropDownField(
         height: 0,
         color: Colors.transparent,
       ),
-      items: dropDown!.map<DropdownMenuItem<String>>((String value) {
+      items: dropDown!.map<DropdownMenuItem<String>>((T value) {
         return DropdownMenuItem(
-          value: value,
-          child: Text(value),
+          value: value.toShortString(),
+          child: Text(value.toShortString()),
         );
       }).toList(),
       onChanged: (String? value) {
         switch (keyName) {
+          case 'genderR':
+            final gender = stringToGender(value!);
+            context!
+                .read<ReportFormBloc>()
+                .add(ReportFormEvent(onGender: gender));
+            break;
           case 'gender':
-            context!.read<SignUpBloc>().add(GenderEvent(value!));
+            final gender = stringToGender(value!);
+            context!.read<CreateProfileBloc>().add(GenderEvent(gender));
             break;
           case 'hairColor':
+            final hairColor = stringToHairColor(value!);
             context!
                 .read<ReportFormBloc>()
-                .add(ReportFormEvent(onHairColor: value));
+                .add(ReportFormEvent(onHairColor: hairColor));
             break;
           case 'educationalLevel':
+            final educationLevel = stringToEducationalLevel(value!);
             context!
                 .read<ReportFormBloc>()
-                .add(ReportFormEvent(onEducationalLevel: value));
+                .add(ReportFormEvent(onEducationalLevel: educationLevel));
+            break;
+          case 'maritalStatus':
+            final maritalStatus = stringToMaritalStatus(value!);
+            context!
+                .read<ReportFormBloc>()
+                .add(ReportFormEvent(onMaritalStatus: maritalStatus));
             break;
           case 'skinColor':
+            final skinColor = stringToSkinColor(value!);
             context!
                 .read<ReportFormBloc>()
-                .add(ReportFormEvent(onSkinColor: value));
+                .add(ReportFormEvent(onSkinColor: skinColor));
             break;
           default:
             return;
@@ -59,7 +79,7 @@ Widget dropDownField(
     keyboardType: TextInputType.none,
     validator: (validate) {
       if (validate == null || validate.isEmpty) {
-        return dropDown == ["Male", "Female"] ? "Please select a gender" : null;
+        return dropDown == Gender.values ? "Please select a gender" : null;
       }
       return null;
     },

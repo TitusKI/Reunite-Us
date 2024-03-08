@@ -29,9 +29,11 @@ AppBar buildAppBar(String type) {
   );
 }
 
-AppBar buildAppBarLarge(String type, {List<Widget> actions = const []}) {
+AppBar buildAppBarLarge(String type,
+    {List<Widget> actions = const [], Widget? leading}) {
   return AppBar(
     centerTitle: true,
+    leading: leading,
     iconTheme: const IconThemeData(color: AppColors.primaryBackground),
     backgroundColor: AppColors.secondaryColor,
     flexibleSpace: Container(
@@ -49,7 +51,7 @@ AppBar buildAppBarLarge(String type, {List<Widget> actions = const []}) {
     actions: actions,
     // systemOverlayStyle:
     //     const SystemUiOverlayStyle(statusBarColor: AppColors.secondaryColor),
-    toolbarHeight: 100.0,
+    toolbarHeight: 50.0,
     // backgroundColor: AppColors.secondaryColor,
     elevation: 10,
     // backgroundColor: Colors.transparent,
@@ -67,7 +69,7 @@ AppBar buildAppBarLarge(String type, {List<Widget> actions = const []}) {
         //   ),
         // ),
         // height defines the thickness of the line
-        height: 10.0,
+        height: 1.0,
       ),
     ),
     title: Center(
@@ -84,9 +86,9 @@ AppBar buildAppBarLarge(String type, {List<Widget> actions = const []}) {
 }
 
 //Need Context for accesssing Bloc
-Widget buildThirdPartyLogin(BuildContext context) {
+Widget buildThirdPartyLogin(BuildContext context, void Function()? func) {
   return GestureDetector(
-    onTap: () {},
+    onTap: func,
     child: Container(
       margin: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h, bottom: 10.h),
       width: 325.w,
@@ -197,57 +199,39 @@ Widget buildLogInAndRegButton(
 
 Widget buildPinCodeField(
     BuildContext context, String? title, TextEditingController controller) {
-  return BlocBuilder<VerificationBloc, VerificationState>(
-    builder: (context, state) {
-      if (state is VerificationLoading) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      if (state is VerificationFailure) {
-        return Center(
-            child: Text('Error: ${state.error}',
-                style: const TextStyle(color: Colors.red)));
-      }
-      if (state is VerificationSuccess) {
-        // Navigate to the next page after successful verification
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pushNamed("/create_profile");
-        });
-      }
-      return PinCodeTextField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        appContext: context,
-        length: 6,
-        animationType: AnimationType.fade,
-        pinTheme: PinTheme(
-          shape: PinCodeFieldShape.box,
-          borderRadius: BorderRadius.circular(5),
-          fieldHeight: 50,
-          fieldWidth: 40,
-          activeFillColor: Colors.white,
-          inactiveFillColor: Colors.white,
-          selectedFillColor: Colors.white,
-          activeColor: AppColors.secondaryColor,
-          inactiveColor: Colors.grey,
-          selectedColor: AppColors.secondaryColor,
-        ),
-        animationDuration: const Duration(milliseconds: 300),
-        backgroundColor: Colors.blue.shade50,
-        enableActiveFill: true,
-        onChanged: (value) {
-          context.read<VerificationBloc>().add(CodeChanged(value));
-          // context.read<VerificationBloc>().add(CodeChanged(value));
-        },
-        onCompleted: (value) {
-          context.read<VerificationBloc>().add(SubmitCode(code: value));
-          context.read<VerificationBloc>().add(CodeChanged(value));
-          title == ""
-              ? Navigator.of(context).pushNamed("/reset_successful")
-              : Navigator.of(context).pushNamed("/create_profile");
-          //  context.read<VerificationBloc>().add(SubmitCode(value));
-        },
-      );
+  return PinCodeTextField(
+    controller: controller,
+    keyboardType: TextInputType.number,
+    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+    appContext: context,
+    length: 6,
+    animationType: AnimationType.fade,
+    pinTheme: PinTheme(
+      shape: PinCodeFieldShape.box,
+      borderRadius: BorderRadius.circular(5),
+      fieldHeight: 50,
+      fieldWidth: 40,
+      activeFillColor: Colors.white,
+      inactiveFillColor: Colors.white,
+      selectedFillColor: Colors.white,
+      activeColor: AppColors.secondaryColor,
+      inactiveColor: Colors.grey,
+      selectedColor: AppColors.secondaryColor,
+    ),
+    animationDuration: const Duration(milliseconds: 300),
+    backgroundColor: Colors.blue.shade50,
+    enableActiveFill: true,
+    onChanged: (value) {
+      context.read<VerificationBloc>().add(CodeChanged(value));
+      // context.read<VerificationBloc>().add(CodeChanged(value));
     },
+    // onCompleted: (value) {
+    //   context.read<VerificationBloc>().add(SubmitCode(code: value));
+    //   context.read<VerificationBloc>().add(CodeChanged(value));
+    //   title == ""
+    //       ? Navigator.of(context).pushNamed("/reset_successful")
+    //       : Navigator.of(context).pushNamed("/create_profile");
+    //   //  context.read<VerificationBloc>().add(SubmitCode(value));
+    // },
   );
 }
