@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:afalagi/bloc/profile/create_profile/create_profile_bloc.dart';
 import 'package:afalagi/bloc/shared_event.dart';
-import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:afalagi/routes/export.dart';
 import 'package:afalagi/views/common/widgets/build_textfield.dart';
 
@@ -35,7 +35,7 @@ Widget dateField(
                       .add(DateEvent(dateOfBirth: dateController.text));
                 } else {
                   context
-                      .read<SignUpBloc>()
+                      .read<CreateProfileBloc>()
                       .add(DateEvent(dateOfBirth: dateController.text));
                   print("Users Date is :${dateController.text}");
                 }
