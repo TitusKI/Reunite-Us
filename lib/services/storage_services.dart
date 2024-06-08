@@ -9,9 +9,26 @@ class StorageService {
     return this;
   }
 
-  Future<void> storeToken(String accessToken, String refreshToken) async {
-    await _prefs.setString('access_token', accessToken);
-    await _prefs.setString('refresh_token', refreshToken);
+  Future<void> storeToken({
+    String? accessToken,
+    String? refreshToken,
+    String? resetToken,
+  }) async {
+    if (accessToken != null) {
+      await _prefs.setString('access_token', accessToken);
+    }
+    if (refreshToken != null) {
+      await _prefs.setString('refresh_token', refreshToken);
+    }
+    if (resetToken != null) {
+      await _prefs.setString('resetToken', resetToken);
+    }
+  }
+
+  Future<void> clearTokens() async {
+    await _prefs.remove('access_token');
+    await _prefs.remove('refresh_token');
+    await _prefs.remove('resetToken');
   }
 
   Future<String?> getAccessToken() async {
@@ -20,6 +37,10 @@ class StorageService {
 
   Future<String?> getRefreshToken() async {
     return _prefs.getString('refresh_token');
+  }
+
+  Future<String?> getResetToken() async {
+    return _prefs.getString('resetToken');
   }
 
   Future<bool> setBool(String key, bool value) async {
@@ -37,11 +58,4 @@ class StorageService {
   bool getIsLoggedIn() {
     return _prefs.getBool(AppConstant.STORAGE_USER_TOKEN_KEY) ?? false;
   }
-
-  // bool getIsLoggedIn() {
-  //   // if it's null user never logged in
-  //   return _prefs.getString(AppConstant.STORAGE_USER_TOKEN_KEY) == null
-  //       ? false
-  //       : true;
-  // }
 }
