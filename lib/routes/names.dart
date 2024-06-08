@@ -18,11 +18,29 @@ class AppRoutes {
   // Reset -assword page
   static const RESET_PASSWORD = '/reset_password';
   // Reset Verification page
-  static const RESET_VERIFICATION = '/reset_verification';
+  //static const RESET_VERIFICATION = '/reset_verification';
   // Reset Succesfully
   static const RESET_SUCCESSFUL = "/reset_successful";
   // home page
   static const HOME = '/home';
+  // profile screen
+  static const PROFILE = "/profile";
+  // edit profile screen
+  static const EDIT_PROFILE = '/edit_profile';
+  // profile detail screen
+  static const PROFILE_DETAIL = '/profile_detail';
+  // missing person detail screen
+  static const MISSING_DETAIL = '/missing_detail';
+  // setting drawer page
+  static const SETTING = '/setting';
+  // settings title notification and sound
+  static const NOTIFICATION_SOUND = '/notification_sound';
+  // feedback page
+  static const FEEDBACK = '/feedback';
+  //about us
+  static const ABOUT_US = '/about_us';
+// support and donation page
+  static const SUPPORT_DONATION = "/support_donation";
   // search page
   static const SEARCH = '/search';
   // report page
@@ -32,6 +50,8 @@ class AppRoutes {
 
   // chat page
   static const CHAT = '/chat';
+  // chat page screen
+  static const CHAT_PAGE = "/chat_page";
   // succes stories page
   static const FOUND = '/found';
 }

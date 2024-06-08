@@ -1,17 +1,33 @@
 // The UNIFICATION Of BlocProvider and routes and pages
 
 import 'package:afalagi/bloc/animation/animation_bloc.dart';
+import 'package:afalagi/bloc/profile/create_profile/create_profile_bloc.dart';
+import 'package:afalagi/bloc/language/language_bloc.dart';
+import 'package:afalagi/bloc/profile/profile_cubit.dart';
+import 'package:afalagi/bloc/search/search_bloc.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
+import 'package:afalagi/bloc/sign_out/sign_out_cubit.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
+import 'package:afalagi/bloc/theme_cubit/theme_cubit.dart';
+import 'package:afalagi/bloc/upload_cubit/upload_cubit.dart';
+import 'package:afalagi/bloc/upload_cubit/upload_missing.dart';
 import 'package:afalagi/repository/user_repository.dart';
-import 'package:afalagi/services/api_services.dart';
+import 'package:afalagi/views/chat_screen/screens/chat_page.dart';
+import 'package:afalagi/views/drawer_screen/screens/about_us/about_us.dart';
+import 'package:afalagi/views/drawer_screen/screens/feedback/feedback.dart';
+import 'package:afalagi/views/drawer_screen/screens/profile/edit_profile.dart';
+import 'package:afalagi/views/drawer_screen/screens/profile/profile_screen.dart';
+import 'package:afalagi/views/drawer_screen/screens/settings/notification_and_sound_screen/notification_and_sound.dart';
+import 'package:afalagi/views/drawer_screen/screens/settings/setting.dart';
+import 'package:afalagi/views/drawer_screen/screens/support_and_donation/support_donation.dart';
+import 'package:afalagi/views/missing_person_detail/missing_person_detail.dart';
+import 'package:afalagi/views/user_details/screens/profile_detail.dart';
 
 import 'export.dart';
 
 class AppPages {
   final UserRepository _userRepository;
-  final ApiServices _apiServices;
-  AppPages(this._userRepository, this._apiServices);
+  AppPages(this._userRepository);
   List<PageEntity> routes() {
     return [
       PageEntity(
@@ -23,7 +39,7 @@ class AppPages {
       ),
       PageEntity(
           route: AppRoutes.MAIN,
-          page: const MyHomePage(),
+          page: MyHomePage(),
           bloc: BlocProvider(
             create: (_) => BottomNavigationBloc(),
           )),
@@ -31,7 +47,7 @@ class AppPages {
         route: AppRoutes.SIGN_IN,
         page: const SignIn(),
         bloc: BlocProvider(
-          create: (_) => SignInBloc(),
+          create: (_) => SignInBloc(_userRepository),
         ),
       ),
       PageEntity(
@@ -45,7 +61,7 @@ class AppPages {
           route: AppRoutes.SIGN_UP_VERIFICATION,
           page: const SignUpVerification(),
           bloc: BlocProvider(
-            create: (_) => VerificationBloc(_apiServices),
+            create: (_) => VerificationBloc(_userRepository),
           )),
       PageEntity(
         route: AppRoutes.CREATE_PROFILE,
@@ -53,31 +69,79 @@ class AppPages {
           userRepository: _userRepository,
         ),
         bloc: BlocProvider(
-          create: (_) => SignUpBloc(_userRepository),
+          create: (_) => CreateProfileBloc(_userRepository),
         ),
       ),
       PageEntity(
         route: AppRoutes.RESET_PASSWORD,
         page: const ResetScreen(),
         bloc: BlocProvider(
-          create: (_) => ResetPasswordBloc(),
+          create: (_) => ResetPasswordBloc(_userRepository),
         ),
       ),
       PageEntity(
-          route: AppRoutes.RESET_VERIFICATION,
-          page: const ResetVerification(),
           bloc: BlocProvider(
-            create: (_) => VerificationBloc(_apiServices),
-          )),
-      PageEntity(
-          route: AppRoutes.RESET_SUCCESSFUL,
-          page: const ResetSuccessful(),
-          bloc: BlocProvider(
-            create: (_) => SignUpBloc(_userRepository),
-          )),
+        create: (_) => SignOutCubit(_userRepository),
+      )),
+      // PageEntity(
+      //     route: AppRoutes.RESET_SUCCESSFUL,
+      //     page: const ResetSuccessful(),
+      //     bloc: BlocProvider(
+      //       create: (_) => SignUpBloc(_userRepository),
+      //     )),
       PageEntity(
         route: AppRoutes.HOME,
         page: const Home(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.PROFILE,
+        page: const ProfileScreen(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.EDIT_PROFILE,
+        page: const EditProfileScreen(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.PROFILE_DETAIL,
+        page: const ProfileDetail(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.MISSING_DETAIL,
+        page: const MissingPersonDetail(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.SETTING,
+        page: const Setting(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.NOTIFICATION_SOUND,
+        page: const NotificationAndSound(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.NOTIFICATION_SOUND,
+        page: const NotificationAndSound(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.FEEDBACK,
+        page: FeedbackPage(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.ABOUT_US,
+        page: const AboutUsPage(),
+        // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.SUPPORT_DONATION,
+        page: const SupportDonationPage(),
         // bloc: BlocProvider(create: (_) => HomeBloc()))
       ),
       PageEntity(
@@ -92,12 +156,16 @@ class AppPages {
         route: AppRoutes.ADD_REPORT,
         page: const AddReport(),
         bloc: BlocProvider(
-          create: (_) => ReportFormBloc(),
+          create: (_) => ReportFormBloc(_userRepository),
         ),
       ),
       PageEntity(
         route: AppRoutes.CHAT,
         page: const ChatScreen(),
+      ),
+      PageEntity(
+        route: AppRoutes.CHAT_PAGE,
+        page: const ChatPage(),
       ),
       PageEntity(
         route: AppRoutes.FOUND,
@@ -110,7 +178,31 @@ class AppPages {
       PageEntity(
           bloc: BlocProvider(
         create: (_) => AnimationBloc(),
-      ))
+      )),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => LanguageBloc(),
+      )),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => SearchBloc(),
+      )),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => ThemeCubit(),
+      )),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => UploadCubit(),
+      )),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => ProfileCubit(_userRepository),
+      )),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => MissingPersonUploadCubit(),
+      )),
     ];
   }
 
@@ -142,7 +234,7 @@ class AppPages {
           if (getIsLoggedIn) {
             print("is logged in");
             return MaterialPageRoute(
-                builder: (_) => const MyHomePage(), settings: settings);
+                builder: (_) => MyHomePage(), settings: settings);
           }
           return MaterialPageRoute(
               builder: (_) => const SignIn(), settings: settings);
