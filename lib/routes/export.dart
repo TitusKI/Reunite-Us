@@ -14,7 +14,6 @@ export 'package:afalagi/views/navigation.dart';
 export 'package:afalagi/views/report_screen/screens/add_report.dart';
 export 'package:afalagi/views/report_screen/screens/report.dart';
 export 'package:afalagi/views/reset_password/screens/reset_screen.dart';
-export 'package:afalagi/views/reset_password/screens/reset_successful.dart';
 export 'package:afalagi/views/reset_password/screens/reset_verification.dart';
 export 'package:afalagi/views/search_screen/screens/search.dart';
 export 'package:afalagi/views/sign_in_screen/screens/sign_in.dart';
