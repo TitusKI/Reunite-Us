@@ -6,19 +6,15 @@ import 'package:flutter/services.dart';
 
 class Global {
   static late StorageService storageService;
-  static ApiServices apiServices = ApiServices(storageService);
-  static UserRepository userRepository = UserRepository(apiServices);
+  static late ApiServices apiServices;
+  static late UserRepository userRepository;
+
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //   statusBarColor: Colors.transparent, // Transparent status bar
-    //   statusBarIconBrightness:
-    //       Brightness.light, // For dark icons in the status bar
-    // ));
 
-    // await Future.delayed(const Duration(seconds: 2));
     storageService = await StorageService().init();
+    apiServices = ApiServices(storageService);
+    userRepository = UserRepository(apiServices);
   }
 }
