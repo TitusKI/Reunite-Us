@@ -11,6 +11,7 @@ import 'package:afalagi/views/reset_password/screens/reset_screen.dart';
 import 'package:afalagi/views/reset_password/screens/reset_successful.dart';
 import 'package:afalagi/views/reset_password/screens/reset_verification.dart';
 import 'package:afalagi/views/sign_in_screen/screens/sign_in.dart';
+import 'package:afalagi/views/sign_up_screen/screens/create_profile.dart';
 import 'package:afalagi/views/sign_up_screen/screens/sign_up.dart';
 import 'package:afalagi/views/welcome_screen/screens/welcome.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,13 @@ class AppPages {
       PageEntity(
         route: AppRoutes.SIGN_UP,
         page: const SignUp(),
+        bloc: BlocProvider(
+          create: (_) => SignUpBloc(),
+        ),
+      ),
+      PageEntity(
+        route: AppRoutes.CREATE_PROFILE,
+        page: const CreateProfile(),
         bloc: BlocProvider(
           create: (_) => SignUpBloc(),
         ),

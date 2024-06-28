@@ -7,3 +7,5 @@ class ResetPasswordState {
     return ResetPasswordState(email: email ?? this.email);
   }
 }
+
+class ResetToInitial extends ResetPasswordState {}

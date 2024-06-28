@@ -5,13 +5,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
   SignUpBloc() : super(const SignUpStates()) {
-    on<UserNameEvent>(_userNameEvent);
+    on<FirstNameEvent>(_firstNameEvent);
+    on<MiddleNameEvent>(_middleNameEvent);
+
+    on<LastNameEvent>(_lastNameEvent);
+
+    on<LocationEvent>(_locationEvent);
+
     on<EmailEvent>(_emailEvent);
     on<PasswordEvent>(_passwordEvent);
     on<RepasswordEvent>(_repasswordEvent);
     on<SignUpLoadingEvent>(_SignUpLoadingEvent);
     on<SignUpSuccessEvent>(_SignUpSuccessEvent);
     on<SignUpFailureEvent>(_SignUpFailureEvent);
+    on<GenderEvent>((event, emit) {
+      emit(GenderSelectionState(event.gender));
+    });
+    on<PhoneNumberEvent>(_phoneNumberEvent);
+    on<DateOfBirthEvent>(_dateOfBirthEvent);
   }
   Stream<SignUpStates> _SignUpLoadingEvent(
       SignUpLoadingEvent event, Emitter<SignUpStates> emit) async* {
@@ -38,10 +49,27 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     emit(const SignUpFailurState("Error Loading"));
   }
 
-  void _userNameEvent(UserNameEvent event, Emitter<SignUpStates> emit) {
-    print(event.userName);
+  void _firstNameEvent(FirstNameEvent event, Emitter<SignUpStates> emit) {
     emit(
-      state.copyWith(userName: event.userName),
+      state.copyWith(firstName: event.firstname),
+    );
+  }
+
+  void _middleNameEvent(MiddleNameEvent event, Emitter<SignUpStates> emit) {
+    emit(state.copyWith(
+      middleName: event.middleName,
+    ));
+  }
+
+  void _lastNameEvent(LastNameEvent event, Emitter<SignUpStates> emit) {
+    emit(
+      state.copyWith(lastName: event.lastName),
+    );
+  }
+
+  void _locationEvent(LocationEvent event, Emitter<SignUpStates> emit) {
+    emit(
+      state.copyWith(location: event.location),
     );
   }
 
@@ -67,5 +95,13 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     emit(
       state.copyWith(repassword: event.repassword),
     );
+  }
+
+  void _phoneNumberEvent(PhoneNumberEvent event, Emitter<SignUpStates> emit) {
+    emit(state.copyWith(phoneNumber: event.phoneNumber));
+  }
+
+  void _dateOfBirthEvent(DateOfBirthEvent event, Emitter<SignUpStates> emit) {
+    emit(state.copyWith(dateOfBirth: event.dateOfBirth));
   }
 }

@@ -15,6 +15,20 @@ class ResetScreen extends StatefulWidget {
 }
 
 class _ResetScreenState extends State<ResetScreen> {
+  late ResetPasswordBloc _resetPasswordBloc;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _resetPasswordBloc = BlocProvider.of<ResetPasswordBloc>(context);
+  }
+
+  @override
+  void dispose() {
+    _resetPasswordBloc.add(ResetEmail());
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
@@ -41,7 +55,7 @@ class _ResetScreenState extends State<ResetScreen> {
                 ),
                 Center(
                   child: reusableText(
-                    "Enter your email address below\n and we'll send you a link to reset",
+                    "Enter your email address below\n and we'll send you a code to reset",
                   ),
                 ),
                 SizedBox(
@@ -52,7 +66,7 @@ class _ResetScreenState extends State<ResetScreen> {
                         EmailEvent(email: value),
                       );
                 }),
-                buildLogInAndRegButton("Send Reset Link", true, () {
+                buildLogInAndRegButton("Get Code", true, () {
                   ResetPasswordController(context).handleEmailReset();
                 }),
                 const SizedBox(

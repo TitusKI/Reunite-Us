@@ -54,14 +54,14 @@ class _SignUpState extends State<SignUp> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            reusableText("User name"),
-                            buildTextField(
-                                "Enter your user name", "name", "user",
-                                (value) {
-                              context
-                                  .read<SignUpBloc>()
-                                  .add(UserNameEvent(value));
-                            }),
+                            // reusableText("User name"),
+                            // buildTextField(
+                            //     "Enter your user name", "name", "user", null,
+                            //     (value) {
+                            //   context
+                            //       .read<SignUpBloc>()
+                            //       .add(UserNameEvent(value));
+                            // }),
                             reusableText("Email"),
                             buildTextField(
                                 "Enter your email address", "email", "user",

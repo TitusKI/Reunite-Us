@@ -9,6 +9,8 @@ class AppRoutes {
   static const SIGN_IN = '/sign_in';
 // sign up page
   static const SIGN_UP = '/sign_up';
+  // sign up page tile
+  static const CREATE_PROFILE = "/create_profile";
   // Reset -assword page
   static const RESET_PASSWORD = '/reset_password';
   // Reset Verification page

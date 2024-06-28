@@ -10,5 +10,8 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
       emit(state.copyWith(email: event.email));
       print(event.email);
     });
+    on<ResetEmail>((event, emit) {
+      emit(ResetToInitial());
+    });
   }
 }

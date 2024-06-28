@@ -11,3 +11,5 @@ class EmailEvent extends ResetPasswordEvent {
   final String? email;
   const EmailEvent({this.email});
 }
+
+class ResetEmail extends ResetPasswordEvent {}

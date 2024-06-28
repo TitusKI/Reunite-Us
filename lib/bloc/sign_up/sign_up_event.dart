@@ -2,9 +2,24 @@ abstract class SignUpEvents {
   const SignUpEvents();
 }
 
-class UserNameEvent extends SignUpEvents {
-  final String userName;
-  const UserNameEvent(this.userName);
+class LocationEvent extends SignUpEvents {
+  final String location;
+  const LocationEvent(this.location);
+}
+
+class FirstNameEvent extends SignUpEvents {
+  final String firstname;
+  const FirstNameEvent(this.firstname);
+}
+
+class MiddleNameEvent extends SignUpEvents {
+  final String middleName;
+  const MiddleNameEvent(this.middleName);
+}
+
+class LastNameEvent extends SignUpEvents {
+  final String lastName;
+  const LastNameEvent(this.lastName);
 }
 
 class EmailEvent extends SignUpEvents {
@@ -20,6 +35,23 @@ class PasswordEvent extends SignUpEvents {
 class RepasswordEvent extends SignUpEvents {
   final String repassword;
   const RepasswordEvent(this.repassword);
+}
+
+class GenderEvent extends SignUpEvents {
+  final String gender;
+  GenderEvent(this.gender);
+  // @override
+  // List<Object> get props => [gender];
+}
+
+class PhoneNumberEvent extends SignUpEvents {
+  final String? phoneNumber;
+  const PhoneNumberEvent(this.phoneNumber);
+}
+
+class DateOfBirthEvent extends SignUpEvents {
+  final String? dateOfBirth;
+  const DateOfBirthEvent(this.dateOfBirth);
 }
 
 class SignUpLoadingEvent extends SignUpEvents {}

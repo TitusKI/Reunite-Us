@@ -60,6 +60,8 @@ class ResetPasswordController {
       } else {
         toastInfo(
             msg: "Reset Password Succesful!", gravity: ToastGravity.CENTER);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            '/sign_in', (Route<dynamic> route) => false);
       }
     } catch (e) {
       print(e.toString());

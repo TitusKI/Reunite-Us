@@ -11,15 +11,11 @@ class SignUpController {
 
   void handleEmailSignUp() async {
     final state = context.read<SignUpBloc>().state;
-    String userName = state.userName;
+
     String email = state.email;
     String password = state.password;
     String repassword = state.repassword;
 
-    if (userName.isEmpty) {
-      toastInfo(msg: "User name can not be empty");
-      return;
-    }
     if (email.isEmpty) {
       toastInfo(msg: "Email can not be empty");
       return;
@@ -43,9 +39,44 @@ class SignUpController {
 
     try {
       context.read<SignUpBloc>().add(SignUpLoadingEvent());
-      print("Registe user Api integration");
+      toastInfo(msg: "Registe user Api integration");
+      Navigator.of(context).pushNamed('/create_profile');
     } catch (e) {
       context.read<SignUpBloc>().add(SignUpFailureEvent(error: e.toString()));
+    }
+  }
+
+  void handleProfileBuild() async {
+    final state = context.read<SignUpBloc>().state;
+    String firstName = state.firstName;
+    String middleName = state.middleName;
+    String lastName = state.lastName;
+    String location = state.location;
+    String? phoneNumber = state.phoneNumber;
+    String? dateOfBirth = state.dateOfBirth;
+    if (firstName.isEmpty) {
+      toastInfo(msg: "first name can not be empty");
+      return;
+    } else if (middleName.isEmpty) {
+      toastInfo(msg: "middle name can not be empty");
+      return;
+    } else if (lastName.isEmpty) {
+      toastInfo(msg: "last name can not be empty");
+      return;
+    } else if (location.isEmpty) {
+      toastInfo(msg: "location can not be empty");
+      return;
+    } else if (phoneNumber.toString().isEmpty) {
+      toastInfo(msg: "phone number can not be empty");
+      return;
+    } else if (dateOfBirth!.isEmpty) {
+      toastInfo(msg: "date of birth can not be empty");
+      return;
+    } else {
+      toastInfo(msg: "Profile Created Succesfully");
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/sign_in', (Route<dynamic> route) => false);
+      return;
     }
   }
 }

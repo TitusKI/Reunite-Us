@@ -1,3 +1,5 @@
+import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
+import 'package:afalagi/bloc/sign_up/sign_up_event.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -98,6 +100,7 @@ Widget reusableText(String text) {
 
 Widget buildTextField(String hintText, String textType, String iconName,
     void Function(String value)? func) {
+  // final List<String> genders = ["Male", "Female", "Other"];
   return Container(
     // height and width of the textfield
     width: 325.w,
@@ -129,6 +132,25 @@ Widget buildTextField(String hintText, String textType, String iconName,
             onChanged: (value) => func!(value),
             keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
+              // suffixIcon: DropdownButton<String>(
+              //   icon: const Icon(Icons.arrow_drop_down),
+              //   iconSize: 24,
+              //   elevation: 16,
+              //   underline: Container(
+              //     height: 0,
+              //     color: Colors.transparent,
+              //   ),
+              //   items: genders.map<DropdownMenuItem<String>>((String value) {
+              //     return DropdownMenuItem(
+              //       value: value,
+              //       child: Text(value),
+              //     );
+              //   }).toList(),
+              //   onChanged: (String? value) {},
+              //   // onChanged: (String value) {
+              //   // //  context.read<SignUpBloc>().add(GenderEvent(value));
+              //   // },
+              // ),
               hintText: hintText,
               border: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -230,6 +252,8 @@ Widget buildPinCodeField(BuildContext context) {
   return BlocBuilder<VerificationBloc, VerificationState>(
     builder: (context, state) {
       return PinCodeTextField(
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         appContext: context,
         length: 6,
         animationType: AnimationType.fade,
