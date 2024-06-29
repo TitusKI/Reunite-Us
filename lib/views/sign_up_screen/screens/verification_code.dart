@@ -5,15 +5,18 @@ import 'package:afalagi/views/common/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ResetVerification extends StatefulWidget {
-  const ResetVerification({super.key});
+class SignUpVerification extends StatefulWidget {
+  final String? title;
+  const SignUpVerification({super.key, this.title});
 
   @override
-  State<ResetVerification> createState() => _ResetVerificationState();
+  State<SignUpVerification> createState() => _SignUpVerificationState();
 }
 
-class _ResetVerificationState extends State<ResetVerification> {
+class _SignUpVerificationState extends State<SignUpVerification> {
   late VerificationBloc _verificationBloc;
+
+  final String? title = "Sign up Verification";
 
   @override
   void didChangeDependencies() {
@@ -30,7 +33,7 @@ class _ResetVerificationState extends State<ResetVerification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBarLarge("Reset Verification"),
+      appBar: buildAppBarLarge(title!),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -45,7 +48,7 @@ class _ResetVerificationState extends State<ResetVerification> {
             Container(
                 padding: const EdgeInsets.all(20.0),
                 margin: const EdgeInsets.all(8.0),
-                child: buildPinCodeField(context, "")),
+                child: buildPinCodeField(context, title)),
             const SizedBox(
               height: 15,
             ),
@@ -70,7 +73,7 @@ class _ResetVerificationState extends State<ResetVerification> {
             BlocBuilder<VerificationBloc, VerificationState>(
               builder: (context, state) {
                 bool isButtonEnabled = state is VerificationCodeValid;
-                return buildLogInAndRegButton("Proceed", isButtonEnabled, () {
+                return buildLogInAndRegButton("Verify", isButtonEnabled, () {
                   // final code = (state as VerificationCodeValid).code;
                   // context.read<VerificationBloc>().add(SubmitCode(code));
 

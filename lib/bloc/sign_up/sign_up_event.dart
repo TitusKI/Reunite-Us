@@ -54,6 +54,8 @@ class DateOfBirthEvent extends SignUpEvents {
   const DateOfBirthEvent(this.dateOfBirth);
 }
 
+class PickImage extends SignUpEvents {}
+
 class SignUpLoadingEvent extends SignUpEvents {}
 
 class SignUpSuccessEvent extends SignUpEvents {}

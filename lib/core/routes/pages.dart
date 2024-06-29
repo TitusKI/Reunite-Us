@@ -13,6 +13,7 @@ import 'package:afalagi/views/reset_password/screens/reset_verification.dart';
 import 'package:afalagi/views/sign_in_screen/screens/sign_in.dart';
 import 'package:afalagi/views/sign_up_screen/screens/create_profile.dart';
 import 'package:afalagi/views/sign_up_screen/screens/sign_up.dart';
+import 'package:afalagi/views/sign_up_screen/screens/verification_code.dart';
 import 'package:afalagi/views/welcome_screen/screens/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,14 +28,6 @@ class AppPages {
           create: (_) => WelcomeBloc(),
         ),
       ),
-      // PageEntity(
-      //   route: AppRoutes.INITIAL,
-      //   page: const SplashScreen(),
-      //   bloc: BlocProvider(
-      //     create: (_) => SplashScreenBloc(),
-      //     child: const SplashScreen(),
-      //   ),
-      // ),
       PageEntity(
         route: AppRoutes.SIGN_IN,
         page: const SignIn(),
@@ -50,19 +43,18 @@ class AppPages {
         ),
       ),
       PageEntity(
+          route: AppRoutes.SIGN_UP_VERIFICATION,
+          page: const SignUpVerification(),
+          bloc: BlocProvider(
+            create: (_) => VerificationBloc(),
+          )),
+      PageEntity(
         route: AppRoutes.CREATE_PROFILE,
         page: const CreateProfile(),
         bloc: BlocProvider(
           create: (_) => SignUpBloc(),
         ),
       ),
-      // // PageEntity(
-      // //   route: AppRoutes.APPLICATION,
-      // //   page: const MyHomePage(),
-      // //   // bloc: BlocProvider(
-      // //   //   create: (_) => ApplicationBl(),
-      // //   // ),
-      // // ),
       PageEntity(
         route: AppRoutes.RESET_PASSWORD,
         page: const ResetScreen(),
@@ -82,7 +74,6 @@ class AppPages {
           bloc: BlocProvider(
             create: (_) => SignUpBloc(),
           )),
-      // PageEntity(bloc: BlocProvider(create: (_) => BottomNavigationBloc())),
       PageEntity(
         route: AppRoutes.HOME,
         page: const MyHomePage(),
@@ -103,7 +94,7 @@ class AppPages {
   }
 
   // models that covers entire screen as we click on navigator object
-  static MaterialPageRoute GenerateRouteSettings(RouteSettings settings) {
+  static MaterialPageRoute generateRouteSettings(RouteSettings settings) {
     print('GenerateRouteSettings');
     if (settings.name != null) {
       // check for route name matching when navigator gets triggered

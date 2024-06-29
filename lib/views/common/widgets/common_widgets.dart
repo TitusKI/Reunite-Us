@@ -1,5 +1,3 @@
-import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
-import 'package:afalagi/bloc/sign_up/sign_up_event.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +32,7 @@ AppBar buildAppBar(String type) {
 AppBar buildAppBarLarge(String type) {
   return AppBar(
     systemOverlayStyle:
-        SystemUiOverlayStyle(statusBarColor: AppColors.accentColor),
+        const SystemUiOverlayStyle(statusBarColor: AppColors.accentColor),
     toolbarHeight: 100.0,
     backgroundColor: AppColors.accentColor,
     elevation: 10,
@@ -48,11 +46,14 @@ AppBar buildAppBarLarge(String type) {
       ),
     ),
     title: Center(
-      child: Text(type,
-          style: TextStyle(
-              color: AppColors.primaryBackground,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.normal)),
+      child: Text(
+        type,
+        style: TextStyle(
+          color: AppColors.primaryBackground,
+          fontSize: 16.sp,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
     ),
   );
 }
@@ -66,7 +67,6 @@ Widget buildThirdPartyLogin(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _reusableIcons("google"),
-        _reusableIcons('apple'),
         _reusableIcons("facebook"),
       ],
     ),
@@ -248,7 +248,7 @@ Widget buildLogInAndRegButton(
   );
 }
 
-Widget buildPinCodeField(BuildContext context) {
+Widget buildPinCodeField(BuildContext context, String? title) {
   return BlocBuilder<VerificationBloc, VerificationState>(
     builder: (context, state) {
       return PinCodeTextField(
@@ -279,7 +279,9 @@ Widget buildPinCodeField(BuildContext context) {
         onCompleted: (value) {
           context.read<VerificationBloc>().add(SubmitCode(value));
           context.read<VerificationBloc>().add(CodeChanged(value));
-          Navigator.of(context).pushNamed("/reset_successful");
+          title == ""
+              ? Navigator.of(context).pushNamed("/reset_successful")
+              : Navigator.of(context).pushNamed("/create_profile");
           //  context.read<VerificationBloc>().add(SubmitCode(value));
         },
       );

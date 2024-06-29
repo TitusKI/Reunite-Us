@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:afalagi/bloc/sign_up/sign_up_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
+  final ImagePicker _picker = ImagePicker();
   SignUpBloc() : super(const SignUpStates()) {
     on<FirstNameEvent>(_firstNameEvent);
     on<MiddleNameEvent>(_middleNameEvent);
@@ -15,16 +19,17 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     on<EmailEvent>(_emailEvent);
     on<PasswordEvent>(_passwordEvent);
     on<RepasswordEvent>(_repasswordEvent);
-    on<SignUpLoadingEvent>(_SignUpLoadingEvent);
-    on<SignUpSuccessEvent>(_SignUpSuccessEvent);
-    on<SignUpFailureEvent>(_SignUpFailureEvent);
+    on<SignUpLoadingEvent>(_signUpLoadingEvent);
+    on<SignUpSuccessEvent>(_signUpSuccessEvent);
+    on<SignUpFailureEvent>(_signUpFailureEvent);
     on<GenderEvent>((event, emit) {
       emit(GenderSelectionState(event.gender));
     });
     on<PhoneNumberEvent>(_phoneNumberEvent);
     on<DateOfBirthEvent>(_dateOfBirthEvent);
+    on<PickImage>(_pickImageEvent);
   }
-  Stream<SignUpStates> _SignUpLoadingEvent(
+  Stream<SignUpStates> _signUpLoadingEvent(
       SignUpLoadingEvent event, Emitter<SignUpStates> emit) async* {
     emit(const SignUpLoadingState());
     try {
@@ -34,7 +39,7 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     }
   }
 
-  Stream<SignUpStates> _SignUpSuccessEvent(
+  Stream<SignUpStates> _signUpSuccessEvent(
       SignUpSuccessEvent event, Emitter<SignUpStates> emit) async* {
     emit(const SignUpSuccessState());
     try {
@@ -44,7 +49,7 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     }
   }
 
-  Stream<SignUpStates> _SignUpFailureEvent(
+  Stream<SignUpStates> _signUpFailureEvent(
       SignUpFailureEvent event, Emitter<SignUpStates> emit) async* {
     emit(const SignUpFailurState("Error Loading"));
   }
@@ -103,5 +108,35 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
 
   void _dateOfBirthEvent(DateOfBirthEvent event, Emitter<SignUpStates> emit) {
     emit(state.copyWith(dateOfBirth: event.dateOfBirth));
+  }
+
+  Future<void> _pickImageEvent(
+      PickImage event, Emitter<SignUpStates> emit) async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        emit(
+          state.copyWith(
+              profileImage: File(
+                pickedFile.path,
+              ),
+              imagePickState: ImagePickState.picked),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            imagePickState: ImagePickState.failed,
+            errorImage: "No image selected",
+          ),
+        );
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          imagePickState: ImagePickState.failed,
+          errorImage: e.toString(),
+        ),
+      );
+    }
   }
 }

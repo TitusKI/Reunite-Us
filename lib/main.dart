@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           //   brightness: Brightness.light,
           // ),
           // initialRoute: ,
-          onGenerateRoute: AppPages.GenerateRouteSettings,
+          onGenerateRoute: AppPages.generateRouteSettings,
 
           // home: const Welcome(),
           // routes: {

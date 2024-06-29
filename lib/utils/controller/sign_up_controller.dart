@@ -19,30 +19,25 @@ class SignUpController {
     if (email.isEmpty) {
       toastInfo(msg: "Email can not be empty");
       return;
-    }
-    if (!email.isEmail()) {
+    } else if (!email.isEmail()) {
       toastInfo(msg: "Please Enter a Valid Email Address");
-    }
-    if (password.isEmpty) {
+    } else if (password.isEmpty) {
       toastInfo(msg: "Password can not be empty");
       return;
-    }
-
-    if (repassword.isEmpty) {
+    } else if (repassword.isEmpty) {
       toastInfo(msg: "Your password confirmation is wrong");
       return;
-    }
-    if (repassword != password) {
+    } else if (repassword != password) {
       toastInfo(msg: "The Password doesn't match the previous password");
       return;
-    }
-
-    try {
-      context.read<SignUpBloc>().add(SignUpLoadingEvent());
-      toastInfo(msg: "Registe user Api integration");
-      Navigator.of(context).pushNamed('/create_profile');
-    } catch (e) {
-      context.read<SignUpBloc>().add(SignUpFailureEvent(error: e.toString()));
+    } else {
+      try {
+        context.read<SignUpBloc>().add(SignUpLoadingEvent());
+        toastInfo(msg: "Registe user Api integration");
+        Navigator.of(context).pushNamed('/sign_up_verification');
+      } catch (e) {
+        context.read<SignUpBloc>().add(SignUpFailureEvent(error: e.toString()));
+      }
     }
   }
 
