@@ -8,6 +8,7 @@ import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/build_textfield.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
+import 'package:afalagi/views/common/widgets/flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
@@ -62,19 +63,23 @@ class _CreateProfileState extends State<CreateProfile> {
                     Center(
                         child: reusableText(
                             "Create Your Initial Profile To Get Started")),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Container(
                       padding: EdgeInsets.only(left: 25.w, right: 25.w),
                       margin: EdgeInsets.only(top: 50.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          reusableText("Upload Photo"),
                           Column(
                             children: [
                               if (state.imagePickState ==
                                   ImagePickState.initial)
                                 buildInitialInput(context),
                               if (state.imagePickState == ImagePickState.picked)
-                                buildImagePreview(state.profileImage!),
+                                buildImagePreview(state.profileImage!, context),
                               if (state.imagePickState == ImagePickState.failed)
                                 buildFailedInput(context, state.errorImage)
                               // the image is as for debugging not actual image
@@ -156,27 +161,98 @@ class _CreateProfileState extends State<CreateProfile> {
 }
 
 Widget buildInitialInput(BuildContext context) {
-  return ElevatedButton(
-    onPressed: () {
-      context.read<SignUpBloc>().add(PickImage());
-    },
-    child: const Text("Pick Image"),
+  return Center(
+    child: Column(
+      children: [
+        Container(
+          color: AppColors.cardColor,
+          child: Center(
+            child: Column(
+              children: [
+                IconButton(
+                  // color: AppColors.accentColor,
+                  style: const ButtonStyle(
+                      backgroundColor:
+                          WidgetStatePropertyAll(AppColors.accentColor)),
+                  onPressed: () {
+                    context.read<SignUpBloc>().add(PickImage());
+                  },
+                  icon: const Icon(
+                    Icons.upload,
+                    color: AppColors.accentColor,
+                    weight: 10,
+                  ),
+                ),
+                const Text(
+                  "Upload a Photo",
+                  style: TextStyle(
+                      color: AppColors.primaryText,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 
-Widget buildImagePreview(File image) {
-  return Column(
-    children: [
-      CircleAvatar(
-        radius: 50,
-        backgroundImage: FileImage(image),
-      ),
-      const SizedBox(
-        height: 20,
-      ),
-      ElevatedButton(
-          onPressed: () {}, child: const Text("Set as Profile Picture"))
-    ],
+Widget buildImagePreview(File image, BuildContext context) {
+  return Center(
+    child: Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.2,
+          child: Center(
+            child: Column(children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: FileImage(image),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: const ButtonStyle(
+                        backgroundColor:
+                            WidgetStatePropertyAll(AppColors.accentColor)),
+                    onPressed: () {
+                      toastInfo(msg: "Profile setted succesfully");
+                    },
+                    child: const Text(
+                      "Set as Profile",
+                      style: TextStyle(
+                        color: AppColors.primaryBackground,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                      style: const ButtonStyle(
+                          backgroundColor:
+                              WidgetStatePropertyAll(AppColors.accentColor)),
+                      onPressed: () {
+                        context.read<SignUpBloc>().add(PickImage());
+                      },
+                      child: const Text(
+                        "Change",
+                        style: TextStyle(
+                          color: AppColors.primaryBackground,
+                        ),
+                      ))
+                ],
+              ),
+            ]),
+          ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -185,10 +261,17 @@ Widget buildFailedInput(BuildContext context, String? errorMsg) {
     children: [
       Text(errorMsg!),
       ElevatedButton(
+        style: const ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(AppColors.accentColor)),
         onPressed: () {
-          // Handle failed input state action
+          context.read<SignUpBloc>().add(PickImage());
         },
-        child: Text('Retry'),
+        child: const Text(
+          'Retry',
+          style: TextStyle(
+            color: AppColors.primaryBackground,
+          ),
+        ),
       ),
     ],
   );
