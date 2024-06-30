@@ -154,7 +154,7 @@ class _WelcomeState extends State<Welcome> {
               child: Text(
                 buttonName,
                 style: TextStyle(
-                  color: AppColors.primaryBackground,
+                  color: AppColors.primarySecondaryText,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.normal,
                 ),

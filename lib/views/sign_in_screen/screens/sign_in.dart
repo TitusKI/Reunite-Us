@@ -87,7 +87,7 @@ class _SignInState extends State<SignIn> {
                   height: 5.0,
                 ),
                 Center(
-                  child: reusableText("Or use your email account to login"),
+                  child: reusableText("Or use your google account to login"),
                 ),
                 buildThirdPartyLogin(context),
                 Row(
