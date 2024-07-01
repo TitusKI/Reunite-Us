@@ -64,10 +64,9 @@ Widget buildThirdPartyLogin(BuildContext context) {
     margin: EdgeInsets.only(top: 10.h, bottom: 5.h),
     padding: EdgeInsets.only(left: 35.w, right: 25.w),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _reusableIcons("google"),
-        _reusableIcons("facebook"),
       ],
     ),
   );

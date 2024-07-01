@@ -1,8 +1,10 @@
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_event.dart';
+import 'package:afalagi/bloc/sign_up/sign_up_state.dart';
 import 'package:afalagi/views/common/widgets/flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 class SignUpController {
@@ -43,35 +45,53 @@ class SignUpController {
 
   void handleProfileBuild() async {
     final state = context.read<SignUpBloc>().state;
+
     String firstName = state.firstName;
     String middleName = state.middleName;
     String lastName = state.lastName;
     String location = state.location;
-    String? phoneNumber = state.phoneNumber;
-    String? dateOfBirth = state.dateOfBirth;
+    PhoneNumber? phoneNumber = state.phoneNumber;
+    // String? phoneNumber = state.phoneNumber;
+    String dateOfBirth = state.dateOfBirth;
+    if (state is GenderSelectionState) {
+      String? gender = state.selectedGender;
+      if (gender.isEmpty) {
+        toastInfo(msg: "gender cannot be empty");
+        return;
+      }
+    }
+
     if (firstName.isEmpty) {
       toastInfo(msg: "first name can not be empty");
       return;
-    } else if (middleName.isEmpty) {
+    }
+    if (middleName.isEmpty) {
       toastInfo(msg: "middle name can not be empty");
       return;
-    } else if (lastName.isEmpty) {
+    }
+    if (lastName.isEmpty) {
       toastInfo(msg: "last name can not be empty");
       return;
-    } else if (location.isEmpty) {
+    }
+    if (location.isEmpty) {
       toastInfo(msg: "location can not be empty");
       return;
-    } else if (phoneNumber.toString().isEmpty) {
+    }
+    if (phoneNumber.toString().isEmpty) {
       toastInfo(msg: "phone number can not be empty");
       return;
-    } else if (dateOfBirth!.isEmpty) {
+    }
+    if (dateOfBirth.isEmpty) {
       toastInfo(msg: "date of birth can not be empty");
       return;
-    } else {
+    }
+    try {
       toastInfo(msg: "Profile Created Succesfully");
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/sign_in', (Route<dynamic> route) => false);
       return;
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

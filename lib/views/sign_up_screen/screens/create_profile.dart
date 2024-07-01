@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({super.key});
@@ -26,22 +27,22 @@ class _CreateProfileState extends State<CreateProfile> {
   final List<String> genders = ["Male", "Female"];
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SignUpBloc, SignUpStates>(
-      listener: (context, state) {
-        if (state.imagePickState == ImagePickState.initial) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.errorImage!,
-              ),
-            ),
-          );
-        }
-      },
+    return BlocBuilder<SignUpBloc, SignUpStates>(
+      // listener: (context, state) {
+      //   if (state.imagePickState == ImagePickState.initial) {
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(
+      //         content: Text(
+      //           state.errorImage!,
+      //         ),
+      //       ),
+      //     );
+      //   }
+      // },
       builder: (context, state) {
         String? selectedGender;
-        String? phoneNumber = state.phoneNumber;
-        String? dateOfBirth = state.dateOfBirth;
+        PhoneNumber? number = state.phoneNumber;
+        String dateOfBirth = state.dateOfBirth;
         TextEditingController _dateController = TextEditingController();
         if (state is GenderSelectionState) {
           selectedGender = state.selectedGender;
@@ -76,7 +77,7 @@ class _CreateProfileState extends State<CreateProfile> {
                           Column(
                             children: [
                               if (state.imagePickState ==
-                                  ImagePickState.initial)
+                                  ImagePickState.initialy)
                                 buildInitialInput(context),
                               if (state.imagePickState == ImagePickState.picked)
                                 buildImagePreview(state.profileImage!, context),
@@ -130,7 +131,7 @@ class _CreateProfileState extends State<CreateProfile> {
                           reusableText("Phone Number"),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.9,
-                            child: phoneNumberField(phoneNumber),
+                            child: phoneNumberField(context, number),
                           ),
                           const SizedBox(
                             height: 10,
@@ -146,6 +147,8 @@ class _CreateProfileState extends State<CreateProfile> {
                     ),
                     buildLogInAndRegButton("Build Profile", true, () {
                       SignUpController(context).handleProfileBuild();
+                      // Navigator.of(context).pushNamedAndRemoveUntil(
+                      //     '/sign_in', (Route<dynamic> route) => false);
                       // Navigator.of(context).pushNamed("SignUp");
                       //SignUpController(context).handleEmailSignUp();
                     })
@@ -171,6 +174,7 @@ Widget buildInitialInput(BuildContext context) {
               children: [
                 IconButton(
                   // color: AppColors.accentColor,
+                  // color: AppColors.accentColor,
                   style: const ButtonStyle(
                       backgroundColor:
                           WidgetStatePropertyAll(AppColors.accentColor)),
@@ -179,7 +183,6 @@ Widget buildInitialInput(BuildContext context) {
                   },
                   icon: const Icon(
                     Icons.upload,
-                    color: AppColors.accentColor,
                     weight: 10,
                   ),
                 ),
@@ -306,7 +309,7 @@ Widget genderTextField(
       keyboardType: TextInputType.none);
 }
 
-Widget phoneNumberField(String? phoneNumber) {
+Widget phoneNumberFiel(String? phoneNumber) {
   return MyTextField(
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       prefixIcon: const Icon(Icons.phone),
@@ -314,6 +317,33 @@ Widget phoneNumberField(String? phoneNumber) {
       hintText: "Enter Phone Number",
       obscureText: false,
       keyboardType: TextInputType.number);
+}
+
+Widget phoneNumberField(BuildContext context, PhoneNumber? phoneNumber) {
+  return InternationalPhoneNumberInput(
+    onInputChanged: (PhoneNumber number) {
+      context.read<SignUpBloc>().add(PhoneNoChanged(number));
+    },
+    onInputValidated: (bool value) {
+      context.read<SignUpBloc>().add(
+            PhoneNoValidationChanged(value),
+          );
+    },
+    selectorConfig: const SelectorConfig(
+      selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+    ),
+    ignoreBlank: false,
+    autoValidateMode: AutovalidateMode.disabled,
+    selectorTextStyle: const TextStyle(
+      color: AppColors.primaryText,
+    ),
+    initialValue: phoneNumber,
+    textFieldController: TextEditingController(),
+    inputBorder: const OutlineInputBorder(),
+    onSaved: (PhoneNumber number) {
+      print("on Saved: $number");
+    },
+  );
 }
 
 Widget dateOfBirthField(BuildContext context,

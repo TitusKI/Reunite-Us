@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
   final ImagePicker _picker = ImagePicker();
-  SignUpBloc() : super(const SignUpStates()) {
+  SignUpBloc() : super(SignUpStates.initial()) {
     on<FirstNameEvent>(_firstNameEvent);
     on<MiddleNameEvent>(_middleNameEvent);
 
@@ -25,10 +25,27 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     on<GenderEvent>((event, emit) {
       emit(GenderSelectionState(event.gender));
     });
-    on<PhoneNumberEvent>(_phoneNumberEvent);
+    on<PhoneNoChanged>(_phoneNumberEvent);
+    on<PhoneNoValidationChanged>(_phoneNoValidationChanged);
     on<DateOfBirthEvent>(_dateOfBirthEvent);
     on<PickImage>(_pickImageEvent);
   }
+  Stream<SignUpStates> _phoneNumberEvent(
+      PhoneNoChanged event, Emitter<SignUpStates> emit) async* {
+    emit(
+      state.copyWith(phoneNumber: event.phoneNumber),
+    );
+  }
+
+  Stream<SignUpStates> _phoneNoValidationChanged(
+      PhoneNoValidationChanged event, Emitter<SignUpStates> emit) async* {
+    emit(
+      state.copyWith(
+        isValid: event.isValid,
+      ),
+    );
+  }
+
   Stream<SignUpStates> _signUpLoadingEvent(
       SignUpLoadingEvent event, Emitter<SignUpStates> emit) async* {
     emit(const SignUpLoadingState());
@@ -102,9 +119,9 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     );
   }
 
-  void _phoneNumberEvent(PhoneNumberEvent event, Emitter<SignUpStates> emit) {
-    emit(state.copyWith(phoneNumber: event.phoneNumber));
-  }
+  // void _phoneNumberEvent(PhoneNumberEvent event, Emitter<SignUpStates> emit) {
+  //   emit(state.copyWith(phoneNumber: event.phoneNumber));
+  // }
 
   void _dateOfBirthEvent(DateOfBirthEvent event, Emitter<SignUpStates> emit) {
     emit(state.copyWith(dateOfBirth: event.dateOfBirth));

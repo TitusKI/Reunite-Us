@@ -1,3 +1,5 @@
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+
 abstract class SignUpEvents {
   const SignUpEvents();
 }
@@ -44,9 +46,18 @@ class GenderEvent extends SignUpEvents {
   // List<Object> get props => [gender];
 }
 
-class PhoneNumberEvent extends SignUpEvents {
-  final String? phoneNumber;
-  const PhoneNumberEvent(this.phoneNumber);
+class PhoneNoChanged extends SignUpEvents {
+  final PhoneNumber phoneNumber;
+  const PhoneNoChanged(this.phoneNumber);
+
+  List<Object> get props => [phoneNumber];
+}
+
+class PhoneNoValidationChanged extends SignUpEvents {
+  final bool isValid;
+  const PhoneNoValidationChanged(this.isValid);
+
+  List<Object> get props => [isValid];
 }
 
 class DateOfBirthEvent extends SignUpEvents {

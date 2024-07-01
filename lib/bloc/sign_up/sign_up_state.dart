@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+
 enum ImagePickState {
-  initial,
+  initialy,
   picked,
   failed,
 }
@@ -14,28 +16,47 @@ class SignUpStates {
   final String email;
   final String password;
   final String repassword;
-  final String? phoneNumber;
-  final String? dateOfBirth;
+  final bool? isValid;
+  final PhoneNumber? phoneNumber;
+  final String dateOfBirth;
   final File? profileImage;
-  final ImagePickState imagePickState;
+  final ImagePickState? imagePickState;
   final String? errorImage;
 
-  const SignUpStates({
-    this.firstName = "",
-    this.middleName = "",
-    this.lastName = "",
-    this.location = "",
-    this.email = "",
-    this.password = "",
-    this.repassword = "",
-    this.phoneNumber = "",
-    this.dateOfBirth,
-    this.profileImage,
-    this.imagePickState = ImagePickState.initial,
-    this.errorImage,
-  });
-  factory SignUpStates.initial() {
-    return const SignUpStates(imagePickState: ImagePickState.initial);
+  const SignUpStates(
+      {this.isValid,
+      this.firstName = "",
+      this.middleName = "",
+      this.lastName = "",
+      this.location = "",
+      this.email = "",
+      this.password = "",
+      this.repassword = "",
+      this.dateOfBirth = '',
+      this.profileImage,
+      this.imagePickState,
+      this.errorImage,
+      this.phoneNumber});
+  SignUpStates.initial()
+      : firstName = "",
+        middleName = "",
+        lastName = "",
+        location = "",
+        email = "",
+        password = "",
+        repassword = "",
+        phoneNumber = PhoneNumber(isoCode: "ET"),
+        isValid = false,
+        imagePickState = ImagePickState.initialy,
+        profileImage = null,
+        errorImage = "retry",
+        dateOfBirth = "";
+
+  factory SignUpStates.initialyy() {
+    return const SignUpStates(
+      imagePickState: ImagePickState.initialy,
+    );
+    // phoneNumber: PhoneNumber(isoCode: "ET"));
   }
   factory SignUpStates.picked(File image) {
     return SignUpStates(
@@ -53,7 +74,8 @@ class SignUpStates {
     String? email,
     String? password,
     String? repassword,
-    String? phoneNumber,
+    PhoneNumber? phoneNumber,
+    bool? isValid,
     String? dateOfBirth,
     File? profileImage,
     ImagePickState? imagePickState,
@@ -72,6 +94,7 @@ class SignUpStates {
       profileImage: profileImage ?? this.profileImage,
       imagePickState: imagePickState ?? this.imagePickState,
       errorImage: errorImage ?? this.errorImage,
+      isValid: isValid ?? this.isValid,
     );
   }
 }
