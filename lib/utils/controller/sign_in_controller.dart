@@ -1,44 +1,38 @@
-import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
-import 'package:afalagi/views/common/widgets/flutter_toast.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:regexpattern/regexpattern.dart';
 
 class SignInController {
-  final BuildContext context;
-  SignInController({required this.context});
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  String? handleSignIn(String fieldName, String value) {
+    switch (fieldName) {
+      case 'email':
+        if (value.isEmpty) {
+          return "Email can't be empty";
+        }
+        if (!value.isEmail()) {
+          return "Please Enter a Valid Email Address";
+        }
+        break;
+      case 'password':
+        if (value.isEmpty) {
+          return "Password can't be empty ";
+        }
+        break;
 
-  void handleSignIn(String type) async {
-    try {
-      if (type == "email") {
-        // Read and access Sign In Bloc here to get the state
-        final state = context.read<SignInBloc>().state;
-        String emailAddress = state.email;
-        String userPassword = state.password;
-        print(emailAddress);
-        if (emailAddress.isEmpty) {
-          toastInfo(msg: "You need to fill email address");
-          return;
-        }
-        if (!emailAddress.isEmail()) {
-          toastInfo(msg: "Please put valid Email address");
-          return;
-        }
-        if (userPassword.isEmpty) {
-          toastInfo(msg: "You need to fill password");
-          return;
-        }
-        try {
-          print("Handle Sign In Api Integration");
-          Navigator.of(context).pushNamed("/home");
-        } catch (e) {
-          print(e.toString());
-        }
-      }
-    } catch (e) {
-      print(e.toString());
+      default:
+        return null;
     }
+    {
+      // try {
+      //   context.read<SignUpBloc>().add(SignUpLoadingEvent());
+      //   toastInfo(msg: "Registe user Api integration");
+      //   Navigator.of(context).pushNamed('/sign_up_verification');
+      // } catch (e) {
+      //   context.read<SignUpBloc>().add(SignUpFailureEvent(error: e.toString()));
+      // }
+    }
+    return null;
   }
 }
