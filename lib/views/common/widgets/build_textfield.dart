@@ -13,7 +13,7 @@ class MyTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final FocusNode? focusNode;
   final String? errorMsg;
-  final String? Function(String?)? onChanged;
+  final void Function(String)? onChanged;
   final Color textColor;
   final Color iconColor;
   final List<TextInputFormatter>? inputFormatters;
@@ -56,10 +56,8 @@ class MyTextField extends StatelessWidget {
             : null,
         prefixIcon: prefixIcon != null
             ? IconTheme(
-                data: IconThemeData(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary), // Set icon color here
+                data: const IconThemeData(
+                    color: AppColors.accentColor), // Set icon color here
                 child: prefixIcon!,
               )
             : null,
