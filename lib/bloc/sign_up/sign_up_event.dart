@@ -60,6 +60,24 @@ class PhoneNoValidationChanged extends SignUpEvents {
   List<Object> get props => [isValid];
 }
 
+class CountryChanged extends SignUpEvents {
+  final String country;
+  const CountryChanged(this.country);
+  List<Object> get props => [country];
+}
+
+class StateChanged extends SignUpEvents {
+  final String? state;
+  const StateChanged(this.state);
+  List<Object> get props => [state!];
+}
+
+class CityChanged extends SignUpEvents {
+  final String? city;
+  const CityChanged(this.city);
+  List<Object> get props => [city!];
+}
+
 class DateOfBirthEvent extends SignUpEvents {
   final String? dateOfBirth;
   const DateOfBirthEvent(this.dateOfBirth);
@@ -75,3 +93,5 @@ class SignUpFailureEvent extends SignUpEvents {
   final String error;
   const SignUpFailureEvent({required this.error});
 }
+
+class SignUpReset extends SignUpEvents {}

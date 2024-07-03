@@ -29,7 +29,43 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     on<PhoneNoValidationChanged>(_phoneNoValidationChanged);
     on<DateOfBirthEvent>(_dateOfBirthEvent);
     on<PickImage>(_pickImageEvent);
+    on<CountryChanged>(_countryChanged);
+    on<StateChanged>(_stateChanged);
+    on<CityChanged>(_cityChanged);
+    on<SignUpReset>(
+      (event, emit) => emit(SignUpStates.initial()),
+    );
   }
+  Stream<SignUpStates> _countryChanged(
+      CountryChanged event, Emitter<SignUpStates> emit) async* {
+    emit(
+      state.copyWith(
+        country: event.country,
+        state: "",
+        city: "",
+      ),
+    );
+  }
+
+  Stream<SignUpStates> _stateChanged(
+      StateChanged event, Emitter<SignUpStates> emit) async* {
+    emit(
+      state.copyWith(
+        state: event.state,
+        city: "",
+      ),
+    );
+  }
+
+  Stream<SignUpStates> _cityChanged(
+      CityChanged event, Emitter<SignUpStates> emit) async* {
+    emit(
+      state.copyWith(
+        city: event.city,
+      ),
+    );
+  }
+
   Stream<SignUpStates> _phoneNumberEvent(
       PhoneNoChanged event, Emitter<SignUpStates> emit) async* {
     emit(
@@ -48,12 +84,10 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
 
   Stream<SignUpStates> _signUpLoadingEvent(
       SignUpLoadingEvent event, Emitter<SignUpStates> emit) async* {
-    emit(const SignUpLoadingState());
-    try {
-      const CircularProgressIndicator();
-    } catch (e) {
-      print(e.toString());
-    }
+    emit(state.copyWith(isSignUpLoading: true));
+    await Future.delayed(Duration(seconds: 2));
+    const CircularProgressIndicator();
+    emit(state.copyWith(isSignUpLoading: false));
   }
 
   Stream<SignUpStates> _signUpSuccessEvent(

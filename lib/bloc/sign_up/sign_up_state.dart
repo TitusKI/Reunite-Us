@@ -22,21 +22,30 @@ class SignUpStates {
   final File? profileImage;
   final ImagePickState? imagePickState;
   final String? errorImage;
+  final String country;
+  final String state;
+  final String city;
+  final bool isSignUpLoading;
 
-  const SignUpStates(
-      {this.isValid,
-      this.firstName = "",
-      this.middleName = "",
-      this.lastName = "",
-      this.location = "",
-      this.email = "",
-      this.password = "",
-      this.repassword = "",
-      this.dateOfBirth = '',
-      this.profileImage,
-      this.imagePickState,
-      this.errorImage,
-      this.phoneNumber});
+  const SignUpStates({
+    this.isValid,
+    this.firstName = "",
+    this.middleName = "",
+    this.lastName = "",
+    this.location = "",
+    this.email = "",
+    this.password = "",
+    this.repassword = "",
+    this.dateOfBirth = '',
+    this.profileImage,
+    this.imagePickState,
+    this.errorImage,
+    this.phoneNumber,
+    this.country = "",
+    this.state = "",
+    this.city = "",
+    this.isSignUpLoading = false,
+  });
   SignUpStates.initial()
       : firstName = "",
         middleName = "",
@@ -50,7 +59,11 @@ class SignUpStates {
         imagePickState = ImagePickState.initialy,
         profileImage = null,
         errorImage = "retry",
-        dateOfBirth = "";
+        dateOfBirth = "",
+        country = "",
+        state = "",
+        city = "",
+        isSignUpLoading = false;
 
   factory SignUpStates.initialyy() {
     return const SignUpStates(
@@ -80,22 +93,29 @@ class SignUpStates {
     File? profileImage,
     ImagePickState? imagePickState,
     String? errorImage,
+    String? country,
+    String? state,
+    String? city,
+    bool? isSignUpLoading,
   }) {
     return SignUpStates(
-      firstName: firstName ?? this.firstName,
-      middleName: middleName ?? this.middleName,
-      lastName: lastName ?? this.lastName,
-      location: location ?? this.location,
-      email: email ?? this.email,
-      password: password ?? this.password,
-      repassword: repassword ?? this.repassword,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      profileImage: profileImage ?? this.profileImage,
-      imagePickState: imagePickState ?? this.imagePickState,
-      errorImage: errorImage ?? this.errorImage,
-      isValid: isValid ?? this.isValid,
-    );
+        firstName: firstName ?? this.firstName,
+        middleName: middleName ?? this.middleName,
+        lastName: lastName ?? this.lastName,
+        location: location ?? this.location,
+        email: email ?? this.email,
+        password: password ?? this.password,
+        repassword: repassword ?? this.repassword,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        profileImage: profileImage ?? this.profileImage,
+        imagePickState: imagePickState ?? this.imagePickState,
+        errorImage: errorImage ?? this.errorImage,
+        isValid: isValid ?? this.isValid,
+        country: country ?? this.country,
+        state: state ?? this.state,
+        city: city ?? this.city,
+        isSignUpLoading: isSignUpLoading ?? this.isSignUpLoading);
   }
 }
 
@@ -116,11 +136,6 @@ class GenderSelectionState extends SignUpStates {
 class SignUpSuccessState extends SignUpStates {
   final bool isSignUpSuccess;
   const SignUpSuccessState({this.isSignUpSuccess = false});
-}
-
-class SignUpLoadingState extends SignUpStates {
-  final bool isSignUpLoading;
-  const SignUpLoadingState({this.isSignUpLoading = false});
 }
 
 class SignUpFailurState extends SignUpStates {
