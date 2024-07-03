@@ -1,9 +1,12 @@
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_event.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_state.dart';
+
 import 'package:afalagi/utils/controller/sign_in_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
+import 'package:afalagi/views/common/widgets/build_textfield.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
+import 'package:afalagi/views/sign_up_screen/widgets/sign_up_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +20,8 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final _formKey = GlobalKey<FormState>();
+  SignInController _signInController = SignInController();
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -30,95 +35,150 @@ class _SignInState extends State<SignIn> {
           backgroundColor: AppColors.primaryBackground,
           appBar: buildAppBarLarge("Log In"),
           body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 60.h),
-                  margin: EdgeInsets.only(top: 50.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding:
+                        EdgeInsets.only(left: 25.w, right: 25.w, top: 60.h),
+                    margin: EdgeInsets.only(top: 50.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        reusableText("Email"),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        formField(
+                            fieldName: "email",
+                            value: state.email,
+                            controller: _signInController.emailController,
+                            textType: "email",
+                            hintText: "Enter your email address",
+                            prefixIcon: const Icon(Icons.email),
+                            inputType: TextInputType.emailAddress,
+                            func: (value) {
+                              context
+                                  .read<SignInBloc>()
+                                  .add(EmailEvent(email: value));
+                            },
+                            formType: 'sign in'),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        reusableText("Password"),
+                        formField(
+                          fieldName: "password",
+                          value: state.password,
+                          controller: _signInController.passwordController,
+                          textType: "password",
+                          hintText: "Enter your password",
+                          prefixIcon: const Icon(Icons.lock),
+                          inputType: TextInputType.visiblePassword,
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              context
+                                  .read<SignInBloc>()
+                                  .add(TogglePasswordVisibility());
+
+                              // context
+                              //     .read<SignInBloc>()
+                              //     .add(TogglePasswordVisibility());
+                            },
+                            icon: Icon(state.iconPassword),
+                            color: AppColors.accentColor,
+                          ),
+                          func: (value) {
+                            context
+                                .read<SignInBloc>()
+                                .add(PasswordEvent(password: value));
+                          },
+                          formType: 'sign_in',
+                          obscureText: state.obscurePassword,
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {},
+                                icon:
+                                    const Icon(Icons.check_box_outline_blank)),
+                            const Text(
+                              "Remember Password",
+                              style: TextStyle(color: AppColors.primaryText),
+                            ),
+                            const SizedBox(
+                              width: 35,
+                            ),
+                            forgotPassword(() {
+                              Navigator.of(context)
+                                  .pushNamed("/reset_password");
+                            }),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+
+                  buildLogInAndRegButton("Log In", true, () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.of(context).pushNamed('/home');
+                    }
+                  }),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  Center(
+                    child: reusableText("Or use your google account to login"),
+                  ),
+                  buildThirdPartyLogin(context),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      reusableText("Email"),
-                      SizedBox(
-                        height: 5.h,
+                      const Text(
+                        "Don't have an account?",
+                        style: TextStyle(color: AppColors.primaryText),
                       ),
-                      buildTextField(
-                          "Enter your email address", "email", "user", (value) {
-                        context
-                            .read<SignInBloc>()
-                            .add(EmailEvent(email: value));
-                      }),
-                      reusableText("Password"),
-                      SizedBox(
-                        height: 5.h,
+                      const SizedBox(
+                        width: 35,
                       ),
-                      buildTextField("Enter your password", "password", "lock",
-                          (value) {
-                        context
-                            .read<SignInBloc>()
-                            .add(PasswordEvent(password: value));
-                      }),
-                      Row(
-                        children: [
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.check_box_outline_blank)),
-                          const Text(
-                            "Remember Password",
-                            style: TextStyle(color: AppColors.primaryText),
-                          ),
-                          const SizedBox(
-                            width: 35,
-                          ),
-                          forgotPassword(() {
-                            Navigator.of(context).pushNamed("/reset_password");
-                          }),
-                        ],
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed("/sign_up");
+                        },
+                        child: const Text(
+                          "sign up",
+                          style: TextStyle(color: AppColors.accentColor),
+                        ),
                       )
                     ],
-                  ),
-                ),
-
-                buildLogInAndRegButton("Log In", true, () {
-                  SignInController(context: context).handleSignIn("email");
-                }),
-                const SizedBox(
-                  height: 5.0,
-                ),
-                Center(
-                  child: reusableText("Or use your google account to login"),
-                ),
-                buildThirdPartyLogin(context),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have an account?",
-                      style: TextStyle(color: AppColors.primaryText),
-                    ),
-                    const SizedBox(
-                      width: 35,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed("/sign_up");
-                      },
-                      child: const Text(
-                        "sign up",
-                        style: TextStyle(color: AppColors.accentColor),
-                      ),
-                    )
-                  ],
-                )
-                // buildLogInAndRegButton("Sign Up", "register", () {
-                //   Navigator.of(context).pushNamed("/sign_up");
-                // })
-              ],
+                  )
+                  // buildLogInAndRegButton("Sign Up", "register", () {
+                  //   Navigator.of(context).pushNamed("/sign_up");
+                  // })
+                ],
+              ),
             ),
           ),
         ),
       );
     });
   }
+}
+
+Widget dateOfBirthField(BuildContext context,
+    TextEditingController emailController, String? email) {
+  return MyTextField(
+      prefixIcon: const Icon(Icons.email),
+      controller: TextEditingController(text: email),
+      validator: (validate) {
+        if (validate!.isEmpty) {
+          return "Please fill in this field";
+        }
+        return null;
+      },
+      hintText: "DD/MM/YYYY",
+      obscureText: false,
+      keyboardType: TextInputType.datetime);
 }
