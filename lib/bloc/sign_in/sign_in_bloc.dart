@@ -1,5 +1,7 @@
 import 'package:afalagi/bloc/sign_in/sign_in_event.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_state.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
@@ -15,7 +17,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 //They do the same as the above one
     on<EmailEvent>(_emailEvent);
     on<PasswordEvent>(_passwordEvent);
+    on<TogglePasswordVisibility>(_togglePasswordVisibility);
   }
+
   void _emailEvent(EmailEvent event, Emitter<SignInState> emit) {
     // print("My Email Is: ${event.email}");
 
@@ -25,5 +29,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   void _passwordEvent(PasswordEvent event, Emitter<SignInState> emit) {
     // print("My Password is:${event.password}");
     emit(state.copyWith(password: event.password));
+  }
+
+  void _togglePasswordVisibility(
+      TogglePasswordVisibility event, Emitter<SignInState> emit) {
+    emit(state.copyWith(
+        obscurePassword: !state.obscurePassword,
+        iconPassword: state.obscurePassword
+            ? CupertinoIcons.eye_slash_fill
+            : Icons.remove_red_eye_rounded));
   }
 }
