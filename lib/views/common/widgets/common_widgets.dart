@@ -126,7 +126,7 @@ Widget buildTextField(String hintText, String textType, String iconName,
         SizedBox(
           width: 270.w,
           height: 50.h,
-          child: TextField(
+          child: TextFormField(
             // sending the value user types on the textfield to the func
             onChanged: (value) => func!(value),
             keyboardType: TextInputType.multiline,
