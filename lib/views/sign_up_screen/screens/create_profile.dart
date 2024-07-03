@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_state.dart';
-import 'package:afalagi/utils/controller/sign_up_controller.dart';
 
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/build_textfield.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
 import 'package:afalagi/views/common/widgets/flutter_toast.dart';
+import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
@@ -25,6 +25,7 @@ class CreateProfile extends StatefulWidget {
 class _CreateProfileState extends State<CreateProfile> {
   late final File image;
   final List<String> genders = ["Male", "Female"];
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SignUpBloc, SignUpStates>(
@@ -48,111 +49,120 @@ class _CreateProfileState extends State<CreateProfile> {
           selectedGender = state.selectedGender;
         }
 
-        return Container(
-          color: AppColors.primaryBackground,
-          child: SafeArea(
-            child: Scaffold(
-              backgroundColor: AppColors.primaryBackground,
-              appBar: buildAppBarLarge("Create Your Profile"),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Center(
-                        child: reusableText(
-                            "Create Your Initial Profile To Get Started")),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 25.w, right: 25.w),
-                      margin: EdgeInsets.only(top: 50.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          reusableText("Upload Photo"),
-                          Column(
-                            children: [
-                              if (state.imagePickState ==
-                                  ImagePickState.initialy)
-                                buildInitialInput(context),
-                              if (state.imagePickState == ImagePickState.picked)
-                                buildImagePreview(state.profileImage!, context),
-                              if (state.imagePickState == ImagePickState.failed)
-                                buildFailedInput(context, state.errorImage)
-                              // the image is as for debugging not actual image
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          reusableText("First Name"),
-                          buildTextField(
-                              "Enter your first name", "name", "user", (value) {
-                            context
-                                .read<SignUpBloc>()
-                                .add(FirstNameEvent(value));
-                          }),
-                          reusableText("Middle Name"),
-                          buildTextField(
-                              "Enter your middle name", "name", "user",
-                              (value) {
-                            context
-                                .read<SignUpBloc>()
-                                .add(MiddleNameEvent(value));
-                          }),
-                          reusableText("Last Name"),
-                          buildTextField("Enter your last name", "name", "user",
-                              (value) {
-                            context
-                                .read<SignUpBloc>()
-                                .add(LastNameEvent(value));
-                          }),
-                          reusableText("Location"),
-                          buildTextField("city, State", "name", "user",
-                              (value) {
-                            context
-                                .read<SignUpBloc>()
-                                .add(LocationEvent(value));
-                          }),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          reusableText("Gender"),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: genderTextField(
-                                selectedGender, genders, context),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          reusableText("Phone Number"),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: phoneNumberField(context, number),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          reusableText("Date Of Birth"),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: dateOfBirthField(
-                                context, _dateController, dateOfBirth),
-                          ),
-                        ],
+        return Form(
+          key: _formKey,
+          child: Container(
+            color: AppColors.primaryBackground,
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: AppColors.primaryBackground,
+                appBar: buildAppBarLarge("Create Your Profile"),
+                body: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
                       ),
-                    ),
-                    buildLogInAndRegButton("Build Profile", true, () {
-                      SignUpController(context).handleProfileBuild();
-                      // Navigator.of(context).pushNamedAndRemoveUntil(
-                      //     '/sign_in', (Route<dynamic> route) => false);
-                      // Navigator.of(context).pushNamed("SignUp");
-                      //SignUpController(context).handleEmailSignUp();
-                    })
-                  ],
+                      Center(
+                          child: reusableText(
+                              "Create Your Initial Profile To Get Started")),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 25.w, right: 25.w),
+                        margin: EdgeInsets.only(top: 50.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            reusableText("Upload Photo"),
+                            Column(
+                              children: [
+                                if (state.imagePickState ==
+                                    ImagePickState.initialy)
+                                  buildInitialInput(context),
+                                if (state.imagePickState ==
+                                    ImagePickState.picked)
+                                  buildImagePreview(
+                                      state.profileImage!, context),
+                                if (state.imagePickState ==
+                                    ImagePickState.failed)
+                                  buildFailedInput(context, state.errorImage)
+                                // the image is as for debugging not actual image
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            reusableText("First Name"),
+                            // buildTextField(
+                            //     "Enter your first name", "name", "user",
+                            //     (value) {
+                            //   context
+                            //       .read<SignUpBloc>()
+                            //       .add(FirstNameEvent(value!));
+                            //   return null;
+                            // }),
+                            reusableText("Middle Name"),
+                            // buildTextField(
+                            //     "Enter your middle name", "name", "user",
+                            //     (value) {
+                            //   context
+                            //       .read<SignUpBloc>()
+                            //       .add(MiddleNameEvent(value!));
+                            //   return value;
+                            // }),
+                            reusableText("Last Name"),
+                            // buildTextField(
+                            //     "Enter your last name", "name", "user",
+                            //     (value) {
+                            //   context
+                            //       .read<SignUpBloc>()
+                            //       .add(LastNameEvent(value!));
+                            //   return value;
+                            // }),
+                            reusableText("Location"),
+                            cscPicker(context),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            reusableText("Gender"),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: genderTextField(
+                                  selectedGender, genders, context),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            reusableText("Phone Number"),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: phoneNumberField(context, number),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            reusableText("Date Of Birth"),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: dateOfBirthField(
+                                  context, _dateController, dateOfBirth),
+                            ),
+                          ],
+                        ),
+                      ),
+                      buildLogInAndRegButton("Build Profile", true, () {
+                        if (_formKey.currentState!.validate()) {
+                          // SignUpController(context).handleProfileBuild();
+                        }
+
+                        // Navigator.of(context).pushNamedAndRemoveUntil(
+                        //     '/sign_in', (Route<dynamic> route) => false);
+                        // Navigator.of(context).pushNamed("SignUp");
+                        //SignUpController(context).handleEmailSignUp();
+                      })
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -161,6 +171,54 @@ class _CreateProfileState extends State<CreateProfile> {
       },
     );
   }
+}
+
+CSCPicker cscPicker(BuildContext context) {
+  return CSCPicker(
+    showStates: true,
+    showCities: true,
+    flagState: CountryFlag.ENABLE,
+    dropdownDecoration: BoxDecoration(
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      color: Colors.white,
+      border: Border.all(color: Colors.grey.shade300, width: 1),
+    ),
+    disabledDropdownDecoration: BoxDecoration(
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      color: Colors.grey.shade300,
+      border: Border.all(color: Colors.grey.shade300, width: 1),
+    ),
+    selectedItemStyle: const TextStyle(
+      color: Colors.black,
+      fontSize: 14,
+    ),
+    dropdownHeadingStyle: const TextStyle(
+      color: Colors.black,
+      fontSize: 17,
+      fontWeight: FontWeight.bold,
+    ),
+    dropdownItemStyle: const TextStyle(
+      color: Colors.black,
+      fontSize: 14,
+    ),
+    countrySearchPlaceholder: "Search Country",
+    stateSearchPlaceholder: "Search State",
+    citySearchPlaceholder: "Search City",
+    countryDropdownLabel: "Country",
+    stateDropdownLabel: "State",
+    cityDropdownLabel: "City",
+    onCountryChanged: (value) {
+      context.read<SignUpBloc>().add(
+            CountryChanged(value),
+          );
+    },
+    onStateChanged: (value) {
+      context.read<SignUpBloc>().add(StateChanged(value));
+    },
+    onCityChanged: (value) {
+      context.read<SignUpBloc>().add(CityChanged(value));
+    },
+  );
 }
 
 Widget buildInitialInput(BuildContext context) {
@@ -366,6 +424,12 @@ Widget dateOfBirthField(BuildContext context,
           },
           icon: const Icon(Icons.calendar_today)),
       controller: TextEditingController(text: dateOfBirth),
+      validator: (validate) {
+        if (validate!.isEmpty) {
+          return "Please fill in this field";
+        }
+        return null;
+      },
       hintText: "DD/MM/YYYY",
       obscureText: false,
       keyboardType: TextInputType.datetime);
