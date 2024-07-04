@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+part of 'sign_up_bloc.dart';
 
 enum ImagePickState {
   initialy,
@@ -97,25 +95,28 @@ class SignUpStates {
     String? state,
     String? city,
     bool? isSignUpLoading,
+    bool? obscurePassword,
+    IconData? iconPassword,
   }) {
     return SignUpStates(
-        firstName: firstName ?? this.firstName,
-        middleName: middleName ?? this.middleName,
-        lastName: lastName ?? this.lastName,
-        location: location ?? this.location,
-        email: email ?? this.email,
-        password: password ?? this.password,
-        repassword: repassword ?? this.repassword,
-        phoneNumber: phoneNumber ?? this.phoneNumber,
-        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-        profileImage: profileImage ?? this.profileImage,
-        imagePickState: imagePickState ?? this.imagePickState,
-        errorImage: errorImage ?? this.errorImage,
-        isValid: isValid ?? this.isValid,
-        country: country ?? this.country,
-        state: state ?? this.state,
-        city: city ?? this.city,
-        isSignUpLoading: isSignUpLoading ?? this.isSignUpLoading);
+      firstName: firstName ?? this.firstName,
+      middleName: middleName ?? this.middleName,
+      lastName: lastName ?? this.lastName,
+      location: location ?? this.location,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      repassword: repassword ?? this.repassword,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      profileImage: profileImage ?? this.profileImage,
+      imagePickState: imagePickState ?? this.imagePickState,
+      errorImage: errorImage ?? this.errorImage,
+      isValid: isValid ?? this.isValid,
+      country: country ?? this.country,
+      state: state ?? this.state,
+      city: city ?? this.city,
+      isSignUpLoading: isSignUpLoading ?? this.isSignUpLoading,
+    );
   }
 }
 

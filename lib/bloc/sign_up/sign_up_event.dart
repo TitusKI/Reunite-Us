@@ -1,4 +1,4 @@
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+part of "sign_up_bloc.dart";
 
 abstract class SignUpEvents {
   const SignUpEvents();

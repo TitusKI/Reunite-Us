@@ -1,10 +1,12 @@
 import 'dart:io';
 
-import 'package:afalagi/bloc/sign_up/sign_up_event.dart';
-import 'package:afalagi/bloc/sign_up/sign_up_state.dart';
 import 'package:flutter/material.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+part 'sign_up_event.dart';
+part "sign_up_state.dart";
 
 class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
   final ImagePicker _picker = ImagePicker();
@@ -32,6 +34,7 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     on<CountryChanged>(_countryChanged);
     on<StateChanged>(_stateChanged);
     on<CityChanged>(_cityChanged);
+
     on<SignUpReset>(
       (event, emit) => emit(SignUpStates.initial()),
     );
