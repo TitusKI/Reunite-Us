@@ -25,7 +25,7 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     on<SignUpSuccessEvent>(_signUpSuccessEvent);
     on<SignUpFailureEvent>(_signUpFailureEvent);
     on<GenderEvent>((event, emit) {
-      emit(GenderSelectionState(event.gender));
+      emit(state.copyWith(selectedGender: event.gender));
     });
     on<PhoneNoChanged>(_phoneNumberEvent);
     on<PhoneNoValidationChanged>(_phoneNoValidationChanged);
@@ -48,6 +48,7 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
         city: "",
       ),
     );
+    print("My Country: ${state.country}");
   }
 
   Stream<SignUpStates> _stateChanged(

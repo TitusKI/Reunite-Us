@@ -46,47 +46,15 @@ class SignUpController {
     return null;
   }
 
-  String? validateLocation(BuildContext context) {
-    final state = context.read<SignUpBloc>().state;
-
-    if (state.country.isEmpty) {
-      return "Country is required";
-    }
-    if (state.state.isEmpty) {
-      return "State is required";
-    }
-    if (state.city.isEmpty) {
-      return "City is required";
-    }
-    return null;
-  }
-
-  String? validatePhoneNumber(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Phone number cannot be empty';
-    }
-
-    if (!value.isPhone()) {
-      return 'please Enter a valid phone number';
-    }
-    return null;
-  }
-
   String? handleProfileBuild(
       BuildContext context, String fieldName, String value) {
-    // ignore: unused_local_variable
-    final SignUpStates state = context.read<SignUpBloc>().state;
-
-    // String firstName = state.firstName;
-    // String middleName = state.middleName;
-    // String lastName = state.lastName;
     switch (fieldName) {
       case 'firstName':
         if (value.isEmpty) {
           return "First name can not be empty";
         }
         if (!value.isAlphabet()) {
-          return "Name can not be number";
+          return "Name only in letters allowed";
         }
         break;
       case 'middleName':
@@ -94,7 +62,7 @@ class SignUpController {
           return "Middle name can not be empty";
         }
         if (!value.isAlphabet()) {
-          return " Name can not be number";
+          return "Name only in letters allowed";
         }
         break;
       case 'lastName':
@@ -102,7 +70,7 @@ class SignUpController {
           return "Last name can not be empty";
         }
         if (!value.isAlphabet()) {
-          return " Name can not be number";
+          return "Name only in letters allowed";
         }
         break;
 

@@ -24,6 +24,7 @@ class SignUpStates {
   final String state;
   final String city;
   final bool isSignUpLoading;
+  final String selectedGender;
 
   const SignUpStates({
     this.isValid,
@@ -43,6 +44,7 @@ class SignUpStates {
     this.state = "",
     this.city = "",
     this.isSignUpLoading = false,
+    this.selectedGender = "",
   });
   SignUpStates.initial()
       : firstName = "",
@@ -61,6 +63,7 @@ class SignUpStates {
         country = "",
         state = "",
         city = "",
+        selectedGender = "",
         isSignUpLoading = false;
 
   factory SignUpStates.initialyy() {
@@ -97,6 +100,7 @@ class SignUpStates {
     bool? isSignUpLoading,
     bool? obscurePassword,
     IconData? iconPassword,
+    String? selectedGender,
   }) {
     return SignUpStates(
       firstName: firstName ?? this.firstName,
@@ -116,6 +120,7 @@ class SignUpStates {
       state: state ?? this.state,
       city: city ?? this.city,
       isSignUpLoading: isSignUpLoading ?? this.isSignUpLoading,
+      selectedGender: selectedGender ?? this.selectedGender,
     );
   }
 }
@@ -125,14 +130,6 @@ SignUpStates signUpStates = SignUpStates();
 final signUpstates = signUpStates.copyWith(
   imagePickState: ImagePickState.picked,
 );
-
-class GenderInitial extends SignUpStates {}
-
-class GenderSelectionState extends SignUpStates {
-  final String selectedGender;
-  const GenderSelectionState(this.selectedGender);
-  List<Object> get props => [selectedGender];
-}
 
 class SignUpSuccessState extends SignUpStates {
   final bool isSignUpSuccess;
