@@ -1,6 +1,4 @@
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
-import 'package:afalagi/bloc/sign_in/sign_in_event.dart';
-import 'package:afalagi/bloc/sign_in/sign_in_state.dart';
 
 import 'package:afalagi/utils/controller/sign_in_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
@@ -52,19 +50,21 @@ class _SignInState extends State<SignIn> {
                           height: 5.h,
                         ),
                         formField(
-                            fieldName: "email",
-                            value: state.email,
-                            controller: _signInController.emailController,
-                            textType: "email",
-                            hintText: "Enter your email address",
-                            prefixIcon: const Icon(Icons.email),
-                            inputType: TextInputType.emailAddress,
-                            func: (value) {
-                              context
-                                  .read<SignInBloc>()
-                                  .add(EmailEvent(email: value));
-                            },
-                            formType: 'sign in'),
+                          fieldName: "email",
+                          value: state.email,
+                          controller: _signInController.emailController,
+                          textType: "email",
+                          hintText: "Enter your email address",
+                          prefixIcon: const Icon(Icons.email),
+                          inputType: TextInputType.emailAddress,
+                          func: (value) {
+                            context
+                                .read<SignInBloc>()
+                                .add(EmailEvent(email: value));
+                          },
+                          formType: 'sign in',
+                          context: context,
+                        ),
                         SizedBox(
                           height: 5.h,
                         ),
@@ -77,26 +77,13 @@ class _SignInState extends State<SignIn> {
                           hintText: "Enter your password",
                           prefixIcon: const Icon(Icons.lock),
                           inputType: TextInputType.visiblePassword,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              context
-                                  .read<SignInBloc>()
-                                  .add(TogglePasswordVisibility());
-
-                              // context
-                              //     .read<SignInBloc>()
-                              //     .add(TogglePasswordVisibility());
-                            },
-                            icon: Icon(state.iconPassword),
-                            color: AppColors.accentColor,
-                          ),
                           func: (value) {
                             context
                                 .read<SignInBloc>()
                                 .add(PasswordEvent(password: value));
                           },
-                          formType: 'sign_in',
-                          obscureText: state.obscurePassword,
+                          formType: 'sign in',
+                          context: context,
                         ),
                         Row(
                           children: [

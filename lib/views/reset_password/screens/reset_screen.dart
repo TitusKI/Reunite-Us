@@ -1,7 +1,9 @@
 import 'package:afalagi/bloc/reset_password/reset_password_bloc.dart';
 import 'package:afalagi/utils/controller/reset_password_controller.dart';
+
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
+import 'package:afalagi/views/sign_up_screen/widgets/sign_up_widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +17,10 @@ class ResetScreen extends StatefulWidget {
 }
 
 class _ResetScreenState extends State<ResetScreen> {
+  final _formKey = GlobalKey<FormState>();
   late ResetPasswordBloc _resetPasswordBloc;
+  final ResetPasswordController _resetPasswordController =
+      ResetPasswordController();
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -31,61 +36,77 @@ class _ResetScreenState extends State<ResetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: buildAppBarLarge("Sign In Help"),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 25.h,
+    return Scaffold(
+      appBar: buildAppBarLarge("Sign In Help"),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 25.h,
+              ),
+              Center(
+                child: Text(
+                  "Forgot Password",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primaryText,
+                      fontSize: 25.sp),
                 ),
-                Center(
-                  child: Text(
-                    "Forgot Password",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.primaryText,
-                        fontSize: 25.sp),
-                  ),
+              ),
+              SizedBox(
+                height: 15.h,
+              ),
+              Center(
+                child: reusableText(
+                  "Enter your email address below\n and we'll send you a code to reset",
                 ),
-                SizedBox(
-                  height: 15.h,
+              ),
+              SizedBox(
+                height: 15.h,
+              ),
+              BlocBuilder<ResetPasswordBloc, ResetPasswordState>(
+                builder: (context, state) {
+                  return formField(
+                    formType: "reset",
+                    func: (value) {
+                      context
+                          .read<ResetPasswordBloc>()
+                          .add(EmailEvent(email: value));
+                    },
+                    value: state.email,
+                    controller: _resetPasswordController.emailController,
+                    textType: "email",
+                    inputType: TextInputType.visiblePassword,
+                    hintText: "Enter your email",
+                    prefixIcon: const Icon(Icons.email),
+                    fieldName: "email",
+                    context: context,
+                  );
+                },
+              ),
+              buildLogInAndRegButton("Get Code", true, () {
+                if (_formKey.currentState!.validate()) {
+                  Navigator.of(context).pushNamed("/reset_verification");
+                } // ResetPasswordController().handleEmailReset();
+              }),
+              const SizedBox(
+                height: 14,
+              ),
+              const Center(
+                child: Text(
+                  'Can\'t reset your password?',
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: AppColors.primaryText,
+                      fontWeight: FontWeight.w600),
                 ),
-                Center(
-                  child: reusableText(
-                    "Enter your email address below\n and we'll send you a code to reset",
-                  ),
-                ),
-                SizedBox(
-                  height: 15.h,
-                ),
-                buildTextField("email", "Reset Password", "user", (value) {
-                  context.read<ResetPasswordBloc>().add(
-                        EmailEvent(email: value),
-                      );
-                }),
-                buildLogInAndRegButton("Get Code", true, () {
-                  ResetPasswordController(context).handleEmailReset();
-                }),
-                const SizedBox(
-                  height: 14,
-                ),
-                const Center(
-                  child: Text(
-                    'Can\'t reset your password?',
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: AppColors.primaryText,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
