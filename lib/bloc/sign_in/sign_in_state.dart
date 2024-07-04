@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of "sign_in_bloc.dart";
 
 class SignInState {
   final String email;
