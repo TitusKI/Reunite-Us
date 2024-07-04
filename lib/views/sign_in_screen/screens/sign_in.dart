@@ -1,7 +1,10 @@
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
 
+import 'package:afalagi/main/global.dart';
+
 import 'package:afalagi/utils/controller/sign_in_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
+import 'package:afalagi/views/common/values/constant.dart';
 import 'package:afalagi/views/common/widgets/build_textfield.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
 import 'package:afalagi/views/sign_up_screen/widgets/sign_up_widgets.dart';
@@ -110,7 +113,12 @@ class _SignInState extends State<SignIn> {
 
                   buildLogInAndRegButton("Log In", true, () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.of(context).pushNamed('/home');
+                      Global.storageService
+                          .setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
+                      // Navigator.of(context).pushNamedAndRemoveUntil(
+                      //     AppRoutes.MAIN, (Route<dynamic> route) => false);
+                      // Navigator.of(context).pushNamed(AppRoutes.Main);
+                      // Navigator.of(context).pushNamed('/home');
                     }
                   }),
                   const SizedBox(

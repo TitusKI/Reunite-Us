@@ -21,9 +21,13 @@ class StorageService {
   }
 
   bool getIsLoggedIn() {
-    // if it's null user never logged in
-    return _prefs.getString(AppConstant.STORAGE_USER_TOKEN_KEY) == null
-        ? false
-        : true;
+    return _prefs.getBool(AppConstant.STORAGE_USER_TOKEN_KEY) ?? false;
   }
+
+  // bool getIsLoggedIn() {
+  //   // if it's null user never logged in
+  //   return _prefs.getString(AppConstant.STORAGE_USER_TOKEN_KEY) == null
+  //       ? false
+  //       : true;
+  // }
 }

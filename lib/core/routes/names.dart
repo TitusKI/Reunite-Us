@@ -4,7 +4,7 @@ class AppRoutes {
   // welcome page on boarding page
   static const WELCOME = '/';
   // application page
-  // static const APPLICATION = '/application';
+  static const MAIN = '/main';
   // sign in page
   static const SIGN_IN = '/sign_in';
 // sign up page
@@ -21,4 +21,12 @@ class AppRoutes {
   static const RESET_SUCCESSFUL = "/reset_successful";
   // home page
   static const HOME = '/home';
+  // search page
+  static const SEARCH = '/search';
+  // report page
+  static const REPORT = '/report';
+  // chat page
+  static const CHAT = '/chat';
+  // succes stories page
+  static const FOUND = '/found';
 }

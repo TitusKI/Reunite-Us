@@ -1,4 +1,5 @@
 // The UNIFICATION Of BlocProvider and routes and pages
+import 'package:afalagi/bloc/bottom_navigation/bottom_navigation_bloc.dart';
 import 'package:afalagi/bloc/reset_password/reset_password_bloc.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
@@ -7,10 +8,15 @@ import 'package:afalagi/bloc/verification/verification_bloc.dart';
 import 'package:afalagi/bloc/welcome/welcome_bloc.dart';
 import 'package:afalagi/core/routes/names.dart';
 import 'package:afalagi/main/global.dart';
+import 'package:afalagi/views/chat_screen/screens/chat.dart';
+import 'package:afalagi/views/found_screen/screens/found.dart';
 import 'package:afalagi/views/home_screen/screens/home.dart';
+import 'package:afalagi/views/navigation.dart';
+import 'package:afalagi/views/report_screen/screens/report.dart';
 import 'package:afalagi/views/reset_password/screens/reset_screen.dart';
 import 'package:afalagi/views/reset_password/screens/reset_successful.dart';
 import 'package:afalagi/views/reset_password/screens/reset_verification.dart';
+import 'package:afalagi/views/search_screen/screens/search.dart';
 import 'package:afalagi/views/sign_in_screen/screens/sign_in.dart';
 import 'package:afalagi/views/sign_up_screen/screens/create_profile.dart';
 import 'package:afalagi/views/sign_up_screen/screens/sign_up.dart';
@@ -29,6 +35,12 @@ class AppPages {
           create: (_) => WelcomeBloc(),
         ),
       ),
+      PageEntity(
+          route: AppRoutes.MAIN,
+          page: const MyHomePage(),
+          bloc: BlocProvider(
+            create: (_) => BottomNavigationBloc(),
+          )),
       PageEntity(
         route: AppRoutes.SIGN_IN,
         page: const SignIn(),
@@ -77,13 +89,29 @@ class AppPages {
           )),
       PageEntity(
         route: AppRoutes.HOME,
-        page: const MyHomePage(),
+        page: const Home(),
         // bloc: BlocProvider(create: (_) => HomeBloc()))
+      ),
+      PageEntity(
+        route: AppRoutes.SEARCH,
+        page: const SearchMissing(),
+      ),
+      PageEntity(
+        route: AppRoutes.REPORT,
+        page: const ReportMissing(),
+      ),
+      PageEntity(
+        route: AppRoutes.CHAT,
+        page: const ChatScreen(),
+      ),
+      PageEntity(
+        route: AppRoutes.FOUND,
+        page: const FoundPersons(),
       ),
       PageEntity(
           bloc: BlocProvider(
         create: (_) => TogglePasswordBloc(),
-      ))
+      )),
     ];
   }
 
@@ -113,6 +141,7 @@ class AppPages {
           print("Second Log");
           bool getIsLoggedIn = Global.storageService.getIsLoggedIn();
           if (getIsLoggedIn) {
+            print("is logged in");
             return MaterialPageRoute(
                 builder: (_) => const MyHomePage(), settings: settings);
           }
