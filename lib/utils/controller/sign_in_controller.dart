@@ -6,6 +6,7 @@ class SignInController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String? handleSignIn(String fieldName, String value) {
+    print("email: ${emailController.text}");
     switch (fieldName) {
       case 'email':
         if (value.isEmpty) {
@@ -24,15 +25,7 @@ class SignInController {
       default:
         return null;
     }
-    {
-      // try {
-      //   context.read<SignUpBloc>().add(SignUpLoadingEvent());
-      //   toastInfo(msg: "Registe user Api integration");
-      //   Navigator.of(context).pushNamed('/sign_up_verification');
-      // } catch (e) {
-      //   context.read<SignUpBloc>().add(SignUpFailureEvent(error: e.toString()));
-      // }
-    }
+
     return null;
   }
 }
