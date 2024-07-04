@@ -29,8 +29,9 @@ AppBar buildAppBar(String type) {
   );
 }
 
-AppBar buildAppBarLarge(String type) {
+AppBar buildAppBarLarge(String type, {List<Widget> actions = const []}) {
   return AppBar(
+    actions: actions,
     systemOverlayStyle:
         const SystemUiOverlayStyle(statusBarColor: AppColors.accentColor),
     toolbarHeight: 100.0,

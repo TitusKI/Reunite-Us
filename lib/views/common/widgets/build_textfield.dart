@@ -2,6 +2,7 @@ import 'package:afalagi/views/common/values/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// ignore: must_be_immutable
 class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -17,9 +18,11 @@ class MyTextField extends StatelessWidget {
   final Color textColor;
   final Color iconColor;
   final List<TextInputFormatter>? inputFormatters;
+  bool readOnly = false;
 
-  const MyTextField({
+  MyTextField({
     super.key,
+    this.readOnly = false,
     required this.controller,
     required this.hintText,
     required this.obscureText,
@@ -39,6 +42,7 @@ class MyTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly,
       inputFormatters: inputFormatters,
       controller: controller,
       obscureText: obscureText,
