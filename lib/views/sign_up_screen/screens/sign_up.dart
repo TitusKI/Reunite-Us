@@ -1,7 +1,4 @@
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
-import 'package:afalagi/bloc/sign_up/sign_up_event.dart';
-import 'package:afalagi/bloc/sign_up/sign_up_state.dart';
-
 import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
@@ -38,34 +35,34 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Container(
-        color: AppColors.primaryBackground,
-        child: SafeArea(
-          child: Scaffold(
-            backgroundColor: AppColors.primaryBackground,
-            appBar: buildAppBarLarge("Sign Up"),
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  Center(
-                      child: reusableText(
-                          "Enter your details below and free sign Up")),
-                  Container(
-                    padding: EdgeInsets.only(left: 25.w, right: 25.w),
-                    margin: EdgeInsets.only(top: 50.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        reusableText("Email"),
-                        BlocBuilder<SignUpBloc, SignUpStates>(
-                          builder: (context, state) {
-                            return formField(
+    return BlocBuilder<SignUpBloc, SignUpStates>(
+      builder: (context, state) {
+        return Form(
+          key: _formKey,
+          child: Container(
+            color: AppColors.primaryBackground,
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: AppColors.primaryBackground,
+                appBar: buildAppBarLarge("Sign Up"),
+                body: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Center(
+                          child: reusableText(
+                              "Enter your details below and free sign Up")),
+                      Container(
+                        padding: EdgeInsets.only(left: 25.w, right: 25.w),
+                        margin: EdgeInsets.only(top: 50.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            reusableText("Email"),
+                            formField(
                                 fieldName: "email",
                                 value: state.email,
                                 controller: _signUpController.emailController,
@@ -78,85 +75,82 @@ class _SignUpState extends State<SignUp> {
                                       .read<SignUpBloc>()
                                       .add(EmailEvent(value));
                                 },
-                                formType: formType);
-                          },
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        reusableText("Password"),
-                        BlocBuilder<SignUpBloc, SignUpStates>(
-                          builder: (context, state) {
-                            return formField(
                                 formType: formType,
-                                fieldName: "password",
-                                value: state.password,
-                                controller:
-                                    _signUpController.passwordController,
-                                textType: "password",
-                                hintText: "Enter your password",
-                                prefixIcon: const Icon(Icons.lock),
-                                inputType: TextInputType.visiblePassword,
-                                func: (value) {
-                                  context
-                                      .read<SignUpBloc>()
-                                      .add(PasswordEvent(value));
-                                });
-                          },
+                                context: context),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            reusableText("Password"),
+                            formField(
+                              formType: formType,
+                              fieldName: "password",
+                              value: state.password,
+                              controller: _signUpController.passwordController,
+                              textType: "password",
+                              hintText: "Enter your password",
+                              prefixIcon: const Icon(Icons.lock),
+                              inputType: TextInputType.visiblePassword,
+                              func: (value) {
+                                context
+                                    .read<SignUpBloc>()
+                                    .add(PasswordEvent(value));
+                              },
+                              context: context,
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            reusableText("Confirm Password"),
+                            formField(
+                              formType: formType,
+                              fieldName: "repassword",
+                              value: state.repassword,
+                              controller:
+                                  _signUpController.confirmPasswordController,
+                              textType: "password",
+                              hintText: "Re-enter your password to confirm",
+                              prefixIcon: const Icon(Icons.lock),
+                              inputType: TextInputType.visiblePassword,
+                              func: (value) {
+                                context
+                                    .read<SignUpBloc>()
+                                    .add(RepasswordEvent(value));
+                              },
+                              context: context,
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        reusableText("Confirm Password"),
-                        BlocBuilder<SignUpBloc, SignUpStates>(
-                          builder: (context, state) {
-                            return formField(
-                                formType: formType,
-                                fieldName: "repassword",
-                                value: state.repassword,
-                                controller:
-                                    _signUpController.confirmPasswordController,
-                                textType: "password",
-                                hintText: "Re-enter your password to confirm",
-                                prefixIcon: const Icon(Icons.lock),
-                                inputType: TextInputType.visiblePassword,
-                                func: (value) {
-                                  context
-                                      .read<SignUpBloc>()
-                                      .add(RepasswordEvent(value));
-                                });
-                          },
-                        ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 25.w),
+                        child: reusableText(
+                            "By creating an account you have agree with our terms and conditions"),
+                      ),
+                      // if (state.isSignUpLoading)
+                      //   const CircularProgressIndicator(),
+                      buildLogInAndRegButton("Sign Up", true, () {
+                        if (_formKey.currentState!.validate()) {
+                          // context
+                          //     .read<SignUpBloc>()
+                          //     .add(SignUpLoadingEvent());
+                          // await Future.delayed(const Duration(seconds: 2));
+                          Navigator.of(context)
+                              .pushNamed("/sign_up_verification");
+                        }
+                        // Navigator.of(context).pushNamed("SignUp");
+                        // SignUpController(context).handleEmailSignUp();
+                      })
+                    ],
                   ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 25.w),
-                    child: reusableText(
-                        "By creating an account you have agree with our terms and conditions"),
-                  ),
-                  // if (state.isSignUpLoading)
-                  //   const CircularProgressIndicator(),
-                  buildLogInAndRegButton("Sign Up", true, () {
-                    if (_formKey.currentState!.validate()) {
-                      // context
-                      //     .read<SignUpBloc>()
-                      //     .add(SignUpLoadingEvent());
-                      // await Future.delayed(const Duration(seconds: 2));
-                      Navigator.of(context).pushNamed("/sign_up_verification");
-                    }
-                    // Navigator.of(context).pushNamed("SignUp");
-                    // SignUpController(context).handleEmailSignUp();
-                  })
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
