@@ -13,3 +13,13 @@ class EmailEvent extends ResetPasswordEvent {
 }
 
 class ResetEmail extends ResetPasswordEvent {}
+
+class PasswordEvent extends ResetPasswordEvent {
+  final String password;
+  const PasswordEvent(this.password);
+}
+
+class RepasswordEvent extends ResetPasswordEvent {
+  final String repassword;
+  const RepasswordEvent(this.repassword);
+}
