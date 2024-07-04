@@ -2,6 +2,7 @@
 import 'package:afalagi/bloc/reset_password/reset_password_bloc.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
+import 'package:afalagi/bloc/toogle_password/toggle_password_bloc.dart';
 import 'package:afalagi/bloc/verification/verification_bloc.dart';
 import 'package:afalagi/bloc/welcome/welcome_bloc.dart';
 import 'package:afalagi/core/routes/names.dart';
@@ -78,7 +79,11 @@ class AppPages {
         route: AppRoutes.HOME,
         page: const MyHomePage(),
         // bloc: BlocProvider(create: (_) => HomeBloc()))
-      )
+      ),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => TogglePasswordBloc(),
+      ))
     ];
   }
 
