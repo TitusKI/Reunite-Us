@@ -15,17 +15,17 @@ class NameChangedEvent extends SharedEvent {
       {this.firstName, this.middleName, this.lastName, this.fullName});
 }
 
-class DateEvent extends SharedEvent {
-  final String? dateOfBirth;
-  final String? dateOfDisapperance;
-  const DateEvent({this.dateOfBirth, this.dateOfDisapperance});
-}
-
 class LocationEvent extends SharedEvent {
   final String? country;
   final String? state;
   final String? city;
   const LocationEvent({this.country, this.state, this.city});
+}
+
+class DateEvent extends SharedEvent {
+  final String? dateOfBirth;
+  final String? dateOfDisapperance;
+  const DateEvent({this.dateOfBirth, this.dateOfDisapperance});
 }
 
 class EmailEvent extends SharedEvent {
