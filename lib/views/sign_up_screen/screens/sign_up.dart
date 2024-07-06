@@ -1,3 +1,4 @@
+import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
@@ -93,7 +94,7 @@ class _SignUpState extends State<SignUp> {
                               func: (value) {
                                 context
                                     .read<SignUpBloc>()
-                                    .add(PasswordEvent(value));
+                                    .add(PasswordEvent(password: value));
                               },
                               context: context,
                             ),
@@ -114,7 +115,7 @@ class _SignUpState extends State<SignUp> {
                               func: (value) {
                                 context
                                     .read<SignUpBloc>()
-                                    .add(RepasswordEvent(value));
+                                    .add(PasswordEvent(repassword: value));
                               },
                               context: context,
                             ),
