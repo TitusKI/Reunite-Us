@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:afalagi/bloc/shared_event.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -8,66 +9,41 @@ import 'package:image_picker/image_picker.dart';
 part 'sign_up_event.dart';
 part "sign_up_state.dart";
 
-class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
+class SignUpBloc extends Bloc<SharedEvent, SignUpStates> {
   final ImagePicker _picker = ImagePicker();
+  @override
   SignUpBloc() : super(SignUpStates.initial()) {
-    on<FirstNameEvent>(_firstNameEvent);
-    on<MiddleNameEvent>(_middleNameEvent);
-
-    on<LastNameEvent>(_lastNameEvent);
-
-    on<LocationEvent>(_locationEvent);
+    on<NameChangedEvent>(_nameChangedEvent);
 
     on<EmailEvent>(_emailEvent);
     on<PasswordEvent>(_passwordEvent);
-    on<RepasswordEvent>(_repasswordEvent);
+
     on<SignUpLoadingEvent>(_signUpLoadingEvent);
     on<SignUpSuccessEvent>(_signUpSuccessEvent);
     on<SignUpFailureEvent>(_signUpFailureEvent);
     on<GenderEvent>((event, emit) {
-      emit(state.copyWith(selectedGender: event.gender));
+      emit(state.copyWith(selected: event.gender));
     });
     on<PhoneNoChanged>(_phoneNumberEvent);
     on<PhoneNoValidationChanged>(_phoneNoValidationChanged);
-    on<DateOfBirthEvent>(_dateOfBirthEvent);
+    // on<DateEvent>(_dateOfBirthEvent);
     on<PickImage>(_pickImageEvent);
-    on<CountryChanged>(_countryChanged);
-    on<StateChanged>(_stateChanged);
-    on<CityChanged>(_cityChanged);
-
+    on<LocationEvent>(_locationEvent);
+    on<DateEvent>(_dateOfBirthEvent);
     on<SignUpReset>(
       (event, emit) => emit(SignUpStates.initial()),
     );
   }
-  Stream<SignUpStates> _countryChanged(
-      CountryChanged event, Emitter<SignUpStates> emit) async* {
+  Stream<SignUpStates> _locationEvent(
+      LocationEvent event, Emitter<SignUpStates> emit) async* {
     emit(
       state.copyWith(
         country: event.country,
-        state: "",
-        city: "",
-      ),
-    );
-    print("My Country: ${state.country}");
-  }
-
-  Stream<SignUpStates> _stateChanged(
-      StateChanged event, Emitter<SignUpStates> emit) async* {
-    emit(
-      state.copyWith(
         state: event.state,
-        city: "",
-      ),
-    );
-  }
-
-  Stream<SignUpStates> _cityChanged(
-      CityChanged event, Emitter<SignUpStates> emit) async* {
-    emit(
-      state.copyWith(
         city: event.city,
       ),
     );
+    print("My Country: ${state.country}");
   }
 
   Stream<SignUpStates> _phoneNumberEvent(
@@ -109,33 +85,15 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     emit(const SignUpFailurState("Error Loading"));
   }
 
-  void _firstNameEvent(FirstNameEvent event, Emitter<SignUpStates> emit) {
-    emit(
-      state.copyWith(firstName: event.firstname),
-    );
-  }
-
-  void _middleNameEvent(MiddleNameEvent event, Emitter<SignUpStates> emit) {
+  void _nameChangedEvent(NameChangedEvent event, Emitter<SignUpStates> emit) {
     emit(state.copyWith(
+      firstName: event.firstName,
       middleName: event.middleName,
+      lastName: event.lastName,
     ));
   }
 
-  void _lastNameEvent(LastNameEvent event, Emitter<SignUpStates> emit) {
-    emit(
-      state.copyWith(lastName: event.lastName),
-    );
-  }
-
-  void _locationEvent(LocationEvent event, Emitter<SignUpStates> emit) {
-    emit(
-      state.copyWith(location: event.location),
-    );
-  }
-
   void _emailEvent(EmailEvent event, Emitter<SignUpStates> emit) {
-    print(event.email);
-
     emit(
       state.copyWith(email: event.email),
     );
@@ -145,15 +103,7 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
     print(event.password);
 
     emit(
-      state.copyWith(password: event.password),
-    );
-  }
-
-  void _repasswordEvent(RepasswordEvent event, Emitter<SignUpStates> emit) {
-    print(event.repassword);
-
-    emit(
-      state.copyWith(repassword: event.repassword),
+      state.copyWith(password: event.password, repassword: event.repassword),
     );
   }
 
@@ -161,8 +111,10 @@ class SignUpBloc extends Bloc<SignUpEvents, SignUpStates> {
   //   emit(state.copyWith(phoneNumber: event.phoneNumber));
   // }
 
-  void _dateOfBirthEvent(DateOfBirthEvent event, Emitter<SignUpStates> emit) {
-    emit(state.copyWith(dateOfBirth: event.dateOfBirth));
+  void _dateOfBirthEvent(DateEvent event, Emitter<SignUpStates> emit) {
+    emit(state.copyWith(
+      dateOfBirth: event.dateOfBirth,
+    ));
   }
 
   Future<void> _pickImageEvent(

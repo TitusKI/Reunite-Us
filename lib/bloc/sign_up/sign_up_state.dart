@@ -10,13 +10,14 @@ class SignUpStates {
   final String firstName;
   final String middleName;
   final String lastName;
+  final String fullName;
   final String location;
   final String email;
   final String password;
   final String repassword;
   final bool? isValid;
   final PhoneNumber? phoneNumber;
-  final String dateOfBirth;
+
   final File? profileImage;
   final ImagePickState? imagePickState;
   final String? errorImage;
@@ -24,18 +25,22 @@ class SignUpStates {
   final String state;
   final String city;
   final bool isSignUpLoading;
-  final String selectedGender;
+  final String selected;
+  final String dateOfBirth;
+  final String dateOfDisapperance;
 
   const SignUpStates({
     this.isValid,
     this.firstName = "",
     this.middleName = "",
     this.lastName = "",
+    this.fullName = "",
     this.location = "",
     this.email = "",
     this.password = "",
     this.repassword = "",
     this.dateOfBirth = '',
+    this.dateOfDisapperance = "",
     this.profileImage,
     this.imagePickState,
     this.errorImage,
@@ -44,12 +49,13 @@ class SignUpStates {
     this.state = "",
     this.city = "",
     this.isSignUpLoading = false,
-    this.selectedGender = "",
+    this.selected = "",
   });
   SignUpStates.initial()
       : firstName = "",
         middleName = "",
         lastName = "",
+        fullName = "",
         location = "",
         email = "",
         password = "",
@@ -60,10 +66,11 @@ class SignUpStates {
         profileImage = null,
         errorImage = "retry",
         dateOfBirth = "",
+        dateOfDisapperance = "",
         country = "",
         state = "",
         city = "",
-        selectedGender = "",
+        selected = "",
         isSignUpLoading = false;
 
   factory SignUpStates.initialyy() {
@@ -84,6 +91,7 @@ class SignUpStates {
     String? firstName,
     String? middleName,
     String? lastName,
+    String? fullName,
     String? location,
     String? email,
     String? password,
@@ -91,6 +99,7 @@ class SignUpStates {
     PhoneNumber? phoneNumber,
     bool? isValid,
     String? dateOfBirth,
+    String? dateOfDisapperance,
     File? profileImage,
     ImagePickState? imagePickState,
     String? errorImage,
@@ -100,18 +109,20 @@ class SignUpStates {
     bool? isSignUpLoading,
     bool? obscurePassword,
     IconData? iconPassword,
-    String? selectedGender,
+    String? selected,
   }) {
     return SignUpStates(
       firstName: firstName ?? this.firstName,
       middleName: middleName ?? this.middleName,
       lastName: lastName ?? this.lastName,
+      fullName: fullName ?? this.fullName,
       location: location ?? this.location,
       email: email ?? this.email,
       password: password ?? this.password,
       repassword: repassword ?? this.repassword,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      dateOfDisapperance: dateOfDisapperance ?? this.dateOfDisapperance,
       profileImage: profileImage ?? this.profileImage,
       imagePickState: imagePickState ?? this.imagePickState,
       errorImage: errorImage ?? this.errorImage,
@@ -120,7 +131,7 @@ class SignUpStates {
       state: state ?? this.state,
       city: city ?? this.city,
       isSignUpLoading: isSignUpLoading ?? this.isSignUpLoading,
-      selectedGender: selectedGender ?? this.selectedGender,
+      selected: selected ?? this.selected,
     );
   }
 }
