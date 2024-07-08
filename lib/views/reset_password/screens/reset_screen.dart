@@ -1,4 +1,5 @@
 import 'package:afalagi/bloc/reset_password/reset_password_bloc.dart';
+import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/utils/controller/reset_password_controller.dart';
 
 import 'package:afalagi/views/common/values/colors.dart';
@@ -71,9 +72,7 @@ class _ResetScreenState extends State<ResetScreen> {
                   return formField(
                     formType: "reset",
                     func: (value) {
-                      context
-                          .read<ResetPasswordBloc>()
-                          .add(EmailEvent(email: value));
+                      context.read<ResetPasswordBloc>().add(EmailEvent(value));
                     },
                     value: state.email,
                     controller: _resetPasswordController.emailController,

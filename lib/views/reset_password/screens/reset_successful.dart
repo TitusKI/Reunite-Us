@@ -1,5 +1,5 @@
 import 'package:afalagi/bloc/reset_password/reset_password_bloc.dart';
-
+import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
 import 'package:afalagi/views/sign_up_screen/widgets/sign_up_widgets.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +62,7 @@ class _ResetSuccessfulState extends State<ResetSuccessful> {
                           func: (value) {
                             context
                                 .read<ResetPasswordBloc>()
-                                .add(PasswordEvent(value));
+                                .add(PasswordEvent(password: value));
                             print("password: $value");
                           },
                           value: state.password,
@@ -83,7 +83,7 @@ class _ResetSuccessfulState extends State<ResetSuccessful> {
                           func: (value) {
                             context
                                 .read<ResetPasswordBloc>()
-                                .add(RepasswordEvent(value));
+                                .add(PasswordEvent(repassword: value));
                           },
                           value: state.repassword,
                           controller: confirmPasswordController,

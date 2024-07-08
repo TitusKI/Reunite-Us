@@ -1,10 +1,9 @@
+import 'package:afalagi/bloc/shared_event.dart';
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-
 part 'reset_password_event.dart';
 part 'reset_password_state.dart';
 
-class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
+class ResetPasswordBloc extends Bloc<SharedEvent, ResetPasswordState> {
   ResetPasswordBloc() : super(const ResetPasswordState()) {
     on<EmailEvent>((event, emit) {
       emit(state.copyWith(email: event.email));
@@ -13,18 +12,10 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
       emit(ResetToInitial());
     });
     on<PasswordEvent>(_passwordEvent);
-    on<RepasswordEvent>(_repasswordEvent);
   }
   void _passwordEvent(PasswordEvent event, Emitter<ResetPasswordState> emit) {
     emit(
-      state.copyWith(password: event.password),
-    );
-  }
-
-  void _repasswordEvent(
-      RepasswordEvent event, Emitter<ResetPasswordState> emit) {
-    emit(
-      state.copyWith(repassword: event.repassword),
+      state.copyWith(password: event.password, repassword: event.repassword),
     );
   }
 }
