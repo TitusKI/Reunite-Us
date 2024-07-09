@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class AppRoutes {
   // Initial Splash screen
   // static const INITIAL = '/';
@@ -25,6 +27,9 @@ class AppRoutes {
   static const SEARCH = '/search';
   // report page
   static const REPORT = '/report';
+  //report form page
+  static const ADD_REPORT = '/add_report';
+
   // chat page
   static const CHAT = '/chat';
   // succes stories page

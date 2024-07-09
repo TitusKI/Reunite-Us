@@ -1,29 +1,9 @@
 // The UNIFICATION Of BlocProvider and routes and pages
-import 'package:afalagi/bloc/bottom_navigation/bottom_navigation_bloc.dart';
-import 'package:afalagi/bloc/reset_password/reset_password_bloc.dart';
+
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
-import 'package:afalagi/bloc/toogle_password/toggle_password_bloc.dart';
-import 'package:afalagi/bloc/verification/verification_bloc.dart';
-import 'package:afalagi/bloc/welcome/welcome_bloc.dart';
-import 'package:afalagi/core/routes/names.dart';
-import 'package:afalagi/main/global.dart';
-import 'package:afalagi/views/chat_screen/screens/chat.dart';
-import 'package:afalagi/views/found_screen/screens/found.dart';
-import 'package:afalagi/views/home_screen/screens/home.dart';
-import 'package:afalagi/views/navigation.dart';
-import 'package:afalagi/views/report_screen/screens/report.dart';
-import 'package:afalagi/views/reset_password/screens/reset_screen.dart';
-import 'package:afalagi/views/reset_password/screens/reset_successful.dart';
-import 'package:afalagi/views/reset_password/screens/reset_verification.dart';
-import 'package:afalagi/views/search_screen/screens/search.dart';
-import 'package:afalagi/views/sign_in_screen/screens/sign_in.dart';
-import 'package:afalagi/views/sign_up_screen/screens/create_profile.dart';
-import 'package:afalagi/views/sign_up_screen/screens/sign_up.dart';
-import 'package:afalagi/views/sign_up_screen/screens/verification_code.dart';
-import 'package:afalagi/views/welcome_screen/screens/welcome.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'export.dart';
 
 class AppPages {
   static List<PageEntity> routes() {
@@ -99,6 +79,13 @@ class AppPages {
       PageEntity(
         route: AppRoutes.REPORT,
         page: const ReportMissing(),
+      ),
+      PageEntity(
+        route: AppRoutes.ADD_REPORT,
+        page: const AddReport(),
+        bloc: BlocProvider(
+          create: (_) => ReportFormBloc(),
+        ),
       ),
       PageEntity(
         route: AppRoutes.CHAT,
