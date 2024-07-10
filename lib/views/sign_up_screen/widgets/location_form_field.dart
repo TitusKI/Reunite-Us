@@ -1,3 +1,4 @@
+import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,9 @@ class LocationFormField extends FormField<Map<String, String?>> {
                       'state': null,
                       'city': null,
                     });
-                    context.read<SignUpBloc>().add(CountryChanged(value));
+                    context
+                        .read<SignUpBloc>()
+                        .add(LocationEvent(country: value));
                   },
                   onStateChanged: (value) {
                     state.didChange({
@@ -71,14 +74,14 @@ class LocationFormField extends FormField<Map<String, String?>> {
                       'state': value,
                       'city': null,
                     });
-                    context.read<SignUpBloc>().add(StateChanged(value));
+                    context.read<SignUpBloc>().add(LocationEvent(state: value));
                   },
                   onCityChanged: (value) {
                     state.didChange({
                       ...state.value!,
                       'city': value,
                     });
-                    context.read<SignUpBloc>().add(CityChanged(value));
+                    context.read<SignUpBloc>().add(LocationEvent(city: value));
                   },
                 ),
                 if (state.hasError)

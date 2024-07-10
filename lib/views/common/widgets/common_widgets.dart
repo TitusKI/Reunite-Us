@@ -132,25 +132,6 @@ Widget buildTextField(String hintText, String textType, String iconName,
             onChanged: (value) => func!(value),
             keyboardType: TextInputType.multiline,
             decoration: InputDecoration(
-              // suffixIcon: DropdownButton<String>(
-              //   icon: const Icon(Icons.arrow_drop_down),
-              //   iconSize: 24,
-              //   elevation: 16,
-              //   underline: Container(
-              //     height: 0,
-              //     color: Colors.transparent,
-              //   ),
-              //   items: genders.map<DropdownMenuItem<String>>((String value) {
-              //     return DropdownMenuItem(
-              //       value: value,
-              //       child: Text(value),
-              //     );
-              //   }).toList(),
-              //   onChanged: (String? value) {},
-              //   // onChanged: (String value) {
-              //   // //  context.read<SignUpBloc>().add(GenderEvent(value));
-              //   // },
-              // ),
               hintText: hintText,
               border: OutlineInputBorder(
                 borderSide: BorderSide(
