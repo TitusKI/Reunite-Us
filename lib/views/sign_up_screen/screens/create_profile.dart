@@ -2,18 +2,18 @@
 
 import 'dart:io';
 
+import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:afalagi/core/routes/names.dart';
 import 'package:afalagi/utils/controller/sign_up_controller.dart';
-
 import 'package:afalagi/views/common/values/colors.dart';
-import 'package:afalagi/views/common/widgets/build_textfield.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
+import 'package:afalagi/views/common/widgets/date_of_birth_field.dart';
 import 'package:afalagi/views/common/widgets/flutter_toast.dart';
+import 'package:afalagi/views/common/widgets/gener_field.dart';
 import 'package:afalagi/views/sign_up_screen/widgets/location_form_field.dart';
 import 'package:afalagi/views/sign_up_screen/widgets/sign_up_widgets.dart';
 import 'package:flutter/material.dart';
-
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -50,7 +50,7 @@ class _CreateProfileState extends State<CreateProfile> {
   Widget build(BuildContext context) {
     return BlocBuilder<SignUpBloc, SignUpStates>(
       builder: (context, state) {
-        String? selectedGender = state.selectedGender;
+        String? selectedGender = state.selected;
         PhoneNumber? number = state.phoneNumber;
         String dateOfBirth = state.dateOfBirth;
         TextEditingController _dateController = TextEditingController();
@@ -94,7 +94,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                 if (state.imagePickState ==
                                     ImagePickState.picked)
                                   buildImagePreview(
-                                      state.profileImage!, context),
+                                      state.profileImage!, context, "profile"),
                                 if (state.imagePickState ==
                                     ImagePickState.failed)
                                   buildFailedInput(context, state.errorImage)
@@ -115,7 +115,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                 func: (value) {
                                   context
                                       .read<SignUpBloc>()
-                                      .add(FirstNameEvent(value));
+                                      .add(NameChangedEvent(firstName: value));
                                 },
                                 formType: "sign up",
                                 context: context),
@@ -132,7 +132,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                 func: (value) {
                                   context
                                       .read<SignUpBloc>()
-                                      .add(MiddleNameEvent(value));
+                                      .add(NameChangedEvent(middleName: value));
                                 },
                                 formType: "sign up",
                                 context: context),
@@ -149,7 +149,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                 func: (value) {
                                   context
                                       .read<SignUpBloc>()
-                                      .add(LastNameEvent(value));
+                                      .add(NameChangedEvent(lastName: value));
                                 },
                                 formType: "sign up",
                                 context: context),
@@ -178,7 +178,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             reusableText("Gender"),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
-                              child: genderTextField(
+                              child: dropDownField(
                                   selectedGender, genders, context),
                             ),
                             const SizedBox(
@@ -195,8 +195,8 @@ class _CreateProfileState extends State<CreateProfile> {
                             reusableText("Date Of Birth"),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
-                              child: dateOfBirthField(
-                                  context, _dateController, dateOfBirth),
+                              child: dateField(context, _dateController,
+                                  dateOfBirth, "birth"),
                             ),
                           ],
                         ),
@@ -259,7 +259,8 @@ Widget buildInitialInput(BuildContext context) {
   );
 }
 
-Widget buildImagePreview(File image, BuildContext context) {
+Widget buildImagePreview(File image, BuildContext context, String imageType) {
+  bool isPressed = false;
   return Center(
     child: Column(
       children: [
@@ -268,10 +269,12 @@ Widget buildImagePreview(File image, BuildContext context) {
           height: MediaQuery.of(context).size.height * 0.2,
           child: Center(
             child: Column(children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: FileImage(image),
-              ),
+              imageType == "profile"
+                  ? CircleAvatar(
+                      radius: 50,
+                      backgroundImage: FileImage(image),
+                    )
+                  : Text(image.path),
               const SizedBox(
                 height: 10,
               ),
@@ -279,20 +282,26 @@ Widget buildImagePreview(File image, BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    style: const ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll(AppColors.accentColor)),
-                    onPressed: () {
-                      toastInfo(msg: "Profile setted succesfully");
-                    },
-                    child: const Text(
-                      "Set as Profile",
-                      style: TextStyle(
-                        color: AppColors.primaryBackground,
-                      ),
-                    ),
-                  ),
+                  isPressed == false
+                      ? ElevatedButton(
+                          style: const ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                  AppColors.accentColor)),
+                          onPressed: () {
+                            isPressed = true;
+                            imageType == "profile"
+                                ? toastInfo(msg: "Profile setted succesfully")
+                                : toastInfo(
+                                    msg: "Missing image setted succesfully");
+                          },
+                          child: const Text(
+                            "Set",
+                            style: TextStyle(
+                              color: AppColors.primaryBackground,
+                            ),
+                          ),
+                        )
+                      : Container(),
                   ElevatedButton(
                       style: const ButtonStyle(
                           backgroundColor:
@@ -337,42 +346,6 @@ Widget buildFailedInput(BuildContext context, String? errorMsg) {
   );
 }
 
-Widget genderTextField(
-    String? selectedGender, List<String> genders, BuildContext context) {
-  return MyTextField(
-    readOnly: true,
-    prefixIcon: const Icon(Icons.person),
-    suffixIcon: DropdownButton<String>(
-      icon: const Icon(Icons.arrow_drop_down),
-      iconSize: 24,
-      elevation: 16,
-      underline: Container(
-        height: 0,
-        color: Colors.transparent,
-      ),
-      items: genders.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (String? value) {
-        context.read<SignUpBloc>().add(GenderEvent(value!));
-      },
-    ),
-    controller: TextEditingController(text: selectedGender),
-    hintText: "Select Gender",
-    obscureText: false,
-    keyboardType: TextInputType.none,
-    validator: (validate) {
-      if (validate == null || validate.isEmpty) {
-        return "Please select a gender";
-      }
-      return null;
-    },
-  );
-}
-
 Widget phoneNumberField(BuildContext context, PhoneNumber? phoneNumber) {
   // final state = context.read<SignUpBloc>().state;
 
@@ -414,40 +387,4 @@ Widget phoneNumberField(BuildContext context, PhoneNumber? phoneNumber) {
     ),
     keyboardType: TextInputType.number,
   );
-}
-
-Widget dateOfBirthField(BuildContext context,
-    TextEditingController dateController, String? dateOfBirth) {
-  return MyTextField(
-      prefixIcon: const Icon(Icons.date_range),
-      suffixIcon: IconButton(
-          onPressed: () async {
-            final DateTime now = DateTime.now();
-            final DateTime minDate =
-                DateTime(now.year - 10, now.month, now.day);
-
-            final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: minDate,
-                firstDate: DateTime(1900),
-                lastDate: minDate);
-            if (picked != null && picked != DateTime.now()) {
-              dateController.text = "${picked.toLocal()}".split(' ')[0];
-              context
-                  .read<SignUpBloc>()
-                  .add(DateOfBirthEvent(dateController.text));
-            }
-          },
-          icon: const Icon(Icons.calendar_today)),
-      controller: TextEditingController(text: dateOfBirth),
-      validator: (validate) {
-        if (validate!.isEmpty) {
-          return "Please fill in this field";
-        }
-        return null;
-      },
-      readOnly: true,
-      hintText: "Select Date",
-      obscureText: false,
-      keyboardType: TextInputType.datetime);
 }
