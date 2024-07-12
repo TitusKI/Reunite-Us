@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
-
 part 'report_form_event.dart';
 part 'report_form_state.dart';
 
@@ -20,7 +18,11 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
     on<LocationEvent>(_locationEvent);
     on<DateEvent>(_dateOfBirthEvent);
   }
-  void _reportFormEvent(ReportFormEvent event, Emitter<ReportFormState> emit) {
+
+  void _reportFormEvent(
+    ReportFormEvent event,
+    Emitter<ReportFormState> emit,
+  ) async {
     emit(state.copyWith(
       page: state.page,
       age: event.onAge,
@@ -31,15 +33,68 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
       recongnizableFeature: event.onRecongnizableFeature,
       educationalLevel: event.onEducationalLevel,
       videoLink: event.onVideoLink,
-      hasMentalDisability: event.hasMentalDisability,
-      hasPhysicalDisability: event.hasPhysicalDisability,
+      selected: event.selected,
     ));
+
+    // Update physical disabilities
+    List<String> updatedPhysicalDisabilities = _updateDisabilities(
+      state.selectedPhysicalDisability,
+      event.physicalDisability,
+      event.otherPhysicalDisability,
+    );
+    emit(state.copyWith(
+      selectedPhysicalDisability: updatedPhysicalDisabilities,
+      otherPhysicalDisability: event.otherPhysicalDisability,
+    ));
+    // Update mental disabilities
+    List<String> updatedMentalDisabilities = _updateDisabilities(
+      state.selectedMentalDisability,
+      event.mentalDisability,
+      event.otherMentalDisability,
+    );
+
+    emit(state.copyWith(
+      selectedMentalDisability: updatedMentalDisabilities,
+      otherMentalDisability: event.otherMentalDisability,
+    ));
+  }
+
+  List<String> _updateDisabilities(
+    List<String?> currentDisabilities,
+    String? newDisability,
+    String? otherDisability,
+  ) {
+    List<String> updatedDisabilities = List.from(currentDisabilities);
+
+    if (newDisability == 'None') {
+      updatedDisabilities = ['None'];
+    } else if (newDisability == 'Other') {
+      if (updatedDisabilities.contains('Other')) {
+        updatedDisabilities.remove('Other');
+        updatedDisabilities.add(otherDisability!);
+      } else {
+        updatedDisabilities.add('Other');
+      }
+    } else {
+      if (updatedDisabilities.contains('None')) {
+        updatedDisabilities.remove('None');
+      }
+      if (updatedDisabilities.contains(newDisability)) {
+        updatedDisabilities.remove(newDisability);
+      } else {
+        updatedDisabilities.add(newDisability!);
+      }
+    }
+
+    return updatedDisabilities;
   }
 
   void _nameChangedEvent(
       NameChangedEvent event, Emitter<ReportFormState> emit) {
     emit(state.copyWith(
-      fullName: event.fullName,
+      firstName: event.firstName,
+      middleName: event.middleName,
+      lastName: event.lastName,
     ));
   }
 
@@ -56,7 +111,9 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
   }
 
   void _dateOfBirthEvent(DateEvent event, Emitter<ReportFormState> emit) {
-    emit(state.copyWith(dateOfDisapperance: event.dateOfDisapperance));
+    emit(state.copyWith(
+        dateOfDisapperance: event.dateOfDisapperance,
+        dateOfBirth: event.dateOfBirth));
   }
 
   Future<void> _pickImageEvent(

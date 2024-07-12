@@ -10,9 +10,20 @@ class ReportFormEvent extends SharedEvent {
   final String? onEducationalLevel;
   final String? onVideoLink;
   final String? onClothingDescription;
-  final bool? hasPhysicalDisability;
-  final bool? hasMentalDisability;
+
+  final String selected;
+
+  final String physicalDisability;
+  final String? otherPhysicalDisability;
+  final String mentalDisability;
+  final String? otherMentalDisability;
+
   const ReportFormEvent({
+    this.physicalDisability = "",
+    this.otherPhysicalDisability = "",
+    this.mentalDisability = "",
+    this.otherMentalDisability = "",
+    this.selected = "",
     this.onHeight,
     this.onAge,
     this.onHairColor,
@@ -22,12 +33,15 @@ class ReportFormEvent extends SharedEvent {
     this.onDescription,
     this.onEducationalLevel,
     this.onVideoLink,
-    this.hasMentalDisability,
-    this.hasPhysicalDisability,
   });
 
   @override
   List<Object> get props => [
+        physicalDisability,
+        otherPhysicalDisability!,
+        mentalDisability,
+        otherMentalDisability!,
+        selected,
         onAge!,
         onHeight!,
         onHairColor!,
@@ -37,7 +51,5 @@ class ReportFormEvent extends SharedEvent {
         onDescription!,
         onEducationalLevel!,
         onVideoLink!,
-        hasPhysicalDisability!,
-        hasMentalDisability!
       ];
 }

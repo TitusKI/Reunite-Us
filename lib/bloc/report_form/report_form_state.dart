@@ -4,7 +4,9 @@ part of 'report_form_bloc.dart';
 class ReportFormState {
   int page;
 
-  final String fullName;
+  final String firstName;
+  final String middleName;
+  final String lastName;
   final String location;
 
   final String password;
@@ -33,8 +35,18 @@ class ReportFormState {
   final String dateOfBirth;
   final String dateOfDisapperance;
 
+  final List<String?> selectedMentalDisability;
+  final List<String?> selectedPhysicalDisability;
+
+  final String otherPhysicalDisability;
+  final String otherMentalDisability;
+
   ReportFormState({
+    this.selectedPhysicalDisability = const [],
+    this.selectedMentalDisability = const [],
     this.clothingDescription = "",
+    this.otherPhysicalDisability = "",
+    this.otherMentalDisability = "",
     this.height,
     this.hairColor = "",
     this.skinColor = "",
@@ -46,7 +58,9 @@ class ReportFormState {
     this.hasPhysicalDisability,
     this.age,
     this.page = 0,
-    this.fullName = "",
+    this.firstName = "",
+    this.middleName = "",
+    this.lastName = "",
     this.location = "",
     this.password = "",
     this.repassword = "",
@@ -61,6 +75,10 @@ class ReportFormState {
     this.selected = "",
   });
   ReportFormState copyWith({
+    List<String?>? selectedPhysicalDisability,
+    List<String?>? selectedMentalDisability,
+    String? otherPhysicalDisability,
+    String? otherMentalDisability,
     String? clothingDescription,
     int? age,
     double? height,
@@ -72,7 +90,9 @@ class ReportFormState {
     String? videoLink,
     bool? hasPhysicalDisability,
     bool? hasMentalDisability,
-    String? fullName,
+    String? firstName,
+    String? middleName,
+    String? lastName,
     String? location,
     String? password,
     String? repassword,
@@ -89,6 +109,14 @@ class ReportFormState {
     int? page,
   }) {
     return ReportFormState(
+      otherPhysicalDisability:
+          otherPhysicalDisability ?? this.otherPhysicalDisability,
+      otherMentalDisability:
+          otherMentalDisability ?? this.otherMentalDisability,
+      selectedPhysicalDisability:
+          selectedPhysicalDisability ?? this.selectedPhysicalDisability,
+      selectedMentalDisability:
+          selectedMentalDisability ?? this.selectedMentalDisability,
       clothingDescription: clothingDescription ?? this.clothingDescription,
       page: page ?? this.page,
       height: height ?? this.height,
@@ -101,7 +129,9 @@ class ReportFormState {
       hasMentalDisability: hasMentalDisability ?? this.hasMentalDisability,
       hasPhysicalDisability:
           hasPhysicalDisability ?? this.hasPhysicalDisability,
-      fullName: fullName ?? this.fullName,
+      firstName: firstName ?? this.firstName,
+      middleName: middleName ?? this.middleName,
+      lastName: lastName ?? this.lastName,
       location: location ?? this.location,
       password: password ?? this.password,
       repassword: repassword ?? this.repassword,
