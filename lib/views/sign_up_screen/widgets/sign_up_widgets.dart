@@ -6,6 +6,7 @@ import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/build_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Widget formField({
@@ -19,6 +20,7 @@ Widget formField({
   Icon? prefixIcon,
   TextInputType? inputType,
   void Function(String value)? func,
+  List<TextInputFormatter>? inputFormatters,
 }) {
   IconButton? suffixIcon;
   bool? obscureText;
@@ -63,6 +65,12 @@ String? _validator(BuildContext context, String? formType, String? value,
             .handleProfileBuild(context, fieldName!, value!);
       }
       return SignUpController().handleEmailSignUp(context, fieldName!, value!);
+    case "report form":
+      if (textType == "report") {
+        return SignUpController()
+            .handleProfileBuild(context, fieldName!, value!);
+      }
+      return SignUpController().handleVideoLink(context, fieldName!, value!);
     case "reset":
       if (fieldName == "password" || fieldName == "repassword") {
         return ResetPasswordController()
