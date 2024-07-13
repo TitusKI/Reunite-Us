@@ -229,10 +229,26 @@ Widget buildLogInAndRegButton(
   );
 }
 
-Widget buildPinCodeField(BuildContext context, String? title) {
+Widget buildPinCodeField(BuildContext context, String? title,
+    TextEditingController controller, String email) {
   return BlocBuilder<VerificationBloc, VerificationState>(
     builder: (context, state) {
+      if (state is VerificationLoading) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (state is VerificationFailure) {
+        return Center(
+            child: Text('Error: ${state.error}',
+                style: const TextStyle(color: Colors.red)));
+      }
+      if (state is VerificationSuccess) {
+        // Navigate to the next page after successful verification
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).pushNamed("/create_profile");
+        });
+      }
       return PinCodeTextField(
+        controller: controller,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         appContext: context,
@@ -258,7 +274,7 @@ Widget buildPinCodeField(BuildContext context, String? title) {
           // context.read<VerificationBloc>().add(CodeChanged(value));
         },
         onCompleted: (value) {
-          context.read<VerificationBloc>().add(SubmitCode(value));
+          context.read<VerificationBloc>().add(SubmitCode(value, email));
           context.read<VerificationBloc>().add(CodeChanged(value));
           title == ""
               ? Navigator.of(context).pushNamed("/reset_successful")

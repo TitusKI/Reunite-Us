@@ -1,12 +1,16 @@
-import 'package:afalagi/bloc/report_form/report_form_bloc.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
+import 'package:afalagi/routes/export.dart';
 import 'package:afalagi/views/common/widgets/build_textfield.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget dateField(BuildContext context, TextEditingController dateController,
-    String? date, String? dateType) {
+Widget dateField(
+    {required BuildContext context,
+    required TextEditingController dateController,
+    required String? date,
+    required String? dateType,
+    String? whoseBirth}) {
   return MyTextField(
       prefixIcon: const Icon(Icons.date_range),
       suffixIcon: IconButton(
@@ -22,19 +26,28 @@ Widget dateField(BuildContext context, TextEditingController dateController,
                 firstDate:
                     dateType == "birth" ? DateTime(1900) : DateTime(1800),
                 lastDate: minDate);
-            if (picked != null && picked != DateTime.now()) {
+            if (picked != null) {
               dateController.text = "${picked.toLocal()}".split(' ')[0];
-              dateType == "birth"
-                  ? context
-                      .read<SignUpBloc>()
-                      .add(DateEvent(dateOfBirth: dateController.text))
-                  : context
+              if (dateType == "birth") {
+                if (whoseBirth == "missingDate") {
+                  context
                       .read<ReportFormBloc>()
-                      .add(DateEvent(dateOfDisapperance: dateController.text));
+                      .add(DateEvent(dateOfBirth: dateController.text));
+                } else {
+                  context
+                      .read<SignUpBloc>()
+                      .add(DateEvent(dateOfBirth: dateController.text));
+                  print("Users Date is :${dateController.text}");
+                }
+              }
+
+              context
+                  .read<ReportFormBloc>()
+                  .add(DateEvent(dateOfDisapperance: dateController.text));
             }
           },
           icon: const Icon(Icons.calendar_today)),
-      controller: TextEditingController(text: date!),
+      controller: TextEditingController(text: dateController.text),
       validator: (validate) {
         if (validate!.isEmpty) {
           return "Please fill in this field";
