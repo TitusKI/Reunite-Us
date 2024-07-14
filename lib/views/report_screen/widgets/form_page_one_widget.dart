@@ -2,10 +2,10 @@
 
 import 'package:afalagi/bloc/report_form/report_form_bloc.dart';
 import 'package:afalagi/bloc/shared_event.dart';
-import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 
 import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/widgets/date_of_birth_field.dart';
+import 'package:afalagi/views/common/widgets/gener_field.dart';
 import 'package:afalagi/views/report_screen/screens/add_report.dart';
 
 import 'package:flutter/material.dart';
@@ -13,6 +13,7 @@ import 'package:afalagi/views/common/widgets/common_widgets.dart';
 
 import 'package:afalagi/views/sign_up_screen/widgets/location_form_field.dart';
 import 'package:afalagi/views/sign_up_screen/widgets/sign_up_widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -31,12 +32,16 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
 
   String? _city;
 
-  final List<String> genders = ["Male", "Female"];
+  final List<String> hairColor = ["black", "white", "brown", "blonde"];
+  final List<String> skinColor = ["black", "brown", "white"];
 
   final SignUpController _signUpController = SignUpController();
 
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateOfBirthController = TextEditingController();
+
   final AddReport _addReport = const AddReport();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,172 +49,217 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
       child: BlocBuilder<ReportFormBloc, ReportFormState>(
         builder: (context, state) {
           String dateOfDisapperance = state.dateOfDisapperance;
+          String dateOfBirth = state.dateOfBirth;
+          String selectedHairColor = state.hairColor;
+          String selectedSkinColor = state.skinColor;
 
-          return Container(
-            alignment: Alignment.center,
+          return Form(
+            key: formKey,
+            child: Container(
+              alignment: Alignment.center,
 
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 10.0,
-                  offset: Offset(0, 5),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.all(16.0),
-            // padding: EdgeInsets.all(15.w),
-            margin: EdgeInsets.all(15.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                reusableText("Full Name:"),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: formField(
-                      fieldName: "fullName",
-                      value: state.fullName,
-                      controller: _signUpController.firstNameController,
-                      hintText: "Enter missing person full name",
-                      prefixIcon: const Icon(Icons.person),
-                      inputType: TextInputType.name,
-                      func: (value) {
-                        context
-                            .read<ReportFormBloc>()
-                            .add(NameChangedEvent(fullName: value));
-                      },
-                      formType: "report",
-                      context: context),
-                ),
-                reusableText("Age:"),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: formField(
-                      fieldName: "age",
-                      value: state.age.toString(),
-                      controller: _signUpController.firstNameController,
-                      hintText: "Enter missing person age",
-                      prefixIcon: const Icon(Icons.person),
-                      inputType: TextInputType.number,
-                      func: (value) {
-                        context
-                            .read<SignUpBloc>()
-                            .add(ReportFormEvent(onAge: int.parse(value)));
-                      },
-                      formType: "report",
-                      context: context),
-                ),
-                reusableText("Date of Disapperance:"),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: dateField(context, _dateController, dateOfDisapperance,
-                      "disapperance"),
-                ),
-                const SizedBox(height: 15.0),
-                reusableText("Last Known Location:"),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: LocationFormField(
-                    context: context,
-                    onSaved: (value) {
-                      _country = value?['country'];
-                      _state = value?['state'];
-                      _city = value?['city'];
-                    },
-                    validator: (value) {
-                      if (value?['country'] == null) {
-                        return "Please select a valid location";
-                      }
-
-                      return null;
-                    },
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15.0),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10.0,
+                    offset: Offset(0, 5),
                   ),
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                const SizedBox(height: 15.0),
-                reusableText("Clothing Description:"),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: formField(
-                      fieldName: "clothingDescription",
-                      value: state.clothingDescription,
-                      controller: _signUpController.firstNameController,
-                      hintText:
-                          "Enter clothing description (color and type of clothes)",
-                      prefixIcon: const Icon(Icons.description_rounded),
-                      inputType: TextInputType.multiline,
-                      func: (value) {
-                        context
-                            .read<ReportFormBloc>()
-                            .add(ReportFormEvent(onClothingDescription: value));
+                ],
+              ),
+              padding: const EdgeInsets.all(16.0),
+              // padding: EdgeInsets.all(15.w),
+              margin: EdgeInsets.all(15.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  reusableText("First Name:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: formField(
+                        textType: "report",
+                        fieldName: "firstName",
+                        value: state.firstName,
+                        controller: _signUpController.firstNameController,
+                        hintText: "Enter missing person first name",
+                        prefixIcon: const Icon(Icons.person),
+                        inputType: TextInputType.name,
+                        func: (value) {
+                          context
+                              .read<ReportFormBloc>()
+                              .add(NameChangedEvent(firstName: value));
+                        },
+                        formType: "report form",
+                        context: context),
+                  ),
+                  reusableText("Middle Name:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: formField(
+                        textType: "report",
+                        fieldName: "middleName",
+                        value: state.middleName,
+                        controller: _signUpController.middleNameController,
+                        hintText: "Enter missing person middle name",
+                        prefixIcon: const Icon(Icons.person),
+                        inputType: TextInputType.name,
+                        func: (value) {
+                          context
+                              .read<ReportFormBloc>()
+                              .add(NameChangedEvent(middleName: value));
+                        },
+                        formType: "report form",
+                        context: context),
+                  ),
+                  reusableText("Last Name:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: formField(
+                        textType: "report",
+                        fieldName: "lastName",
+                        value: state.lastName,
+                        controller: _signUpController.lastNameController,
+                        hintText: "Enter missing person full name",
+                        prefixIcon: const Icon(Icons.person),
+                        inputType: TextInputType.name,
+                        func: (value) {
+                          context
+                              .read<ReportFormBloc>()
+                              .add(NameChangedEvent(lastName: value));
+                        },
+                        formType: "report form",
+                        context: context),
+                  ),
+                  reusableText("Date of Birth:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: dateField(
+                        context: context,
+                        dateController: _dateOfBirthController,
+                        date: dateOfBirth,
+                        dateType: "birth"),
+                  ),
+                  reusableText("Date of Disapperance:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: dateField(
+                        context: context,
+                        dateController: _dateController,
+                        date: dateOfDisapperance,
+                        dateType: "disapperance"),
+                  ),
+                  const SizedBox(height: 15.0),
+                  reusableText("Last Known Location:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: LocationFormField(
+                      context: context,
+                      onSaved: (value) {
+                        _country = value?['country'];
+                        _state = value?['state'];
+                        _city = value?['city'];
                       },
-                      formType: "report",
-                      context: context),
-                ),
-                reusableText("Height:"),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: formField(
-                      fieldName: "height",
-                      value: state.height.toString(),
-                      controller: _signUpController.firstNameController,
-                      hintText: "Enter missing person height here",
-                      prefixIcon: const Icon(Icons.height),
-                      inputType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      func: (value) {
-                        context.read<ReportFormBloc>().add(
-                            ReportFormEvent(onHeight: double.parse(value)));
+                      validator: (value) {
+                        if (value?['country'] == null) {
+                          return "Please select a valid location";
+                        }
+
+                        return null;
                       },
-                      formType: "report",
-                      context: context),
-                ),
-                reusableText("Hair Color:"),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: formField(
-                      fieldName: "hairColor",
-                      value: state.hairColor,
-                      controller: _signUpController.firstNameController,
-                      hintText: "Enter color of the hair",
-                      prefixIcon: const Icon(Icons.color_lens_rounded),
-                      inputType: TextInputType.text,
-                      func: (value) {
-                        context
-                            .read<ReportFormBloc>()
-                            .add(ReportFormEvent(onHairColor: value));
-                      },
-                      formType: "report",
-                      context: context),
-                ),
-                reusableText("Skin Color:"),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: formField(
-                      fieldName: "skinColor",
-                      value: state.skinColor,
-                      controller: _signUpController.firstNameController,
-                      hintText: "Enter color of the skin",
-                      prefixIcon: const Icon(Icons.color_lens_rounded),
-                      inputType: TextInputType.text,
-                      func: (value) {
-                        context
-                            .read<ReportFormBloc>()
-                            .add(ReportFormEvent(onSkinColor: value));
-                      },
-                      formType: "report",
-                      context: context),
-                ),
-                const SizedBox(height: 25.0),
-                Center(
-                  child: pageViewButton(
-                      context: context, index: index, buttonName: "Next"),
-                )
-              ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  const SizedBox(height: 15.0),
+                  reusableText("Clothing Description:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: formField(
+                        fieldName: "clothingDescription",
+                        value: state.clothingDescription,
+                        controller:
+                            _signUpController.clothingDescriptionController,
+                        hintText:
+                            "Enter clothing description (color and type of clothes)",
+                        prefixIcon: const Icon(Icons.description_rounded),
+                        inputType: TextInputType.multiline,
+                        func: (value) {
+                          context.read<ReportFormBloc>().add(
+                              ReportFormEvent(onClothingDescription: value));
+                        },
+                        formType: "report form",
+                        context: context),
+                  ),
+                  reusableText("Height:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: formField(
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        fieldName: "height",
+                        value: state.height.toString(),
+                        controller: _signUpController.heightController,
+                        hintText: "Enter missing person height here",
+                        prefixIcon: const Icon(Icons.height),
+                        inputType: TextInputType.number,
+                        func: (value) {
+                          context.read<ReportFormBloc>().add(
+                              ReportFormEvent(onHeight: double.parse(value)));
+                        },
+                        formType: "report form",
+                        context: context),
+                  ),
+                  reusableText("Hair Color:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: dropDownField(
+                        selected: selectedHairColor,
+                        dropDown: hairColor,
+                        context: context,
+                        hintText: "Select hair color",
+                        keyName: "hairColor"),
+                  ),
+                  reusableText("Skin Color:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: dropDownField(
+                        selected: selectedSkinColor,
+                        dropDown: skinColor,
+                        context: context,
+                        hintText: "Select skin color",
+                        keyName: 'skinColor'),
+                  ),
+                  // SizedBox(
+                  //   width: MediaQuery.of(context).size.width * 0.9,
+                  //   child: formField(
+                  //       fieldName: "skinColor",
+                  //       value: state.skinColor,
+                  //       controller: _signUpController.skinColorController,
+                  //       hintText: "Enter color of the skin",
+                  //       prefixIcon: const Icon(Icons.color_lens_rounded),
+                  //       inputType: TextInputType.text,
+                  //       func: (value) {
+                  //         context
+                  //             .read<ReportFormBloc>()
+                  //             .add(ReportFormEvent(onSkinColor: value));
+                  //       },
+                  //       formType: "report form",
+                  //       context: context),
+                  // ),
+                  const SizedBox(height: 25.0),
+                  Center(
+                    child: pageViewButton(
+                        context: context,
+                        index: index,
+                        buttonName: "Next",
+                        formKey: formKey),
+                  )
+                ],
+              ),
             ),
           );
         },

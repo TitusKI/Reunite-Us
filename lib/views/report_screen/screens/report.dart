@@ -1,4 +1,4 @@
-import 'package:afalagi/core/routes/names.dart';
+import 'package:afalagi/routes/names.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';

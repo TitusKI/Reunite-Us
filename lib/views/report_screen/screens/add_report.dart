@@ -1,7 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'package:afalagi/bloc/report_form/report_form_bloc.dart';
-import 'package:afalagi/core/routes/routes.dart';
+import 'package:afalagi/routes/routes.dart';
 
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
@@ -29,6 +29,7 @@ class AddReport extends StatelessWidget {
               alignment: Alignment.topCenter,
               children: [
                 PageView(
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   onPageChanged: (index) {
                     state.page = index;
@@ -46,18 +47,28 @@ class AddReport extends StatelessWidget {
 ElevatedButton pageViewButton(
     {required BuildContext context,
     required int index,
-    required String buttonName}) {
+    required String buttonName,
+    required formKey}) {
   return ElevatedButton(
     style: ButtonStyle(
         alignment: Alignment.centerRight,
         backgroundColor: WidgetStateProperty.all(AppColors.accentColor)),
     onPressed: () {
-      if (index < 2) {
+      if (index == 1) {
+        // if (formKey.currentState!.validate()) {
+        //   formKey.currentState!.save();
+        _pageController.animateToPage(index,
+            duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+        // }
+      } else if (index == 0) {
         _pageController.animateToPage(index,
             duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
       } else {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRoutes.SIGN_IN, (Route<dynamic> route) => false);
+        if (formKey.currentState!.validate()) {
+          formKey.currentState!.save();
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.SIGN_IN, (Route<dynamic> route) => false);
+        }
       }
     },
     child: Text(
