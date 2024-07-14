@@ -36,7 +36,7 @@ class MyHomePage extends StatelessWidget {
             appBarTitle = "Report Missing";
             appBarActions = [
               IconButton(
-                icon: Icon(Icons.add),
+                icon: const Icon(Icons.add),
                 onPressed: () {
                   // Action for the report screen
                 },
@@ -58,7 +58,7 @@ class MyHomePage extends StatelessWidget {
         return Scaffold(
           appBar: buildAppBarLarge(appBarTitle, actions: appBarActions),
           bottomNavigationBar: ConvexAppBar(
-            style: TabStyle.textIn,
+            style: TabStyle.react,
             backgroundColor: AppColors.accentColor,
             items: const [
               TabItem(icon: Icons.home_rounded, title: "Home"),
