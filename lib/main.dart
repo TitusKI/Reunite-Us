@@ -1,5 +1,7 @@
-import 'package:afalagi/core/routes/pages.dart';
-import 'package:afalagi/main/global.dart';
+// ignore_for_file: must_be_immutable
+
+import 'package:afalagi/routes/pages.dart';
+import 'package:afalagi/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,34 +9,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 Future<void> main() async {
   await Global.init();
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  AppPages appPages = AppPages(Global.userRepository, Global.apiServices);
+  MyApp({super.key});
 
-  // This widget is the root of your application.
+  // This widget is the root of this application.
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [...AppPages.allBlocProvider(context)],
+      providers: [...appPages.allBlocProvider(context)],
       child: ScreenUtilInit(
-        builder: (context, child) => const MaterialApp(
+        builder: (context, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
-          // theme: ThemeData(
-          //   primaryColor: Colors.red,
-          //   brightness: Brightness.light,
-          // ),
-          // initialRoute: ,
-          onGenerateRoute: AppPages.generateRouteSettings,
-
-          // home: const Welcome(),
-          // routes: {
-          //   // "myHomePage": (context) => const MyHomePage(),
-          //   "signIn": (context) => const SignIn(),
-          //   "register": (context) => const Register(),
-          // },
+          onGenerateRoute: appPages.generateRouteSettings,
         ),
       ),
     );

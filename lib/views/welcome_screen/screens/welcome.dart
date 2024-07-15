@@ -1,5 +1,5 @@
 import 'package:afalagi/bloc/welcome/welcome_bloc.dart';
-import 'package:afalagi/main/global.dart';
+import 'package:afalagi/global.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/values/constant.dart';
 import 'package:dots_indicator/dots_indicator.dart';
