@@ -1,8 +1,8 @@
 import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
-import 'package:afalagi/core/routes/routes.dart';
+import 'package:afalagi/routes/routes.dart';
 
-import 'package:afalagi/main/global.dart';
+import 'package:afalagi/global.dart';
 
 import 'package:afalagi/utils/controller/sign_in_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';

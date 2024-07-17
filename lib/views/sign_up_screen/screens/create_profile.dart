@@ -4,9 +4,11 @@ import 'dart:io';
 
 import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
-import 'package:afalagi/core/routes/names.dart';
+import 'package:afalagi/repository/user_repository.dart';
+import 'package:afalagi/routes/names.dart';
 import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
+import 'package:afalagi/views/common/widgets/build_textfield.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
 import 'package:afalagi/views/common/widgets/date_of_birth_field.dart';
 import 'package:afalagi/views/common/widgets/flutter_toast.dart';
@@ -19,7 +21,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class CreateProfile extends StatefulWidget {
-  const CreateProfile({super.key});
+  final UserRepository userRepository;
+  const CreateProfile({required this.userRepository, super.key});
 
   @override
   State<CreateProfile> createState() => _CreateProfileState();
@@ -30,14 +33,17 @@ class _CreateProfileState extends State<CreateProfile> {
   final List<String> genders = ["Male", "Female"];
   final _formKey = GlobalKey<FormState>();
   final SignUpController _signUpController = SignUpController();
-  SignUpBloc _signUpBloc = SignUpBloc();
+  final TextEditingController dateController = TextEditingController();
+  late SignUpBloc _signUpBloc;
   String? _country;
   String? _state;
   String? _city;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _signUpBloc = BlocProvider.of<SignUpBloc>(context);
+    //   final UserRepository repository = UserRepository();
+    _signUpBloc = SignUpBloc(widget.userRepository);
+    //_signUpBloc = BlocProvider.of<SignUpBloc>(context);
   }
 
   @override
@@ -52,8 +58,8 @@ class _CreateProfileState extends State<CreateProfile> {
       builder: (context, state) {
         String? selectedGender = state.selected;
         PhoneNumber? number = state.phoneNumber;
-        String dateOfBirth = state.dateOfBirth;
-        TextEditingController _dateController = TextEditingController();
+        // String dateOfBirth = state.dateOfBirth;
+
         // if (state is GenderSelectionState) {
         //   selectedGender = state.selectedGender;
         // }
@@ -179,7 +185,11 @@ class _CreateProfileState extends State<CreateProfile> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.9,
                               child: dropDownField(
-                                  selectedGender, genders, context),
+                                  selected: selectedGender,
+                                  dropDown: genders,
+                                  context: context,
+                                  hintText: "Select gender",
+                                  keyName: 'gender'),
                             ),
                             const SizedBox(
                               height: 10,
@@ -193,10 +203,21 @@ class _CreateProfileState extends State<CreateProfile> {
                               height: 10,
                             ),
                             reusableText("Date Of Birth"),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              child: dateField(context, _dateController,
-                                  dateOfBirth, "birth"),
+                            BlocBuilder<SignUpBloc, SignUpStates>(
+                              builder: (context, state) {
+                                final String dateOfBirth = state.dateOfBirth;
+                                print("Date of Birth:$dateOfBirth");
+                                return SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
+                                  child: dateField(
+                                      context: context,
+                                      dateController: dateController,
+                                      date: dateOfBirth,
+                                      dateType: "birth",
+                                      whoseBirth: "userBirth"),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -221,6 +242,7 @@ class _CreateProfileState extends State<CreateProfile> {
 }
 
 Widget buildInitialInput(BuildContext context) {
+  print("Image Pick Initial State");
   return Center(
     child: Column(
       children: [
@@ -260,11 +282,12 @@ Widget buildInitialInput(BuildContext context) {
 }
 
 Widget buildImagePreview(File image, BuildContext context, String imageType) {
+  print("ImagePreview");
   bool isPressed = false;
   return Center(
     child: Column(
       children: [
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.2,
           child: Center(
@@ -274,7 +297,11 @@ Widget buildImagePreview(File image, BuildContext context, String imageType) {
                       radius: 50,
                       backgroundImage: FileImage(image),
                     )
-                  : Text(image.path),
+                  : MyTextField(
+                      controller: TextEditingController(text: image.path),
+                      hintText: "",
+                      obscureText: false,
+                      keyboardType: TextInputType.text),
               const SizedBox(
                 height: 10,
               ),
