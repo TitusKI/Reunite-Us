@@ -51,6 +51,7 @@ dependencies:
   toastification: ^2.0.0
   convex_bottom_bar: ^3.2.0
   validators: ^3.0.0
+  dio: ^5.5.0+1
   # image_picker: ^1.1.2
 
 dev_dependencies:

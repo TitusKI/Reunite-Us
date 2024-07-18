@@ -4,6 +4,8 @@
     
     <!-- Required to read from external storage -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     
     <!-- Required to write to external storage (optional) -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
