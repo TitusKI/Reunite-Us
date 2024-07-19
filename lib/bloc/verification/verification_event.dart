@@ -16,9 +16,17 @@ class CodeChanged extends VerificationEvent {
 
 class SubmitCode extends VerificationEvent {
   final String code;
-  const SubmitCode(this.code);
+  final String email;
+  const SubmitCode(this.code, this.email);
   @override
-  List<Object> get props => [code];
+  List<Object> get props => [code, email];
+}
+
+class ResendCode extends VerificationEvent {
+  final String email;
+  const ResendCode(this.email);
+  @override
+  List<Object> get props => [email];
 }
 
 class ResetCode extends VerificationEvent {}

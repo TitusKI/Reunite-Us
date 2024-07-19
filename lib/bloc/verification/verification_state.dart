@@ -27,6 +27,19 @@ class VerificationCodeValid extends VerificationState {
   List<Object> get props => [code];
 }
 
+class VerificationLoading extends VerificationState {}
+
+class VerificationSuccess extends VerificationState {}
+
+class VerificationFailure extends VerificationState {
+  final String error;
+
+  const VerificationFailure(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+
 class VerificationSubmitted extends VerificationState {
   final String code;
   const VerificationSubmitted(this.code);
@@ -35,3 +48,5 @@ class VerificationSubmitted extends VerificationState {
 }
 
 class VerificationReset extends VerificationState {}
+
+class VerificationCodeResent extends VerificationState {}
