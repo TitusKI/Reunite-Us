@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpVerification extends StatefulWidget {
   final String? title;
+
   const SignUpVerification({super.key, this.title});
 
   @override
@@ -15,18 +16,23 @@ class SignUpVerification extends StatefulWidget {
 
 class _SignUpVerificationState extends State<SignUpVerification> {
   late VerificationBloc _verificationBloc;
-
+  final TextEditingController _pinCodeController = TextEditingController();
   final String? title = "Sign up Verification";
-
+  late String email;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _verificationBloc = BlocProvider.of<VerificationBloc>(context);
+    final args = ModalRoute.of(context)!.settings.arguments as String;
+    setState(() {
+      email = args;
+    });
   }
 
   @override
   void dispose() {
     _verificationBloc.add(ResetCode());
+    _pinCodeController.dispose();
     super.dispose();
   }
 
@@ -48,7 +54,8 @@ class _SignUpVerificationState extends State<SignUpVerification> {
             Container(
                 padding: const EdgeInsets.all(20.0),
                 margin: const EdgeInsets.all(8.0),
-                child: buildPinCodeField(context, title)),
+                child: buildPinCodeField(
+                    context, title, _pinCodeController, email)),
             const SizedBox(
               height: 15,
             ),
@@ -65,7 +72,9 @@ class _SignUpVerificationState extends State<SignUpVerification> {
                             color: AppColors.accentColor, fontSize: 15),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      _verificationBloc.add(ResendCode(email));
+                    },
                   )
                 ],
               ),
