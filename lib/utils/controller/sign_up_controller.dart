@@ -2,6 +2,7 @@ import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';
+import 'package:validators/validators.dart';
 
 class SignUpController {
   final TextEditingController nameController = TextEditingController();
@@ -12,6 +13,12 @@ class SignUpController {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController middleNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController clothingDescriptionController =
+      TextEditingController();
+  final TextEditingController videoLinkController = TextEditingController();
+  final TextEditingController hairColorController = TextEditingController();
+  final TextEditingController skinColorController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
 
   String? handleEmailSignUp(
       BuildContext context, String fieldName, String value) {
@@ -80,6 +87,28 @@ class SignUpController {
 
     return null;
   }
+
+  String? handleVideoLink(
+      BuildContext context, String fieldName, String value) {
+    switch (fieldName) {
+      case 'videoMessage':
+        if (!isURL(value) ||
+            !(value.contains('youtube.com') ||
+                value.contains('youtu.be') ||
+                value.contains('facebook.com') ||
+                value.contains('instagram.com') ||
+                value.contains('tiktok.com'))) {
+          return "Please Enter a valid social media video link";
+        }
+        break;
+
+      default:
+        return null;
+    }
+
+    return null;
+  }
+}
   //   PhoneNumber? phoneNumber = state.phoneNumber;
   //   // String? phoneNumber = state.phoneNumber;
   //   String dateOfBirth = state.dateOfBirth;
@@ -118,4 +147,4 @@ class SignUpController {
   //   } catch (e) {
   //     print(e.toString());
   //   }
-}
+
