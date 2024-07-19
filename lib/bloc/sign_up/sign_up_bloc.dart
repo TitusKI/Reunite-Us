@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:afalagi/bloc/shared_event.dart';
+import 'package:afalagi/model/user_model.dart';
+import 'package:afalagi/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -11,8 +13,9 @@ part "sign_up_state.dart";
 
 class SignUpBloc extends Bloc<SharedEvent, SignUpStates> {
   final ImagePicker _picker = ImagePicker();
+  final UserRepository? _repository;
   @override
-  SignUpBloc() : super(SignUpStates.initial()) {
+  SignUpBloc(this._repository) : super(SignUpStates.initial()) {
     on<NameChangedEvent>(_nameChangedEvent);
 
     on<EmailEvent>(_emailEvent);
@@ -33,7 +36,31 @@ class SignUpBloc extends Bloc<SharedEvent, SignUpStates> {
     on<SignUpReset>(
       (event, emit) => emit(SignUpStates.initial()),
     );
+    on<SignUpSubmitEvent>(_signupSubmitEvent);
   }
+  Future<void> _signupSubmitEvent(
+      SignUpSubmitEvent event, Emitter<SignUpStates> emit) async {
+    emit(state.copyWith(isSignUpLoading: true));
+    print("email is : ${state.email}");
+    try {
+      await _repository!.signUp(
+          email: state.email,
+          password: state.password,
+          passwordConfirm: state.repassword);
+      // On successful sign-up, update the state
+      emit(state.copyWith(
+        isSignUpLoading: false,
+        signUpSuccess: true, // Set to true on success
+        signUpFailure: '', // Clear any previous failure message
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+          isSignUpLoading: false,
+          signUpSuccess: false,
+          signUpFailure: e.toString()));
+    }
+  }
+
   Stream<SignUpStates> _locationEvent(
       LocationEvent event, Emitter<SignUpStates> emit) async* {
     emit(
@@ -65,7 +92,7 @@ class SignUpBloc extends Bloc<SharedEvent, SignUpStates> {
   Stream<SignUpStates> _signUpLoadingEvent(
       SignUpLoadingEvent event, Emitter<SignUpStates> emit) async* {
     emit(state.copyWith(isSignUpLoading: true));
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     const CircularProgressIndicator();
     emit(state.copyWith(isSignUpLoading: false));
   }

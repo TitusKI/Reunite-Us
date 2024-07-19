@@ -25,9 +25,10 @@ class SignUpStates {
   final String state;
   final String city;
   final bool isSignUpLoading;
+  final bool signUpSuccess;
+  final String? signUpFailure;
   final String selected;
   final String dateOfBirth;
-  final String dateOfDisapperance;
 
   const SignUpStates({
     this.isValid,
@@ -40,7 +41,6 @@ class SignUpStates {
     this.password = "",
     this.repassword = "",
     this.dateOfBirth = '',
-    this.dateOfDisapperance = "",
     this.profileImage,
     this.imagePickState,
     this.errorImage,
@@ -49,6 +49,8 @@ class SignUpStates {
     this.state = "",
     this.city = "",
     this.isSignUpLoading = false,
+    this.signUpSuccess = false,
+    this.signUpFailure = "",
     this.selected = "",
   });
   SignUpStates.initial()
@@ -66,11 +68,12 @@ class SignUpStates {
         profileImage = null,
         errorImage = "retry",
         dateOfBirth = "",
-        dateOfDisapperance = "",
         country = "",
         state = "",
         city = "",
         selected = "",
+        signUpSuccess = false,
+        signUpFailure = null,
         isSignUpLoading = false;
 
   factory SignUpStates.initialyy() {
@@ -99,7 +102,6 @@ class SignUpStates {
     PhoneNumber? phoneNumber,
     bool? isValid,
     String? dateOfBirth,
-    String? dateOfDisapperance,
     File? profileImage,
     ImagePickState? imagePickState,
     String? errorImage,
@@ -107,6 +109,8 @@ class SignUpStates {
     String? state,
     String? city,
     bool? isSignUpLoading,
+    bool? signUpSuccess,
+    String? signUpFailure,
     bool? obscurePassword,
     IconData? iconPassword,
     String? selected,
@@ -122,7 +126,6 @@ class SignUpStates {
       repassword: repassword ?? this.repassword,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      dateOfDisapperance: dateOfDisapperance ?? this.dateOfDisapperance,
       profileImage: profileImage ?? this.profileImage,
       imagePickState: imagePickState ?? this.imagePickState,
       errorImage: errorImage ?? this.errorImage,
@@ -131,12 +134,14 @@ class SignUpStates {
       state: state ?? this.state,
       city: city ?? this.city,
       isSignUpLoading: isSignUpLoading ?? this.isSignUpLoading,
+      signUpSuccess: signUpSuccess ?? this.signUpSuccess,
+      signUpFailure: signUpFailure ?? this.signUpFailure,
       selected: selected ?? this.selected,
     );
   }
 }
 
-SignUpStates signUpStates = SignUpStates();
+SignUpStates signUpStates = const SignUpStates();
 //image picked state
 final signUpstates = signUpStates.copyWith(
   imagePickState: ImagePickState.picked,
