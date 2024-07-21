@@ -1,6 +1,5 @@
 import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
-import 'package:afalagi/repository/user_repository.dart';
 import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
@@ -39,7 +38,6 @@ class _SignUpState extends State<SignUp> {
 
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
-      print("form is valid");
       _signUpBloc.add(SignUpSubmitEvent());
     }
   }

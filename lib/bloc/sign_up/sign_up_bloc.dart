@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:afalagi/bloc/shared_event.dart';
-import 'package:afalagi/model/user_model.dart';
 import 'package:afalagi/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
