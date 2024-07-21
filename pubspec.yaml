@@ -52,6 +52,8 @@ dependencies:
   convex_bottom_bar: ^3.2.0
   validators: ^3.0.0
   dio: ^5.5.0+1
+  flutter_native_splash: ^2.4.1
+  google_fonts: ^6.2.1
   # image_picker: ^1.1.2
 
 dev_dependencies:
@@ -79,6 +81,7 @@ flutter:
   assets:
     - assets/welcome/
     - assets/icons/
+    - assets/logo/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
