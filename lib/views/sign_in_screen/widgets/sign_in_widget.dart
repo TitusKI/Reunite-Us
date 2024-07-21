@@ -63,71 +63,6 @@ Widget reusableText(String text) {
   );
 }
 
-Widget buildTextField(String hintText, String textType, String iconName,
-    void Function(String value)? func) {
-  return Container(
-    // height and width of the textfield
-    width: 325.w,
-    height: 50.h,
-    margin: EdgeInsets.only(bottom: 20.h),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.all(
-        Radius.circular(15.w),
-      ),
-      border: Border.all(color: AppColors.secondaryColor),
-    ),
-    child: Row(
-      children: [
-        Container(
-          width: 16.w,
-          height: 16.w,
-          margin: EdgeInsets.only(left: 17.w),
-          child: Image.asset("assets/icons/$iconName.png"),
-        ),
-        SizedBox(
-          width: 270.w,
-          height: 50.h,
-          child: TextField(
-            // sending the value user types on the textfield to the func
-            onChanged: (value) => func!(value),
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              hintText: hintText,
-              border: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-              hintStyle: const TextStyle(
-                color: AppColors.secondaryColor,
-              ),
-            ),
-            style: TextStyle(
-              color: AppColors.accentColor,
-              fontFamily: "Avenir",
-              fontSize: 12.sp,
-              fontWeight: FontWeight.normal,
-            ),
-            autocorrect: false,
-            obscureText: textType == "password" ? true : false,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
 Widget forgotPassword(BuildContext context) {
   return Container(
     margin: EdgeInsets.only(left: 25.h),
@@ -167,13 +102,13 @@ Widget buildLogInAndRegButton(
             border: Border.all(
                 color: buttonType == "login"
                     ? Colors.transparent
-                    : AppColors.secondaryColor),
+                    : AppColors.cardColor),
             boxShadow: const [
               BoxShadow(
                 spreadRadius: 1,
                 blurRadius: 2,
                 offset: Offset(0, 1),
-                color: AppColors.secondaryColor,
+                color: AppColors.cardColor,
               )
             ]),
         child: Center(

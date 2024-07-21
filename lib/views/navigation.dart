@@ -59,7 +59,7 @@ class MyHomePage extends StatelessWidget {
           appBar: buildAppBarLarge(appBarTitle, actions: appBarActions),
           bottomNavigationBar: ConvexAppBar(
             style: TabStyle.react,
-            backgroundColor: AppColors.accentColor,
+            backgroundColor: AppColors.secondaryColor,
             items: const [
               TabItem(icon: Icons.home_rounded, title: "Home"),
               TabItem(icon: Icons.search_rounded, title: "Search"),

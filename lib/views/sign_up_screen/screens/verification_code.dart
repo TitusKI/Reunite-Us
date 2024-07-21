@@ -54,8 +54,7 @@ class _SignUpVerificationState extends State<SignUpVerification> {
             Container(
                 padding: const EdgeInsets.all(20.0),
                 margin: const EdgeInsets.all(8.0),
-                child: buildPinCodeField(
-                    context, title, _pinCodeController, email)),
+                child: buildPinCodeField(context, title, _pinCodeController)),
             const SizedBox(
               height: 15,
             ),

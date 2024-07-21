@@ -18,7 +18,7 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
     on<SubmitCode>((event, emit) async {
       emit(VerificationLoading());
       try {
-        await _apiServices.verifyCode(event.code, event.email);
+        await _apiServices.verifyCode(event.code!, event.email!);
         emit(VerificationSuccess());
       } catch (e) {
         if (e.toString().contains("401")) {
@@ -26,7 +26,7 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
           try {
             await _apiServices.refreshToken();
             // Retry verification after refreshing token
-            await _apiServices.verifyCode(event.code, event.email);
+            await _apiServices.verifyCode(event.code!, event.email!);
             emit(VerificationSuccess());
           } catch (e) {
             emit(const VerificationFailure(

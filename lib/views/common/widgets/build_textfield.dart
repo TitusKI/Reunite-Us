@@ -61,7 +61,7 @@ class MyTextField extends StatelessWidget {
         prefixIcon: prefixIcon != null
             ? IconTheme(
                 data: const IconThemeData(
-                    color: AppColors.accentColor), // Set icon color here
+                    color: AppColors.secondaryColor), // Set icon color here
                 child: prefixIcon!,
               )
             : null,

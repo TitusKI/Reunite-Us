@@ -15,26 +15,22 @@ class ResetVerification extends StatefulWidget {
 class _ResetVerificationState extends State<ResetVerification> {
   late VerificationBloc _verificationBloc;
   final TextEditingController _pinCodeController = TextEditingController();
-  late String email;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _verificationBloc = BlocProvider.of<VerificationBloc>(context);
-    final args = ModalRoute.of(context)!.settings.arguments as String;
-    email = args;
   }
 
   @override
   void dispose() {
     _verificationBloc.add(ResetCode());
-    _pinCodeController.dispose();
+    // _pinCodeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final email = ModalRoute.of(context)!.settings.arguments as String;
-
     return Scaffold(
       appBar: buildAppBarLarge("Reset Verification"),
       body: SingleChildScrollView(
@@ -51,8 +47,7 @@ class _ResetVerificationState extends State<ResetVerification> {
             Container(
                 padding: const EdgeInsets.all(20.0),
                 margin: const EdgeInsets.all(8.0),
-                child:
-                    buildPinCodeField(context, "", _pinCodeController, email)),
+                child: buildPinCodeField(context, "", _pinCodeController)),
             const SizedBox(
               height: 15,
             ),

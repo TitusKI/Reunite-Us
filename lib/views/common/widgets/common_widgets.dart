@@ -31,17 +31,38 @@ AppBar buildAppBar(String type) {
 
 AppBar buildAppBarLarge(String type, {List<Widget> actions = const []}) {
   return AppBar(
+    flexibleSpace: Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.secondaryColor, // Medium Persian Blue
+            AppColors.accentColor, // Vivid Cerulean
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+    ),
     actions: actions,
-    systemOverlayStyle:
-        const SystemUiOverlayStyle(statusBarColor: AppColors.accentColor),
-    toolbarHeight: 100.0,
-    backgroundColor: AppColors.accentColor,
+    // systemOverlayStyle:
+    //     const SystemUiOverlayStyle(statusBarColor: AppColors.secondaryColor),
+    toolbarHeight: 50.0,
+    // backgroundColor: AppColors.secondaryColor,
     elevation: 10,
     // backgroundColor: Colors.transparent,
     bottom: PreferredSize(
       preferredSize: const Size.fromHeight(1.0),
       child: Container(
-        color: AppColors.accentColor,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.secondaryColor, // Medium Persian Blue
+              AppColors.accentColor, // Vivid Cerulean
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         // height defines the thickness of the line
         height: 10.0,
       ),
@@ -91,82 +112,9 @@ Widget reusableText(String text) {
       text,
       style: TextStyle(
         color: AppColors.primaryText,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w300,
         fontSize: 14.sp,
       ),
-    ),
-  );
-}
-
-Widget buildTextField(String hintText, String textType, String iconName,
-    void Function(String value)? func) {
-  // final List<String> genders = ["Male", "Female", "Other"];
-  return Container(
-    // height and width of the textfield
-    width: 325.w,
-    height: 50.h,
-    margin: EdgeInsets.only(bottom: 20.h),
-    decoration: BoxDecoration(
-      color: AppColors.secondaryColor,
-      borderRadius: BorderRadius.all(
-        Radius.circular(15.w),
-      ),
-      border: Border.all(color: AppColors.secondaryColor),
-    ),
-    child: Row(
-      children: [
-        Container(
-          width: 16.w,
-          height: 16.w,
-          margin: EdgeInsets.only(left: 17.w),
-          child: Image.asset(
-            "assets/icons/$iconName.png",
-            color: AppColors.primarySecondaryText,
-          ),
-        ),
-        SizedBox(
-          width: 270.w,
-          height: 50.h,
-          child: TextFormField(
-            // sending the value user types on the textfield to the func
-            onChanged: (value) => func!(value),
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              hintText: hintText,
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: textType == 'search'
-                      ? AppColors.primaryBackground
-                      : Colors.transparent,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: textType == "search"
-                      ? AppColors.primaryBackground
-                      : Colors.transparent,
-                ),
-              ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-              hintStyle: const TextStyle(
-                color: AppColors.secondaryText,
-              ),
-            ),
-            style: TextStyle(
-              color: AppColors.primaryText,
-              fontFamily: "Avenir",
-              fontSize: 12.sp,
-              fontWeight: FontWeight.normal,
-            ),
-            autocorrect: false,
-            obscureText: textType == "password" ? true : false,
-          ),
-        ),
-      ],
     ),
   );
 }
@@ -220,7 +168,7 @@ Widget buildLogInAndRegButton(
                 buttonName,
                 style: TextStyle(
                     fontSize: 16.sp,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.bold,
                     color: AppColors.primaryBackground),
               ),
             )),
@@ -229,8 +177,8 @@ Widget buildLogInAndRegButton(
   );
 }
 
-Widget buildPinCodeField(BuildContext context, String? title,
-    TextEditingController controller, String email) {
+Widget buildPinCodeField(
+    BuildContext context, String? title, TextEditingController controller) {
   return BlocBuilder<VerificationBloc, VerificationState>(
     builder: (context, state) {
       if (state is VerificationLoading) {
@@ -262,9 +210,9 @@ Widget buildPinCodeField(BuildContext context, String? title,
           activeFillColor: Colors.white,
           inactiveFillColor: Colors.white,
           selectedFillColor: Colors.white,
-          activeColor: AppColors.accentColor,
+          activeColor: AppColors.secondaryColor,
           inactiveColor: Colors.grey,
-          selectedColor: AppColors.accentColor,
+          selectedColor: AppColors.secondaryColor,
         ),
         animationDuration: const Duration(milliseconds: 300),
         backgroundColor: Colors.blue.shade50,
@@ -274,7 +222,7 @@ Widget buildPinCodeField(BuildContext context, String? title,
           // context.read<VerificationBloc>().add(CodeChanged(value));
         },
         onCompleted: (value) {
-          context.read<VerificationBloc>().add(SubmitCode(value, email));
+          context.read<VerificationBloc>().add(SubmitCode(code: value));
           context.read<VerificationBloc>().add(CodeChanged(value));
           title == ""
               ? Navigator.of(context).pushNamed("/reset_successful")

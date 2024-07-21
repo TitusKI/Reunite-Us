@@ -65,7 +65,7 @@ class _WelcomeState extends State<Welcome> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       decorator: DotsDecorator(
                           activeColor: AppColors.accentColor,
-                          color: AppColors.secondaryColor,
+                          color: AppColors.cardColor,
                           size: const Size.square(8.0),
                           activeSize: const Size(15.0, 8.0),
                           activeShape: RoundedRectangleBorder(
@@ -97,9 +97,9 @@ class _WelcomeState extends State<Welcome> {
             child: Text(
           title,
           style: TextStyle(
-            color: AppColors.primaryText,
+            color: AppColors.secondaryColor,
             fontSize: 25.sp,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.bold,
           ),
         )),
         Container(
@@ -108,7 +108,7 @@ class _WelcomeState extends State<Welcome> {
           child: Text(
             subtitle,
             style: TextStyle(
-              color: AppColors.primaryText,
+              color: AppColors.secondaryColor,
               fontSize: 15.sp,
               fontWeight: FontWeight.normal,
             ),
@@ -141,22 +141,14 @@ class _WelcomeState extends State<Welcome> {
             decoration: BoxDecoration(
               color: AppColors.accentColor,
               borderRadius: BorderRadius.all(Radius.circular(15.w)),
-              boxShadow: const [
-                BoxShadow(
-                  color: AppColors.accentColor,
-                  spreadRadius: 1,
-                  blurRadius: 2,
-                  offset: Offset(0, 1),
-                ),
-              ],
             ),
             child: Center(
               child: Text(
                 buttonName,
                 style: TextStyle(
-                  color: AppColors.primarySecondaryText,
+                  color: AppColors.primaryBackground,
                   fontSize: 18.sp,
-                  fontWeight: FontWeight.normal,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),

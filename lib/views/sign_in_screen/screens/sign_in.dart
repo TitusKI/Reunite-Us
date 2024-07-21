@@ -23,12 +23,12 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
-  SignInController _signInController = SignInController();
+  final SignInController _signInController = SignInController();
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor:
-          AppColors.accentColor, // Set status bar color for home screen
+          AppColors.secondaryColor, // Set status bar color for home screen
       statusBarIconBrightness: Brightness.light, // Light text/icons
     ));
     return BlocBuilder<SignInBloc, SignInState>(builder: (context, state) {
@@ -90,22 +90,32 @@ class _SignInState extends State<SignIn> {
                         Row(
                           children: [
                             IconButton(
+                                alignment: Alignment.centerRight,
+                                iconSize: 13,
                                 onPressed: () {},
                                 icon:
                                     const Icon(Icons.check_box_outline_blank)),
                             const Text(
                               "Remember Password",
-                              style: TextStyle(color: AppColors.primaryText),
+                              style: TextStyle(
+                                  fontSize: 13, color: AppColors.primaryText),
                             ),
-                            const SizedBox(
-                              width: 35,
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 175.w,
                             ),
                             forgotPassword(() {
                               Navigator.of(context)
                                   .pushNamed("/reset_password");
                             }),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -134,7 +144,7 @@ class _SignInState extends State<SignIn> {
                     children: [
                       const Text(
                         "Don't have an account?",
-                        style: TextStyle(color: AppColors.primaryText),
+                        style: TextStyle(color: AppColors.secondaryColor),
                       ),
                       const SizedBox(
                         width: 35,
