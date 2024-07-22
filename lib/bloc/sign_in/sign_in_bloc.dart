@@ -1,7 +1,5 @@
 import 'package:afalagi/bloc/shared_event.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:afalagi/routes/export.dart';
 part 'sign_in_event.dart';
 part 'sign_in_state.dart';
 
@@ -9,7 +7,11 @@ class SignInBloc extends Bloc<SharedEvent, SignInState> {
   SignInBloc() : super(const SignInState()) {
     on<EmailEvent>(_emailEvent);
     on<PasswordEvent>(_passwordEvent);
+    on<SignInReset>(_resetToInitial);
     // on<TogglePasswordVisibility>(togglePasswordVisibility);
+  }
+  void _resetToInitial(SignInReset event, Emitter<SignInState> emit) {
+    emit(SignInState.initial());
   }
 
   void _emailEvent(EmailEvent event, Emitter<SignInState> emit) {

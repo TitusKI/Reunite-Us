@@ -1,5 +1,6 @@
 import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
+
 import 'package:afalagi/routes/routes.dart';
 
 import 'package:afalagi/global.dart';
@@ -8,6 +9,8 @@ import 'package:afalagi/utils/controller/sign_in_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/values/constant.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
+import 'package:afalagi/views/sign_in_screen/widgets/AnimatedText.dart';
+import 'package:afalagi/views/sign_in_screen/widgets/language.dart';
 import 'package:afalagi/views/sign_up_screen/widgets/sign_up_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +27,19 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   final SignInController _signInController = SignInController();
+  late SignInBloc _signInBloc;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _signInBloc = BlocProvider.of<SignInBloc>(context);
+  }
+
+  @override
+  void dispose() {
+    _signInBloc.add(SignInReset());
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -35,20 +51,40 @@ class _SignInState extends State<SignIn> {
       return SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.primaryBackground,
-          appBar: buildAppBarLarge("Log In"),
+          appBar:
+              buildAppBarLarge('Log In', actions: [const LanguageDropdown()]),
           body: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  Center(
+                    child: Image.asset(
+                      'assets/logo/logo.png', // Your logo image path
+                      width: 150.h,
+                    ),
+                  ),
                   Container(
                     padding:
-                        EdgeInsets.only(left: 25.w, right: 25.w, top: 60.h),
-                    margin: EdgeInsets.only(top: 50.h),
+                        EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h),
+                    margin: EdgeInsets.only(top: 25.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Center(
+                        //   child: Image.asset(
+                        //     'assets/logo/logo.png', // Your logo image path
+                        //     height: 100.h,
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: 15.h,
+                        // ),
+                        animatedTextScreen(),
                         reusableText("Email"),
                         SizedBox(
                           height: 5.h,
@@ -98,7 +134,8 @@ class _SignInState extends State<SignIn> {
                             const Text(
                               "Remember Password",
                               style: TextStyle(
-                                  fontSize: 13, color: AppColors.primaryText),
+                                  fontSize: 13,
+                                  color: AppColors.secondaryColor),
                             ),
                           ],
                         ),
@@ -159,7 +196,10 @@ class _SignInState extends State<SignIn> {
                         ),
                       )
                     ],
-                  )
+                  ),
+                  SizedBox(
+                    height: 15.h,
+                  ),
                   // buildLogInAndRegButton("Sign Up", "register", () {
                   //   Navigator.of(context).pushNamed("/sign_up");
                   // })
@@ -172,3 +212,46 @@ class _SignInState extends State<SignIn> {
     });
   }
 }
+
+// Widget buildMarqueeText() {
+//   return SizedBox(
+//     height: 50.h,
+//     child: Marquee(
+//       text: 'Welcome to Reunite-Us',
+//       style: const TextStyle(
+//         fontWeight: FontWeight.bold,
+//         fontSize: 24.0,
+//         color: Colors.blueAccent,
+//       ),
+//       scrollAxis: Axis.horizontal,
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       blankSpace: 20.0,
+//       velocity: 100.0,
+//       pauseAfterRound: const Duration(seconds: 1),
+//       startPadding: 10.dm,
+//       accelerationDuration: const Duration(seconds: 1),
+//       accelerationCurve: Curves.linear,
+//       decelerationDuration: const Duration(milliseconds: 500),
+//       decelerationCurve: Curves.easeOut,
+//     ),
+//   );
+// }
+
+// Widget buildAnimatedText() {
+//   return SizedBox(
+//     width: 200.w,
+//     child: DefaultTextStyle(
+//       style: const TextStyle(
+//         fontSize: 24.0,
+//         fontWeight: FontWeight.bold,
+//         color: AppColors.accentColor,
+//       ),
+//       child: AnimatedTextKit(
+//         animatedTexts: [
+//           WavyAnimatedText('Welcome to Reunite-Us'),
+//         ],
+//         isRepeatingAnimation: true,
+//       ),
+//     ),
+//   );
+// }

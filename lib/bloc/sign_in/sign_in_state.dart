@@ -12,6 +12,11 @@ class SignInState {
     this.obscurePassword = true,
     this.iconPassword = Icons.remove_red_eye_rounded,
   });
+  SignInState.initial()
+      : email = "",
+        password = "",
+        obscurePassword = true,
+        iconPassword = Icons.remove_red_eye_rounded;
   SignInState copyWith({
     String? email,
     String? password,
