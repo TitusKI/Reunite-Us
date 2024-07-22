@@ -31,38 +31,41 @@ AppBar buildAppBar(String type) {
 
 AppBar buildAppBarLarge(String type, {List<Widget> actions = const []}) {
   return AppBar(
+    centerTitle: true,
+    iconTheme: const IconThemeData(color: AppColors.primaryBackground),
+    backgroundColor: AppColors.secondaryColor,
     flexibleSpace: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.secondaryColor, // Medium Persian Blue
-            AppColors.accentColor, // Vivid Cerulean
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        // decoration: const BoxDecoration(
+        //   // gradient: LinearGradient(
+        //   //   colors: [
+        //   //     AppColors.secondaryColor, // Medium Persian Blue
+        //   //     AppColors.accentColor, // Vivid Cerulean
+        //   //   ],
+        //   //   begin: Alignment.topLeft,
+        //   //   end: Alignment.bottomRight,
+        //   // ),
+        // ),
         ),
-      ),
-    ),
     actions: actions,
     // systemOverlayStyle:
     //     const SystemUiOverlayStyle(statusBarColor: AppColors.secondaryColor),
-    toolbarHeight: 50.0,
+    toolbarHeight: 100.0,
     // backgroundColor: AppColors.secondaryColor,
     elevation: 10,
     // backgroundColor: Colors.transparent,
     bottom: PreferredSize(
       preferredSize: const Size.fromHeight(1.0),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.secondaryColor, // Medium Persian Blue
-              AppColors.accentColor, // Vivid Cerulean
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        // decoration: const BoxDecoration(
+        //   gradient: LinearGradient(
+        //     colors: [
+        //       AppColors.secondaryColor, // Medium Persian Blue
+        //       AppColors.accentColor, // Vivid Cerulean
+        //     ],
+        //     begin: Alignment.topLeft,
+        //     end: Alignment.bottomRight,
+        //   ),
+        // ),
         // height defines the thickness of the line
         height: 10.0,
       ),
@@ -82,25 +85,43 @@ AppBar buildAppBarLarge(String type, {List<Widget> actions = const []}) {
 
 //Need Context for accesssing Bloc
 Widget buildThirdPartyLogin(BuildContext context) {
-  return Container(
-    margin: EdgeInsets.only(top: 10.h, bottom: 5.h),
-    padding: EdgeInsets.only(left: 35.w, right: 25.w),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _reusableIcons("google"),
-      ],
-    ),
-  );
-}
-
-Widget _reusableIcons(String iconName) {
   return GestureDetector(
     onTap: () {},
-    child: SizedBox(
-      width: 40.w,
-      height: 40.w,
-      child: Image.asset("assets/icons/$iconName.png"),
+    child: Container(
+      margin: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h, bottom: 10.h),
+      width: 325.w,
+      height: 50.h,
+      decoration: BoxDecoration(
+        color: AppColors.secondaryColor,
+        borderRadius: BorderRadius.circular(15.w),
+        border: Border.all(color: AppColors.cardColor),
+      ),
+      child: Row(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+                color: AppColors.primaryBackground, shape: BoxShape.circle),
+            child: Image.asset(
+              "assets/icons/google.png",
+              //color: AppColors.primaryBackground,
+            ),
+          ),
+          SizedBox(
+            width: 20.w,
+          ), // Assuming this builds the Google icon
+
+          Center(
+            child: Text(
+              "Continue with Google",
+              style: TextStyle(
+                color: AppColors.primaryBackground,
+                fontWeight: FontWeight.w100,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -111,8 +132,8 @@ Widget reusableText(String text) {
     child: Text(
       text,
       style: TextStyle(
-        color: AppColors.primaryText,
-        fontWeight: FontWeight.w300,
+        color: AppColors.secondaryColor,
+        fontWeight: FontWeight.normal,
         fontSize: 14.sp,
       ),
     ),
@@ -140,10 +161,7 @@ Widget buildLogInAndRegButton(
     child: Column(
       children: [
         Container(
-            margin: EdgeInsets.only(
-                left: 25.w,
-                right: 25.w,
-                top: isButtonEnabled == true ? 35.h : 20.h),
+            margin: EdgeInsets.only(left: 25.w, right: 25.w, top: 20.h),
             width: 325.w,
             height: 50.h,
             decoration: BoxDecoration(
@@ -168,7 +186,7 @@ Widget buildLogInAndRegButton(
                 buttonName,
                 style: TextStyle(
                     fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w300,
                     color: AppColors.primaryBackground),
               ),
             )),

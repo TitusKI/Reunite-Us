@@ -1,5 +1,4 @@
 import 'package:afalagi/routes/export.dart';
-import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,8 +13,8 @@ class _HomeState extends State<Home> {
     return Center(
         child: ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, AppRoutes.SIGN_UP);
+              Navigator.pushNamed(context, AppRoutes.SIGN_IN);
             },
-            child: const Text("Sign Up ")));
+            child: const Text("Sign in ")));
   }
 }

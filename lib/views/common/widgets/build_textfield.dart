@@ -78,9 +78,7 @@ class MyTextField extends StatelessWidget {
         fillColor: AppColors.cardColor,
         filled: true,
         hintText: hintText,
-        hintStyle: const TextStyle(
-          color: Color.fromARGB(115, 88, 85, 85),
-        ),
+        hintStyle: const TextStyle(color: AppColors.primarySecondaryText),
         errorText: errorMsg,
       ),
     );
