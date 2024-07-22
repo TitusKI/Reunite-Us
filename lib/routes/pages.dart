@@ -1,5 +1,6 @@
 // The UNIFICATION Of BlocProvider and routes and pages
 
+import 'package:afalagi/bloc/animation/animation_bloc.dart';
 import 'package:afalagi/bloc/sign_in/sign_in_bloc.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
 import 'package:afalagi/repository/user_repository.dart';
@@ -106,6 +107,10 @@ class AppPages {
           bloc: BlocProvider(
         create: (_) => TogglePasswordBloc(),
       )),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => AnimationBloc(),
+      ))
     ];
   }
 
