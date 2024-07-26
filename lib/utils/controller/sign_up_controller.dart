@@ -19,7 +19,9 @@ class SignUpController {
   final TextEditingController hairColorController = TextEditingController();
   final TextEditingController skinColorController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
-
+  final TextEditingController languageSpokenController =
+      TextEditingController();
+  final TextEditingController nationalityController = TextEditingController();
   String? handleEmailSignUp(
       BuildContext context, String fieldName, String value) {
     final SignUpStates state = context.read<SignUpBloc>().state;
