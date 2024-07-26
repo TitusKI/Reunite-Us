@@ -1,5 +1,6 @@
 import 'package:afalagi/bloc/shared_event.dart';
 import 'package:afalagi/bloc/sign_up/sign_up_bloc.dart';
+import 'package:afalagi/model/user_model.dart';
 import 'package:afalagi/utils/controller/sign_up_controller.dart';
 import 'package:afalagi/views/common/values/colors.dart';
 import 'package:afalagi/views/common/widgets/common_widgets.dart';
@@ -38,7 +39,11 @@ class _SignUpState extends State<SignUp> {
 
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
-      _signUpBloc.add(SignUpSubmitEvent());
+      final user = User(
+          email: _signUpController.emailController.text,
+          password: _signUpController.passwordController.text,
+          confirmPassword: _signUpController.confirmPasswordController.text);
+      _signUpBloc.add(SignUpSubmitEvent(user));
     }
   }
 
@@ -46,15 +51,10 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return BlocListener<SignUpBloc, SignUpStates>(
       listener: (context, state) {
-        if (state.isSignUpLoading) {
-          // Optional: Show a loading indicator here if needed
-          const Center(child: CircularProgressIndicator());
-        }
-
         if (state.signUpSuccess) {
           final email = state.email;
           // Navigate to the verification screen
-          print("Successfully Signed Up");
+          print("Successfully Signed Up: $email");
           Navigator.of(context)
               .pushNamed("/sign_up_verification", arguments: email);
         }
@@ -161,7 +161,10 @@ class _SignUpState extends State<SignUp> {
                           child: reusableText(
                               "By creating an account you have agree with our terms and conditions"),
                         ),
-                        buildLogInAndRegButton("Sign Up", true, _handleSubmit)
+                        state.isSignUpLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : buildLogInAndRegButton(
+                                "Sign Up", true, _handleSubmit)
                       ],
                     ),
                   ),
