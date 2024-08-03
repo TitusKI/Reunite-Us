@@ -6,7 +6,7 @@ import 'package:afalagi/presentation/bloc/user/profile/create_profile/create_pro
 import 'package:afalagi/presentation/bloc/user/profile/create_profile/create_profile_event.dart';
 import 'package:afalagi/presentation/bloc/user/profile/create_profile/create_profile_state.dart';
 import 'package:afalagi/presentation/bloc/shared_event.dart';
-import 'package:afalagi/data/models/Auth/user_profile_model.dart';
+import 'package:afalagi/data/models/user/user_profile_model.dart';
 import 'package:afalagi/config/routes/names.dart';
 import 'package:afalagi/core/util/controller/enum_extensions.dart';
 import 'package:afalagi/core/util/controller/enum_utility.dart';
