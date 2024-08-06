@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:afalagi/data/models/Auth/user_profile_model.dart';
+import 'package:afalagi/data/models/user/user_profile_model.dart';
 import 'package:afalagi/data/services/remote/user_services.dart';
 import 'package:afalagi/domain/repository/user/user_repository.dart';
 import 'package:dio/dio.dart';
