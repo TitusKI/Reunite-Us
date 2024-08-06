@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:afalagi/core/constants/constant.dart';
 import 'package:afalagi/core/constants/domain_export.dart';
-import 'package:afalagi/data/models/Auth/user_profile_model.dart';
+import 'package:afalagi/data/models/user/user_profile_model.dart';
 import 'package:afalagi/data/services/local/storage_services.dart';
 import 'package:afalagi/injection_container.dart';
 import 'package:dio/dio.dart';
