@@ -7,7 +7,7 @@ import 'package:afalagi/domain/usecases/user/update_profile_pic.dart';
 import 'package:afalagi/domain/usecases/user/update_user_profile.dart';
 import 'package:afalagi/injection_container.dart';
 import 'package:afalagi/presentation/bloc/generic_state.dart';
-import 'package:afalagi/data/models/Auth/user_profile_model.dart';
+import 'package:afalagi/data/models/user/user_profile_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
