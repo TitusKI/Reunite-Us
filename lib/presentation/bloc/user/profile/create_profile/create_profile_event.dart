@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:afalagi/presentation/bloc/shared_event.dart';
-import 'package:afalagi/data/models/Auth/user_profile_model.dart';
+import 'package:afalagi/data/models/user/user_profile_model.dart';
 import 'package:afalagi/core/util/controller/enums.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
