@@ -8,9 +8,6 @@ import 'package:afalagi/domain/repository/post/post_repository.dart';
 import 'package:afalagi/injection_container.dart';
 
 class PostRepositoryImpl extends PostRepository {
-  // final PostServices _PostServices;
-  // PostRepositoryImpl(this._PostServices);
-
   @override
   Future<void> createPost(MissingPersonEntity missingPerson) async {
     return await sl<PostServices>().createPost(missingPerson);
