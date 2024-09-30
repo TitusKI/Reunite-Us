@@ -1,7 +1,7 @@
 import 'package:afalagi/core/error/failure.dart';
 import 'package:afalagi/features/success_stories/data/services/success_story_services.dart';
 import 'package:afalagi/features/success_stories/domain/entities/success_story_entity.dart';
-import 'package:afalagi/features/success_stories/data/repository/success_story_repository.dart';
+import 'package:afalagi/features/success_stories/domain/repository/success_story_repository.dart';
 import 'package:afalagi/injection_container.dart';
 import 'package:dartz/dartz.dart';
 

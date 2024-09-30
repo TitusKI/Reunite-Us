@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:afalagi/core/util/file_pick_util.dart';
 import 'package:afalagi/features/post/domain/usecases/create_post.dart';
 import 'package:afalagi/injection_container.dart';
 import 'package:afalagi/features/user/presentation/bloc/create_profile/create_profile_state.dart';
@@ -6,6 +9,7 @@ import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_
 import 'package:afalagi/core/resources/shared_event.dart';
 import 'package:afalagi/core/util/controller/enums.dart';
 import 'package:bloc/bloc.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 // Ensure this imports your enums
 
@@ -17,6 +21,7 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
     on<NameChangedEvent>(_nameChangedEvent);
 
     on<PickImage>(_pickImageEvent);
+    on<PickDocument>(_pickDocumentEvent);
     on<LocationEvent>(_locationEvent);
     on<DateEvent>(_dateOfBirthEvent);
     on<MissingPersonPost>(_missingPersonPost);
@@ -27,6 +32,7 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
     emit(state.copyWith(isMissingLoading: true));
 
     try {
+      print("missing person on cubit");
       // await sl<PostRepository>().createPost(
       //     missingPerson: event.missingPerson,
       //     legalDocs: event.legalDocs,
@@ -64,6 +70,10 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
       selected: event.selected,
       maritalStatus: event.onMaritalStatus,
       gender: event.onGender,
+      posterRelation: event.onPosterRelation,
+      recognizableFeature: event.onRecognizableFeature,
+      nationionality: event.onNationality,
+      languageSpoken: event.onLanguageSpoken,
     ));
 
     // Update physical disabilities
@@ -191,6 +201,35 @@ class ReportFormBloc extends Bloc<SharedEvent, ReportFormState> {
           errorImage: e.toString(),
         ),
       );
+    }
+  }
+
+  Future<void> _pickDocumentEvent(
+      PickDocument event, Emitter<ReportFormState> emit) async {
+    emit(state.copyWith(docPickState: MissingDocPickState.initial));
+    try {
+      FilePickerResult? pickedFiles = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.any,
+      );
+      // );
+      print('Picking multiple files');
+      print(pickedFiles?.files.first.name);
+      //     pickedFiles = await pickMultipleFiles();
+
+      if (pickedFiles?.files != null && pickedFiles!.files.isNotEmpty) {
+        print('Setting files to the state');
+        emit(state.copyWith(
+          legalDocuments: pickedFiles.files,
+          docPickState: MissingDocPickState.picked,
+        ));
+        print('file setted successfulluy');
+      } else {
+        emit(state.copyWith(errorDoc: 'No Documents Selected'));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+          docPickState: MissingDocPickState.failed, errorDoc: e.toString()));
     }
   }
 }

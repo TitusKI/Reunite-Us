@@ -4,9 +4,12 @@ import 'package:afalagi/core/constants/presentation_export.dart';
 import 'package:afalagi/features/comment/presentation/bloc/comment_cubit.dart';
 import 'package:afalagi/features/post/presentation/bloc/upload_cubit/upload_video.dart';
 import 'package:afalagi/features/success_stories/presentation/bloc/success_story_cubit.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+
+import 'features/post/data/services/local/search_cache.dart';
+import 'features/post/domain/usecases/get_filtered_post.dart';
+import 'features/post/presentation/bloc/search_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -16,7 +19,7 @@ Future<void> initializeDependencies() async {
   // Ensure binding is initialized
   // Local Data Source Register
   sl.registerSingleton<StorageService>(await StorageService().init());
-
+  sl.registerLazySingleton<SearchCacheService>(() => SearchCacheService());
   // Services Register
   sl.registerSingleton<AuthServices>(AuthServices());
   sl.registerSingleton<UserServices>(UserServices());
@@ -43,6 +46,7 @@ Future<void> initializeDependencies() async {
 // Post Usecases Register
   sl.registerSingleton<CreatePostUsecase>(CreatePostUsecase());
   sl.registerSingleton<GetAllPostUsecase>(GetAllPostUsecase());
+  sl.registerSingleton<GetFilteredPostUsecase>(GetFilteredPostUsecase());
   sl.registerSingleton<GetMyPostsUsecase>(GetMyPostsUsecase());
   sl.registerSingleton<GetPostByIdUsecase>(GetPostByIdUsecase());
   sl.registerSingleton<GetPostImagesUsecase>(GetPostImagesUsecase());
@@ -79,11 +83,11 @@ Future<void> initializeDependencies() async {
     () => ReportFormBloc(),
   );
   sl.registerFactory<PostsCubit>(() => PostsCubit());
-  sl.registerFactory<SearchBloc>(() => SearchBloc());
-  sl.registerFactory<UploadCubit>(() => UploadCubit());
+  sl.registerFactory<SearchCubit>(() => SearchCubit());
+  // sl.registerFactory<UploadCubit>(() => UploadCubit());
   sl.registerFactory<VideoUploadCubit>(() => VideoUploadCubit());
-  sl.registerFactory<MissingPersonUploadCubit>(
-      () => MissingPersonUploadCubit());
+  // sl.registerFactory<MissingPersonUploadCubit>(
+  //     () => MissingPersonUploadCubit());
 // success story cubit register
   sl.registerFactory<SuccessStoryCubit>(() => SuccessStoryCubit());
   // user bloc and cubit register

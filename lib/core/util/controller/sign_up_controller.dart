@@ -2,7 +2,6 @@ import 'package:afalagi/features/auth/presentation/bloc/sign_up/sign_up_bloc.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';
-import 'package:validators/validators.dart';
 
 class SignUpController {
   final TextEditingController nameController = TextEditingController();
@@ -80,27 +79,6 @@ class SignUpController {
         }
         if (!value.isAlphabet()) {
           return "Name only in letters allowed";
-        }
-        break;
-
-      default:
-        return null;
-    }
-
-    return null;
-  }
-
-  String? handleVideoLink(
-      BuildContext context, String fieldName, String value) {
-    switch (fieldName) {
-      case 'videoMessage':
-        if (!isURL(value) ||
-            !(value.contains('youtube.com') ||
-                value.contains('youtu.be') ||
-                value.contains('facebook.com') ||
-                value.contains('instagram.com') ||
-                value.contains('tiktok.com'))) {
-          return "Please Enter a valid social media video link";
         }
         break;
 

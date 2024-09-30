@@ -1,5 +1,4 @@
 import 'package:afalagi/core/constants/presentation_export.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatScreen extends StatefulWidget {

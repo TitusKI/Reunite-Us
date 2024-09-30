@@ -2,7 +2,6 @@ import 'package:afalagi/core/constants/constant.dart';
 import 'package:afalagi/core/constants/presentation_export.dart';
 import 'package:afalagi/config/theme/colors.dart';
 import 'package:afalagi/features/post/domain/entities/missing_person_entity.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/common_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileDetail extends StatefulWidget {
@@ -88,11 +87,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
                       _buildDetailRow(Icons.person, 'Name',
                           "${profile.firstName} ${profile.middleName} ${profile.lastName}"),
                       _buildDetailRow(
-                          Icons.cake, 'Age', "${profile.birthDate} "),
-                      _buildDetailRow(
                           Icons.phone, 'Contact', profile.phoneNumber ?? ''),
-                      _buildDetailRow(
-                          Icons.email, 'Email', profile.email ?? ''),
+                      _buildDetailRow(Icons.email, 'Email', user?.email ?? ''),
                     ],
                   ),
                 ),

@@ -1,6 +1,5 @@
 // ignore_for_file: unused_field
 
-import 'package:afalagi/features/post/domain/entities/missing_person_entity.dart';
 import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_bloc.dart';
 import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_event.dart';
 import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_state.dart';
@@ -15,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../domain/entities/missing_person_entity.dart';
+
 PageController _pageController = PageController(initialPage: 0);
 
 // ignore: must_be_immutable
@@ -27,7 +28,12 @@ class AddReport extends StatefulWidget {
 
 class _AddReportState extends State<AddReport> {
   late ReportFormBloc _reportFormBloc;
+
   @override
+  // void initState() {
+  //   super.initState();
+  //   _reportFormBloc = context.read<ReportFormBloc>();
+  // }
   void didChangeDependencies() {
     super.didChangeDependencies();
     //   final UserRepository repository = UserRepository();
@@ -40,50 +46,6 @@ class _AddReportState extends State<AddReport> {
   //   _reportFormBloc.close();
   //   super.dispose();
   // }
-
-  void _handleMissingPost() {
-    final missingPerson = MissingPersonEntity(
-        maritalStatus: _reportFormBloc.state.maritalStatus.toString(),
-        posterRelation: _reportFormBloc.state.posterRelation!.toString(),
-        dateOfBirth: _reportFormBloc.state.dateOfBirth,
-        firstName: _reportFormBloc.state.firstName,
-        middleName: _reportFormBloc.state.middleName,
-        lastName: _reportFormBloc.state.lastName,
-        description: _reportFormBloc.state.description,
-        lastSeenLocation: _reportFormBloc.state.location,
-        lastSeenDate: _reportFormBloc.state.dateOfDisappearance,
-        languageSpoken: _reportFormBloc.state.languageSpoken!,
-        nationality: _reportFormBloc.state.nationality,
-        hairColor: _reportFormBloc.state.hairColor!.toString(),
-        skinColor: _reportFormBloc.state.skinColor!.toString(),
-        recognizableFeatures: _reportFormBloc.state.recognizableFeature,
-        physicalDisability:
-            _reportFormBloc.state.selectedPhysicalDisability as List<String>,
-        otherPhysicalDisability: _reportFormBloc.state.otherPhysicalDisability,
-        mentalDisability:
-            _reportFormBloc.state.selectedMentalDisability as List<String>,
-        otherMentalDisability: _reportFormBloc.state.otherMentalDisability,
-        medicalIssues:
-            _reportFormBloc.state.selectedMedicalIssues as List<String>,
-        otherMedicalIssue: _reportFormBloc.state.otherMedicalIssues,
-        gender: _reportFormBloc.state.gender!.toString(),
-        educationalLevel: _reportFormBloc.state.educationalLevel!.toString(),
-
-// Testing... The state of the post Images and legalDocs are a type of XFile? does it matter
-
-        postImages: [_reportFormBloc.state.postImages!.path],
-        legalDocs: [_reportFormBloc.state.legalDocuments!.path]);
-    // final postImages = _reportFormBloc.state.postImages;
-    // final legalDocs = _reportFormBloc.state.legalDocuments;
-    // final videoMessage = _reportFormBloc.state
-    _reportFormBloc.add(MissingPersonPost(
-      missingPerson: missingPerson,
-      // postImages: postImages!,
-      // legalDocs: legalDocs!,
-    ));
-    // _createProfileBloc
-    //     .add(ProfileSubmitEvent(userProfile: userProfile, file: file!));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +85,59 @@ class _AddReportState extends State<AddReport> {
           ),
         ));
   }
+
+  void handleMissingPost() {
+    BlocBuilder<ReportFormBloc, ReportFormState>(
+      builder: (context, state) {
+        final missingPerson = MissingPersonEntity(
+            maritalStatus: state.maritalStatus.toString(),
+            posterRelation: state.posterRelation!.toString(),
+            dateOfBirth: state.dateOfBirth,
+            firstName: state.firstName,
+            middleName: state.middleName,
+            lastName: state.lastName,
+            description: state.description,
+            lastSeenLocation: state.location,
+            lastSeenDate: state.dateOfDisappearance,
+            languageSpoken: state.languageSpoken!,
+            nationality: state.nationality,
+            hairColor: state.hairColor!.toString(),
+            skinColor: state.skinColor!.toString(),
+            recognizableFeatures: state.recognizableFeature,
+            physicalDisability:
+                state.selectedPhysicalDisability as List<String>,
+            otherPhysicalDisability: state.otherPhysicalDisability,
+            mentalDisability: state.selectedMentalDisability as List<String>,
+            otherMentalDisability: state.otherMentalDisability,
+            medicalIssues: state.selectedMedicalIssues as List<String>,
+            otherMedicalIssue: state.otherMedicalIssues,
+            gender: state.gender!.toString(),
+            educationalLevel: state.educationalLevel!.toString(),
+
+            // Testing... The state of the post Images and legalDocs are a type of XFile? does it matter
+
+            postImages: [state.postImages!.path],
+            legalDocs:
+                state.legalDocuments!.map((value) => value.path!).toList());
+        context
+            .read<ReportFormBloc>()
+            .add(MissingPersonPost(missingPerson: missingPerson));
+
+        if (state.isMissingLoading!) {
+          const CircularProgressIndicator();
+        }
+        if (state.missingFailure != null) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.missingFailure!)));
+        }
+        if (state.isMissingSuccess!) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Report Submitted Successfully')));
+        }
+        return Container();
+      },
+    );
+  }
 }
 
 ElevatedButton pageViewButton(
@@ -131,15 +146,15 @@ ElevatedButton pageViewButton(
     required String buttonName,
     required formKey,
     void Function()? func}) {
-  func = func;
   return ElevatedButton(
     style: ButtonStyle(
         alignment: Alignment.centerRight,
         backgroundColor: WidgetStateProperty.all(AppColors.accentColor)),
     onPressed: () {
+      print('Button Pressed');
       if (index == 1) {
         // if (formKey.currentState!.validate()) {
-        //   formKey.currentState!.save();
+        // formKey.currentState!.save();
         _pageController.animateToPage(index,
             duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
         // }
@@ -147,13 +162,10 @@ ElevatedButton pageViewButton(
         _pageController.animateToPage(index,
             duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
       } else {
+        print("Report pressed");
         if (formKey.currentState!.validate()) {
-          formKey.currentState!.save();
-          final state = context.read<ReportFormBloc>().state;
-          state.isMissingLoading! ? const CircularProgressIndicator() : func!;
-
-          // Navigator.of(context).pushNamedAndRemoveUntil(
-          //     AppRoutes.SIGN_IN, (Route<dynamic> route) => false);
+          // formKey.currentState!.save();
+          func!();
         }
       }
     },

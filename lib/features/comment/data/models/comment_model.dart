@@ -10,9 +10,11 @@ class Comment {
   final String? parentId;
   final String? successStoryId;
   final String commentText;
+  final int? replies;
   final User? user;
 
   Comment({
+    this.replies,
     this.user,
     this.parentId,
     this.successStoryId,
@@ -23,6 +25,7 @@ class Comment {
   });
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
+      replies: json['_count']['replies'],
       commentText: json['commentText'],
       id: json['id'],
       postId: json['postId'],

@@ -30,6 +30,14 @@ class SuccessStoryCubit extends Cubit<GenericState> {
       emit(state.copyWith(isLoading: true));
       final successStory =
           await sl<GetSuccessStoryByIdUsecase>().call(parms: storyId);
+      successStory.fold((failure) {
+        emit(state.copyWith(
+          isLoading: false,
+          isSuccess: false,
+        ));
+      }, (story) {
+        emit(state.copyWith(isLoading: false, isSuccess: true, data: story));
+      });
       emit(state.copyWith(data: successStory));
     } catch (e) {
       emit(state.copyWith(

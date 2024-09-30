@@ -1,25 +1,17 @@
 // import 'package:afalagi/bloc/create_profile/create_profile_state.dart';
+import 'dart:io';
+
+import 'package:afalagi/core/constants/presentation_export.dart';
 import 'package:afalagi/features/post/domain/entities/missing_person_entity.dart';
-import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_bloc.dart';
-import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_event.dart';
-import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_state.dart';
 import 'package:afalagi/core/resources/shared_event.dart';
-import 'package:afalagi/features/post/presentation/bloc/upload_cubit/upload_cubit.dart';
 import 'package:afalagi/core/util/controller/enum_utility.dart';
 import 'package:afalagi/core/util/controller/enums.dart';
-
 import 'package:afalagi/core/util/controller/sign_up_controller.dart';
 import 'package:afalagi/config/theme/colors.dart';
 import 'package:afalagi/features/auth/presentation/views/widgets/build_textfield.dart';
 import 'package:afalagi/features/auth/presentation/views/widgets/flutter_toast.dart';
-import 'package:afalagi/features/post/presentation/views/report_screen/screens/add_report.dart';
 import 'package:afalagi/features/post/presentation/views/report_screen/widgets/build_disability.dart';
-// import 'package:afalagi/views/sign_up_screen/widgets/image_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/common_widgets.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/gener_field.dart';
-import 'package:afalagi/features/auth/presentation/views/sign_up_screen/widgets/sign_up_widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -55,40 +47,73 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
   }
 
   void _handleMissingPost() {
+    var bloc = _reportFormBloc.state;
+    print(bloc.firstName);
+    print(bloc.maritalStatus!.name.toUpperCase());
+    print(bloc.posterRelation!.name.toUpperCase());
+    print(bloc.dateOfBirth);
+
+    print(bloc.middleName);
+
+    print(bloc.lastName);
+
+    print(bloc.description);
+//..
+    print(bloc.country);
+
+    print(bloc.dateOfDisappearance);
+
+    print(bloc.languageSpoken);
+
+//..
+
+    print(bloc.nationality);
+    print(bloc.postImages!.path);
+    print(bloc.hairColor!.name.toUpperCase());
+    print(bloc.legalDocuments!.map((value) => value.path).toList());
+    print(bloc.recognizableFeature);
+    print(bloc.legalDocuments!.map((value) => value.path).toList()[0]);
+    print(bloc.recognizableFeature);
+
     final missingPerson = MissingPersonEntity(
-        maritalStatus: _reportFormBloc.state.maritalStatus.toString(),
-        posterRelation: _reportFormBloc.state.posterRelation!.toString(),
-        dateOfBirth: _reportFormBloc.state.dateOfBirth,
-        firstName: _reportFormBloc.state.firstName,
-        middleName: _reportFormBloc.state.middleName,
-        lastName: _reportFormBloc.state.lastName,
-        description: _reportFormBloc.state.description,
-        lastSeenLocation: _reportFormBloc.state.location,
-        lastSeenDate: _reportFormBloc.state.dateOfDisappearance,
-        languageSpoken: _reportFormBloc.state.languageSpoken!,
-        nationality: _reportFormBloc.state.nationality,
-        hairColor: _reportFormBloc.state.hairColor!.toString(),
-        skinColor: _reportFormBloc.state.skinColor!.toString(),
-        recognizableFeatures: _reportFormBloc.state.recognizableFeature,
-        physicalDisability:
-            _reportFormBloc.state.selectedPhysicalDisability as List<String>,
-        otherPhysicalDisability: _reportFormBloc.state.otherPhysicalDisability,
-        mentalDisability:
-            _reportFormBloc.state.selectedMentalDisability as List<String>,
-        otherMentalDisability: _reportFormBloc.state.otherMentalDisability,
-        medicalIssues:
-            _reportFormBloc.state.selectedMedicalIssues as List<String>,
-        otherMedicalIssue: _reportFormBloc.state.otherMedicalIssues,
-        gender: _reportFormBloc.state.gender!.toString(),
-        educationalLevel: _reportFormBloc.state.educationalLevel!.toString(),
+        maritalStatus: bloc.maritalStatus!.name.toUpperCase(),
+        posterRelation: bloc.posterRelation!.name.toUpperCase(),
+        dateOfBirth: bloc.dateOfBirth,
+        firstName: bloc.firstName,
+        middleName: bloc.middleName,
+        lastName: bloc.lastName,
+        description: bloc.description,
+        lastSeenLocation: bloc.country,
+        lastSeenDate: bloc.dateOfDisappearance,
+        languageSpoken: bloc.languageSpoken ?? 'Amharic',
+        nationality: bloc.nationality,
+        hairColor: bloc.hairColor?.name.toUpperCase(),
+        skinColor: bloc.skinColor?.name.toUpperCase(),
+        recognizableFeatures: bloc.recognizableFeature,
+        physicalDisability: bloc.selectedPhysicalDisability
+            .map((value) => value.name.toUpperCase())
+            .toList(),
+        otherPhysicalDisability: bloc.otherPhysicalDisability ?? '',
+        mentalDisability: bloc.selectedMentalDisability
+            .map((value) => value.name.toUpperCase())
+            .toList(),
+        otherMentalDisability: bloc.otherMentalDisability ?? '',
+        medicalIssues: bloc.selectedMedicalIssues
+            .map((value) => value.name.toUpperCase())
+            .toList(),
+        otherMedicalIssue: bloc.otherMedicalIssues ?? '',
+        gender: bloc.gender!.name.toUpperCase(),
+        educationalLevel: bloc.educationalLevel!.name.toUpperCase(),
 
 // Testing... The state of the post Images and legalDocs are a type of XFile? does it matter
 
-        postImages: [_reportFormBloc.state.postImages!.path],
-        legalDocs: [_reportFormBloc.state.legalDocuments!.path]);
-    // final postImages = _reportFormBloc.state.postImages;
-    // final legalDocs = _reportFormBloc.state.legalDocuments;
-    // final videoMessage = _reportFormBloc.state
+        postImages: [bloc.postImages!.path] ?? [],
+        legalDocs: bloc.legalDocuments!.map((value) => value.path!).toList());
+
+    print(missingPerson);
+    // final postImages = _bloc.postImages;
+    // final legalDocs = _bloc.legalDocuments;
+    // final videoMessage = _bloc
     _reportFormBloc.add(MissingPersonPost(
       missingPerson: missingPerson,
       // postImages: postImages!,
@@ -98,26 +123,6 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
     //     .add(ProfileSubmitEvent(userProfile: userProfile, file: file!));
   }
 
-  // void _handleProfile() {
-  //   if (_formKey.currentState!.validate()) {
-  //     _formKey.currentState!.save();
-  //     final userProfile = UserProfile(
-  //       firstName: _signUpController.firstNameController.text,
-  //       middleName: _signUpController.middleNameController.text,
-  //       lastName: _signUpController.lastNameController.text,
-  //       birthDate: dateController.text,
-  //       country: _createProfileBloc.state.country,
-  //       state: _createProfileBloc.state.state,
-  //       city: _createProfileBloc.state.city,
-  //       phoneNumber: phoneNumberController.text,
-  //       gender: _createProfileBloc.state.selected!.value,
-  //     );
-  //     final file = _createProfileBloc.state.profileImage;
-  //     _createProfileBloc
-  //         .add(ProfileSubmitEvent(userProfile: userProfile, file: file!));
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -126,13 +131,14 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
           String? selectedEducation = state.educationalLevel != null
               ? educationalLevelToString(state.educationalLevel!)
               : "";
-          print("SelectedEducation is ");
-          print(selectedEducation);
+          String? selectedPosterRelation = state.posterRelation != null
+              ? posterRelationToString(state.posterRelation!)
+              : "";
+
           String? selectedMarital = state.maritalStatus != null
               ? maritalStatusToString(state.maritalStatus!)
               : "";
-          print("Selected Marital is ");
-          print(selectedMarital);
+          late bool isDocSelected = false;
 
           return Form(
             key: formKey,
@@ -166,8 +172,7 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
                       prefixIcon: const Icon(Icons.person),
                       inputType: TextInputType.name,
                       func: (value) {
-                        context
-                            .read<ReportFormBloc>()
+                        _reportFormBloc
                             .add(ReportFormEvent(onRecognizableFeature: value));
                       },
                       formType: "report form",
@@ -242,6 +247,16 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
                         hintText: "Select educational level",
                         keyName: 'educationalLevel'),
                   ),
+                  reusableText("Poster Relation:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: dropDownField(
+                        selected: selectedPosterRelation,
+                        dropDown: PosterRelation.values,
+                        context: context,
+                        hintText: "Select Poster Relation",
+                        keyName: 'posterRelation'),
+                  ),
                   const SizedBox(
                     height: 15.0,
                   ),
@@ -274,17 +289,18 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
                           if (state.imagePickState ==
                               MissignImagePickState.picked)
                             buildImagePreview(
-                                state.postImages!, context, "missingImage"),
+                                state.postImages!, "missingImage"),
                           if (state.imagePickState ==
                               MissignImagePickState.failed)
-                            buildFailedInput(context, state.errorImage)
+                            buildFailedInput(
+                                context, state.errorImage, 'imageError')
                           // the image is as for debugging not actual image
                         ],
                       );
                     },
                   ),
                   reusableText("Legal Document"),
-                  BlocBuilder<UploadCubit, UploadState>(
+                  BlocBuilder<ReportFormBloc, ReportFormState>(
                     builder: (context, state) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -297,30 +313,50 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
                                 children: [
                                   Expanded(
                                     child: TextField(
-                                      controller: TextEditingController(
-                                          text: state.filePath),
-                                      decoration: InputDecoration(
-                                        labelText: 'File Path',
-                                        suffixIcon: IconButton(
-                                          icon: const Icon(Icons.attach_file),
-                                          onPressed: () => context
-                                              .read<UploadCubit>()
-                                              .pickFile(),
-                                        ),
-                                      ),
                                       readOnly: true,
+                                      decoration: InputDecoration(
+                                        hintText: 'Choose Legal Documents',
+                                        suffixIcon: IconButton(
+                                            icon: const Icon(Icons.attach_file),
+                                            onPressed: () async {
+                                              _reportFormBloc
+                                                  .add(PickDocument());
+                                              setState(() {
+                                                isDocSelected = true;
+                                              });
+                                            }),
+                                      ),
                                     ),
                                   ),
+                                  if (isDocSelected)
+                                    Expanded(
+                                        child: ListView.builder(
+                                            itemCount:
+                                                state.legalDocuments?.length ??
+                                                    0,
+                                            itemBuilder: (context, index) {
+                                              return ListTile(
+                                                title: Text(state
+                                                    .legalDocuments![index]
+                                                    .name),
+                                                subtitle: Text(state
+                                                    .legalDocuments![index].size
+                                                    .toString()),
+                                              );
+                                            })),
+                                  if (state.docPickState ==
+                                      MissingDocPickState.failed)
+                                    buildFailedInput(
+                                        context, state.errorDoc, 'docError')
                                 ],
                               ),
                             ),
                             const SizedBox(height: 16),
-                            ElevatedButton.icon(
-                              onPressed: () =>
-                                  context.read<UploadCubit>().uploadFile(),
-                              icon: const Icon(Icons.upload_file),
-                              label: const Text('Upload'),
-                            ),
+                            // ElevatedButton.icon(
+                            //   onPressed: () => context.read<UploadCubit>(),
+                            //   icon: const Icon(Icons.upload_file),
+                            //   label: const Text('Upload'),
+                            // ),
                             const SizedBox(height: 16),
                             // if (state.status == UploadStatus.loading)
                             //   const CircularProgressIndicator(),
@@ -351,12 +387,18 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
                           index: index,
                           buttonName: "Back",
                           formKey: formKey),
-                      pageViewButton(
-                          context: context,
-                          index: 2,
-                          buttonName: "Report",
-                          formKey: formKey,
-                          func: _handleMissingPost)
+                      ElevatedButton(
+                        onPressed: () {
+                          _handleMissingPost();
+                        },
+                        child: const Text("Report"),
+                      )
+                      // pageViewButton(
+                      //     context: context,
+                      //     index: 2,
+                      //     buttonName: "Report",
+                      //     formKey: formKey,
+                      //     func: () => _handleMissingPost)
                     ],
                   ),
                 ],
@@ -367,127 +409,166 @@ class _FormPageTwoWidgetState extends State<FormPageTwoWidget> {
       ),
     );
   }
-}
 
-Widget buildInitialInput(BuildContext context) {
-  print("Image Pick Initial State");
-  return Center(
-    child: Column(
-      children: [
-        Container(
-          color: AppColors.cardColor,
-          child: Center(
-            child: Column(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    context.read<ReportFormBloc>().add(PickImage());
-                  },
-                  icon: const Icon(
-                    Icons.upload,
-                    weight: 10,
+  Widget buildInitialInputDoc() {
+    return Expanded(
+      child: TextField(
+        readOnly: true,
+        decoration: InputDecoration(
+          hintText: 'Choose Legal Documents',
+          suffixIcon: IconButton(
+              icon: const Icon(Icons.attach_file),
+              onPressed: () async {
+                context.read<ReportFormBloc>().add(PickDocument());
+              }),
+        ),
+      ),
+    );
+  }
+
+  Widget buildDocPreview(List<PlatformFile>? files) {
+    print(files?.length);
+    return Expanded(
+        child: ListView.builder(
+            itemCount: files?.length ?? 0,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(files![index].name),
+                subtitle: Text(files[index].size.toString()),
+              );
+            }));
+  }
+
+  Widget buildInitialInput(BuildContext context) {
+    print("Image Pick Initial State");
+    return Center(
+      child: Column(
+        children: [
+          Container(
+            color: AppColors.cardColor,
+            child: Center(
+              child: Column(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _reportFormBloc.add(PickImage());
+                    },
+                    icon: const Icon(
+                      Icons.upload,
+                      weight: 10,
+                    ),
                   ),
+                  const Text(
+                    "Upload a Photo",
+                    style: TextStyle(
+                        color: AppColors.primaryText,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildImagePreview(XFile image, String imageType) {
+    print("ImagePreview");
+    bool isPressed = false;
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.24,
+            child: Center(
+              child: Column(children: [
+                imageType == 'missingImage'
+                    ? Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            image: DecorationImage(
+                                image: FileImage(File(image.path)))),
+                      )
+                    : MyTextField(
+                        controller: TextEditingController(text: image.name),
+                        hintText: "",
+                        obscureText: false,
+                        keyboardType: TextInputType.text),
+                const SizedBox(
+                  height: 10,
                 ),
-                const Text(
-                  "Upload a Photo",
-                  style: TextStyle(
-                      color: AppColors.primaryText,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15),
-                )
-              ],
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    isPressed == false
+                        ? ElevatedButton(
+                            style: const ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                    AppColors.accentColor)),
+                            onPressed: () {
+                              isPressed = true;
+                              imageType == "profile"
+                                  ? toastInfo(msg: "Profile setted succesfully")
+                                  : toastInfo(
+                                      msg: "Missing image setted succesfully");
+                            },
+                            child: const Text(
+                              "Set",
+                              style: TextStyle(
+                                color: AppColors.primaryBackground,
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    ElevatedButton(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                                WidgetStatePropertyAll(AppColors.accentColor)),
+                        onPressed: () {
+                          _reportFormBloc.add(PickImage());
+                        },
+                        child: const Text(
+                          "Change",
+                          style: TextStyle(
+                            color: AppColors.primaryBackground,
+                          ),
+                        ))
+                  ],
+                ),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFailedInput(
+      BuildContext context, String? errorMsg, String? errorType) {
+    print(errorMsg);
+    return Column(
+      children: [
+        Text(errorMsg ?? 'Unknown error'),
+        ElevatedButton(
+          style: const ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(AppColors.accentColor)),
+          onPressed: () {
+            errorMsg == 'imageError'
+                ? _reportFormBloc.add(PickImage())
+                : _reportFormBloc.add(PickDocument());
+          },
+          child: const Text(
+            'Retry',
+            style: TextStyle(
+              color: AppColors.primaryBackground,
             ),
           ),
         ),
       ],
-    ),
-  );
-}
-
-Widget buildImagePreview(XFile image, BuildContext context, String imageType) {
-  print("ImagePreview");
-  bool isPressed = false;
-  return Center(
-    child: Column(
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.24,
-          child: Center(
-            child: Column(children: [
-              MyTextField(
-                  controller: TextEditingController(text: image.path),
-                  hintText: "",
-                  obscureText: false,
-                  keyboardType: TextInputType.text),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  isPressed == false
-                      ? ElevatedButton(
-                          style: const ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                  AppColors.accentColor)),
-                          onPressed: () {
-                            isPressed = true;
-                            imageType == "profile"
-                                ? toastInfo(msg: "Profile setted succesfully")
-                                : toastInfo(
-                                    msg: "Missing image setted succesfully");
-                          },
-                          child: const Text(
-                            "Set",
-                            style: TextStyle(
-                              color: AppColors.primaryBackground,
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  ElevatedButton(
-                      style: const ButtonStyle(
-                          backgroundColor:
-                              WidgetStatePropertyAll(AppColors.accentColor)),
-                      onPressed: () {
-                        context.read<ReportFormBloc>().add(PickImage());
-                      },
-                      child: const Text(
-                        "Change",
-                        style: TextStyle(
-                          color: AppColors.primaryBackground,
-                        ),
-                      ))
-                ],
-              ),
-            ]),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget buildFailedInput(BuildContext context, String? errorMsg) {
-  print(errorMsg);
-  return Column(
-    children: [
-      Text(errorMsg ?? 'Unknown error'),
-      ElevatedButton(
-        style: const ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(AppColors.accentColor)),
-        onPressed: () {
-          context.read<ReportFormBloc>().add(PickImage());
-        },
-        child: const Text(
-          'Retry',
-          style: TextStyle(
-            color: AppColors.primaryBackground,
-          ),
-        ),
-      ),
-    ],
-  );
+    );
+  }
 }

@@ -1,12 +1,13 @@
 // The UNIFICATION Of BlocProvider and routes and pages
 
 import 'package:afalagi/features/auth/data/services/local/storage_services.dart';
+import 'package:afalagi/features/success_stories/presentation/views/screens/success_story_detail.dart';
 import 'package:afalagi/injection_container.dart';
 import 'package:afalagi/features/comment/presentation/bloc/comment_cubit.dart';
 import 'package:afalagi/features/success_stories/presentation/bloc/success_story_cubit.dart';
-import 'package:afalagi/features/post/presentation/views/home_screen/widgets/comment_section.dart';
 import 'package:afalagi/features/post/presentation/views/report_screen/screens/close_post.dart';
 import '../../core/constants/presentation_export.dart';
+import '../../features/post/presentation/bloc/search_cubit.dart';
 
 class AppPages {
   // final UserRepositoryImpl _userRepository;
@@ -77,7 +78,7 @@ class AppPages {
             create: (_) => sl<PostsCubit>(),
           )),
       // bloc: BlocProvider(create: (_) => HomeBloc()))
-      PageEntity(page: const CommentSection()),
+      // PageEntity(page: const CommentSection()),
       PageEntity(
         route: AppRoutes.PROFILE,
         page: const ProfileScreen(),
@@ -136,7 +137,7 @@ class AppPages {
       ),
       PageEntity(
         route: AppRoutes.SEARCH,
-        page: const SearchMissing(),
+        page: SearchMissing(),
       ),
       PageEntity(
         route: AppRoutes.REPORT,
@@ -164,6 +165,9 @@ class AppPages {
             create: (_) => sl<SuccessStoryCubit>(),
           )),
       PageEntity(
+          route: AppRoutes.STORY_DETAIL,
+          page: const SuccessStoryDetailScreen()),
+      PageEntity(
           bloc: BlocProvider(
         create: (_) => sl<TogglePasswordBloc>(),
       )),
@@ -177,24 +181,24 @@ class AppPages {
       )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => sl<SearchBloc>(),
+        create: (_) => sl<SearchCubit>(),
       )),
       PageEntity(
           bloc: BlocProvider(
         create: (_) => sl<ThemeCubit>(),
       )),
-      PageEntity(
-          bloc: BlocProvider(
-        create: (_) => sl<UploadCubit>(),
-      )),
+      // PageEntity(
+      //     bloc: BlocProvider(
+      //   create: (_) => sl<UploadCubit>(),
+      // )),
       PageEntity(
           bloc: BlocProvider(
         create: (_) => sl<ProfileCubit>(),
       )),
-      PageEntity(
-          bloc: BlocProvider(
-        create: (_) => sl<MissingPersonUploadCubit>(),
-      )),
+      // PageEntity(
+      //     bloc: BlocProvider(
+      //   create: (_) => sl<MissingPersonUploadCubit>(),
+      // )),
       PageEntity(
           // page: CommentSection(postId: postId),
           bloc: BlocProvider(

@@ -1,63 +1,32 @@
+import 'package:afalagi/core/constants/domain_export.dart';
 import 'package:afalagi/core/constants/presentation_export.dart';
-import 'package:afalagi/features/comment/data/models/comment_model.dart';
-import 'package:afalagi/features/comment/domain/entities/post_comment_entity.dart';
-import 'package:afalagi/features/post/domain/entities/missing_person_entity.dart';
-import 'package:afalagi/features/comment/presentation/bloc/comment_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// The CommentSection widget displays the comments from a MissingPerson entity
-/// and allows the user to write a new comment, which will be sent as a single request.
-class CommentSection extends StatefulWidget {
-  final MissingPersonEntity? missingPerson;
+import '../../../../../../core/constants/data_export.dart';
+import '../../../../../comment/presentation/bloc/comment_cubit.dart';
 
-  const CommentSection({
-    super.key,
-    this.missingPerson, // To associate new comments with the post
-  });
+class CommentSection extends StatefulWidget {
+  final MissingPersonEntity post;
+
+  const CommentSection({super.key, required this.post});
 
   @override
-  State<CommentSection> createState() => _CommentSectionState();
+  _CommentSectionState createState() => _CommentSectionState();
 }
 
 class _CommentSectionState extends State<CommentSection> {
-  late MissingPersonEntity? missingPerson;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  final TextEditingController commentController = TextEditingController();
 
-    // Extract the passed argument
-    final args =
-        ModalRoute.of(context)?.settings.arguments as MissingPersonEntity?;
-    setState(() {
-      missingPerson = args;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    missingPerson = null;
-    context.read<CommentCubit>();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    CommentCubit().close();
-  }
+  // Map to track visibility of replies for each comment
+  final Map<String, bool> _showReplies = {};
 
   @override
   Widget build(BuildContext context) {
-    final comments = missingPerson?.comment;
-    print(comments);
-    // Get comments from the entity
-    final TextEditingController commentController = TextEditingController();
+    final List<Comment>? allComments = widget.post.comment;
 
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
+        bottom: MediaQuery.of(context).viewInsets.bottom,
         left: 16.w,
         right: 16.w,
         top: 16.h,
@@ -66,7 +35,6 @@ class _CommentSectionState extends State<CommentSection> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header for the comments section
           Text(
             'Comments',
             style: TextStyle(
@@ -76,33 +44,35 @@ class _CommentSectionState extends State<CommentSection> {
             ),
           ),
           SizedBox(height: 10.h),
-
-          // List of Comments fetched from the MissingPerson entity
           Expanded(
-            child: comments != null
-                ? ListView.builder(
-                    itemCount: comments.length,
+            child: (allComments == null || allComments.isEmpty)
+                ? const Center(child: Text('No comments yet'))
+                : ListView.builder(
+                    itemCount:
+                        allComments.where((c) => c.parentId == null).length,
                     itemBuilder: (context, index) {
-                      final comment = comments[index];
-
-                      return _buildCommentItem(comment);
+                      final comment = allComments
+                          .where((c) => c.parentId == null)
+                          .elementAt(index);
+                      return _buildCommentItem(context, comment, allComments);
                     },
-                  )
-                : const Center(
-                    child: Text('No comments yet'), // No comments message
                   ),
           ),
           SizedBox(height: 16.h),
-
-          // TextField for the user to write a new comment
           _buildCommentInputField(context, commentController),
         ],
       ),
     );
   }
 
-  // Method to build each comment item
-  Widget _buildCommentItem(Comment comment) {
+  // Build the comment item with potential replies
+  Widget _buildCommentItem(
+      BuildContext context, Comment comment, List<Comment> allComments) {
+    print("The id of this comment is ${comment.id}");
+    bool showReplies = _showReplies[comment.id] ??
+        false; // Get visibility state, default to false
+    final replies = allComments.where((c) => c.parentId == comment.id).toList();
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Card(
@@ -115,6 +85,7 @@ class _CommentSectionState extends State<CommentSection> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Display the user name of the comment
               Text(
                 comment.user!.profile.firstName ?? 'Anonymous',
                 style: TextStyle(
@@ -124,20 +95,47 @@ class _CommentSectionState extends State<CommentSection> {
                 ),
               ),
               SizedBox(height: 4.h),
+
+              // Display the actual comment text
               Text(
                 comment.commentText,
                 style: TextStyle(fontSize: 14.sp),
               ),
               const SizedBox(height: 4.0),
+
+              // 'Reply' button and display replies count if there are any replies
               TextButton(
                 onPressed: () {
-                  // Handle reply action
+                  _showReplyInputField(context, comment);
                 },
                 child: const Text(
                   'Reply',
                   style: TextStyle(color: Colors.blue),
                 ),
               ),
+
+              if (replies.isNotEmpty)
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _showReplies[comment.id!] = !_showReplies[comment.id]! ??
+                          true; // Toggle reply visibility, default to true if null
+                    });
+                  },
+                  child: Text(
+                    '${replies.length} replies',
+                    style: const TextStyle(color: Colors.blue),
+                  ),
+                ),
+
+              // Display the replies if available and the toggle is active
+              if (!showReplies)
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Column(
+                    children: _buildReplies(context, comment, allComments),
+                  ),
+                ),
             ],
           ),
         ),
@@ -145,7 +143,86 @@ class _CommentSectionState extends State<CommentSection> {
     );
   }
 
-  // Method to build the comment input field
+  // Build the replies of a comment
+  List<Widget> _buildReplies(
+      BuildContext context, Comment comment, List<Comment> allComments) {
+    // Filter the list of comments to find replies to the given comment
+    final replies = allComments.where((c) => c.parentId == comment.id).toList();
+
+    // Recursively build each reply comment
+    return replies
+        .map((reply) => _buildCommentItem(context, reply, allComments))
+        .toList();
+  }
+
+  // Method to show the reply input field
+  void _showReplyInputField(BuildContext context, Comment parentComment) {
+    final TextEditingController replyController = TextEditingController();
+
+    // Show a modal bottom sheet for replying
+    showModalBottomSheet(
+      useSafeArea: true,
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16.w,
+            right: 16.w,
+            top: 16.h,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Reply to ${parentComment.user!.profile.firstName}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.sp,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              TextField(
+                controller: replyController,
+                decoration: InputDecoration(
+                  hintText: 'Write a reply...',
+                  filled: true,
+                  fillColor: Colors.grey.shade200,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: () {
+                      if (replyController.text.isNotEmpty) {
+                        // Create a new reply (PostCommentEntity) linked to the parent comment
+                        final reply = PostCommentEntity(
+                          postId: parentComment.postId!,
+                          commentText: replyController.text,
+                          parentId: parentComment.id, // Link to parent comment
+                        );
+
+                        // Dispatch the createReply action to the CommentCubit
+                        context.read<CommentCubit>().createPostComment(reply);
+
+                        // Clear the text field after sending the reply
+                        replyController.clear();
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildCommentInputField(
       BuildContext context, TextEditingController controller) {
     return TextField(
@@ -162,17 +239,12 @@ class _CommentSectionState extends State<CommentSection> {
           icon: const Icon(Icons.send),
           onPressed: () {
             if (controller.text.isNotEmpty) {
-              // Create a new PostCommentEntity
-              final comment = PostCommentEntity(
-                postId:
-                    widget.missingPerson!.id!, // Assuming `id` is the post ID
-                commentText: controller.text,
-              );
-
-              // Dispatch the createPostComment action to the CommentCubit
-              context.read<CommentCubit>().createPostComment(comment);
-
-              // Clear the text field after sending the comment
+              context.read<CommentCubit>().createPostComment(
+                    PostCommentEntity(
+                      postId: widget.post.id!,
+                      commentText: controller.text,
+                    ),
+                  );
               controller.clear();
             }
           },

@@ -58,7 +58,7 @@ class CreateProfileState {
         lastName = "",
         fullName = "",
         location = "",
-        phoneNumber = PhoneNumber(isoCode: "ET"),
+        phoneNumber = PhoneNumber(isoCode: "ET", dialCode: '+251'),
         isValid = false,
         imagePickState = ImagePickState.initialy,
         profileImage = null,

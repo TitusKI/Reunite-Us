@@ -1,11 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:afalagi/core/constants/constant.dart';
-import 'package:afalagi/core/constants/domain_export.dart';
 import 'package:afalagi/features/user/data/models/user_profile_model.dart';
-import 'package:afalagi/features/auth/data/services/local/storage_services.dart';
+
 import 'package:afalagi/injection_container.dart';
 import 'package:dio/dio.dart';
+
+import '../../../../core/constants/data_export.dart';
+import '../../domain/entities/user_profile_entity.dart';
 
 class UserServices {
   final Dio _dio = Dio(BaseOptions(
@@ -22,9 +25,11 @@ class UserServices {
           const pathsWithHeaders = [
             // '/auth/logout',
             // '/auth/verify-email',
+            '/auth/refresh',
             '/user/profile/me',
             '/user/profile',
             '/user/profile/pic',
+
             // '/post',
             // '/post/me',
 
@@ -50,7 +55,7 @@ class UserServices {
               error.requestOptions.path != "/auth/refresh") {
             // Attempt to refresh the token
             try {
-              final newAccessToken = await sl<AuthRepository>().refreshToken();
+              final newAccessToken = await sl<AuthServices>().refreshToken();
               // Update the header with the new access token
               error.requestOptions.headers['Authorization'] =
                   'Bearer $newAccessToken';
@@ -75,90 +80,65 @@ class UserServices {
       ),
     );
   }
+  Completer? _refreshCompleter;
 
-  // Future<String> refreshToken() async {
-  //   // storageService.clearTokens();
-  //   final refreshToken = await storageService.getRefreshToken();
-  //   if (refreshToken == null) {
-  //     throw Exception("No refresh token available");
-  //   }
-  //   try {
-  //     final response = await _dio.post(
-  //       "/auth/refresh",
-  //       data: {
-  //         'refresh_token': refreshToken,
-  //       },
-  //     );
+  Future<String> refreshToken() async {
+    if (_refreshCompleter != null) {
+      await _refreshCompleter!.future;
+    } else {
+      _refreshCompleter = Completer();
 
-  //     final data = response.data;
-  //     await storageService.storeToken(
-  //         accessToken: data['access_token'],
-  //         refreshToken: data['refresh_token']);
-  //     final getAccessToken = await storageService.getAccessToken();
-  //     return getAccessToken!;
-  //   } catch (e) {
-  //     print(e);
-  //     throw Exception("Failed to refresh token: ${e.toString()}");
-  //   }
-  // }
+      try {
+        final response = await _dio.post(
+          "/auth/refresh",
+          data: {'refresh_token': refreshToken},
+        );
 
-  Future<FormData> createProfileFormData(
-      UserProfile userProfile, File file) async {
-    print("Started in form Data");
-    print("All profile information");
-    print(userProfile.firstName);
-    print(userProfile.middleName);
-    print(userProfile.lastName);
-    print(userProfile.gender);
-    print(userProfile.phoneNumber.toString());
-    print(userProfile.birthDate);
-    print(userProfile.country);
-    print(userProfile.state);
-    print(userProfile.city);
-    print(file);
+        final data = response.data;
+        await sl<StorageService>().storeToken(
+          accessToken: data['access_token'],
+          refreshToken: data['refresh_token'],
+        );
 
-    final Map<String, dynamic> userProfileMap = userProfile.toJson();
+        _refreshCompleter!.complete();
+      } catch (e) {
+        _refreshCompleter!.completeError(e);
+        rethrow;
+      } finally {
+        _refreshCompleter = null;
+      }
+    }
 
-    // Fix: Correct the profilePicture part
-    final formDataMap = {
-      ...userProfileMap,
-      'profilePicture': await MultipartFile.fromFile(file.path,
-          filename: "profile_picture.png"),
-    };
-
-    final FormData formData = FormData.fromMap(formDataMap);
-
-    return formData;
+    return await sl<StorageService>().getAccessToken() ?? "";
   }
 
   Future<void> buildUserProfile({
-    required UserProfile userProfile,
-    required File file,
+    required UserProfileEntity userProfile,
   }) async {
     try {
-      final accessToken = await sl<StorageService>().getAccessToken();
-      print("Access Token for: $accessToken");
+      // final accessToken = await sl<StorageService>().getAccessToken();
+      // print("Access Token for: $accessToken");
 
       // Authorization header
-      var headers = {
-        'Authorization': 'Bearer $accessToken',
-      };
+      // var headers = {
+      //   'Authorization': 'Bearer $accessToken',
+      // };
 
       print("Profile start to build in dio");
 
-      var dio = Dio();
+      // var dio = Dio();
+      final UserProfile profileModel = UserProfile.fromEntity(userProfile);
+      print(profileModel.toJson());
 
       // Create the FormData
-      var data = await createProfileFormData(userProfile, file);
+      FormData data = profileModel.toFormData();
+      print(data);
+      print(data.fields);
+      print(data.files);
 
       // Send the request
-      var response = await dio.post(
-        "${AppConstant.BASE_URL}/user/profile",
-        // "http://192.168.43.184:3333/api/user/profile",
-        options: Options(
-          headers: headers,
-          contentType: 'multipart/form-data',
-        ),
+      var response = await _dio.post(
+        "/user/profile",
         data: data,
       );
 

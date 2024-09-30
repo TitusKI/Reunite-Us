@@ -30,103 +30,120 @@ class _FoundPersonsState extends State<FoundPersons> {
         }
 
         // if (state.failure != null) {
-        //   Navigator.pushNamed(context, AppRoutes.HOME);
+        //   return NoInternetConnectionWidget(onRetry: () {
+        //     context.read<SuccessStoryCubit>().getSuccessStories();
+        //   });
         // }
 
-        final List<SuccessStoryEntity> successStories = state.data ?? [];
+        if (state.isSuccess) {
+          final List<SuccessStoryEntity> successStories = state.data ?? [];
 
-        if (successStories.isEmpty) {
-          return const Center(
-            child: Text('No success stories found.'),
-          );
-        }
+          if (successStories.isEmpty) {
+            return const Center(
+              child: Text('No success stories found.'),
+            );
+          }
 
-        return ListView.builder(
-          itemCount: successStories.length,
-          itemBuilder: (context, index) {
-            final story = successStories[index];
-            final user = story.user;
-            final profile = user!.profile;
-            final profilePictureUrl =
-                '${AppConstant.UPLOAD_BASE_URL}/profile/${profile.profilePicture}';
-            final storyPictureUrl =
-                '${AppConstant.UPLOAD_BASE_URL}/post/${story.images![0]}';
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
+          return ListView.builder(
+            itemCount: successStories.length,
+            itemBuilder: (context, index) {
+              final story = successStories[index];
+              final user = story.user;
+              final profile = user!.profile;
+              final profilePictureUrl =
+                  '${AppConstant.UPLOAD_BASE_URL}/profile/${profile.profilePicture}';
+              final storyPictureUrl =
+                  '${AppConstant.UPLOAD_BASE_URL}/successStory/${story.images![0]}';
+              return GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.STORY_DETAIL,
+                      arguments: story.id);
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            profilePictureUrl, // Ensure image URL is correct
-                          ),
-                        ),
-                        title: Text(
-                          "${profile.firstName} ${profile.middleName} ",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                            color: AppColors.secondaryColor,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        story.content!,
-                        style: const TextStyle(
-                            fontSize: 14.0, color: AppColors.secondaryColor),
-                      ),
-                      const SizedBox(height: 10.0),
-                      if (storyPictureUrl.isNotEmpty) // Check if image exists
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Image.network(
-                                storyPictureUrl,
-                                fit: BoxFit.cover,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                profilePictureUrl, // Ensure image URL is correct
                               ),
                             ),
-                          ],
-                        ),
-                      const SizedBox(height: 10.0),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                            title: Text(
+                              "${profile.firstName} ${profile.middleName} ",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                color: AppColors.secondaryColor,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
                           Text(
-                            'Watch the story on',
-                            style:
-                                TextStyle(fontSize: 14.0, color: Colors.blue),
+                            story.content!,
+                            style: const TextStyle(
+                                fontSize: 14.0,
+                                color: AppColors.secondaryColor),
+                          ),
+                          const SizedBox(height: 10.0),
+                          if (storyPictureUrl
+                              .isNotEmpty) // Check if image exists
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Image.network(
+                                    storyPictureUrl,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          const SizedBox(height: 10.0),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Watch the story on',
+                                style: TextStyle(
+                                    fontSize: 14.0, color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildSocialMediaButton(
+                                Icons.video_library,
+                                'YouTube',
+                                Colors.red,
+                              ),
+                              const SizedBox(width: 10.0),
+                              _buildSocialMediaButton(
+                                Icons.facebook,
+                                'Facebook',
+                                AppColors.accentColor,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildSocialMediaButton(
-                            Icons.video_library,
-                            'YouTube',
-                            Colors.red,
-                          ),
-                          const SizedBox(width: 10.0),
-                          _buildSocialMediaButton(
-                            Icons.facebook,
-                            'Facebook',
-                            AppColors.accentColor,
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            );
+              );
+            },
+          );
+        }
+        return NoInternetConnectionWidget(
+          onRetry: () {
+            context.read<SuccessStoryCubit>().getSuccessStories();
           },
         );
       },

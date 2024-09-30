@@ -6,12 +6,14 @@ class PostCommentEntity {
   final String? userId;
   final String commentText;
   final User? user;
+  final String? parentId;
 
   PostCommentEntity({
     this.user,
     this.id,
     required this.postId,
     this.userId,
+    this.parentId,
     required this.commentText,
   });
 }

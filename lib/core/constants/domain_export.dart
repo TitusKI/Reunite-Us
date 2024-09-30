@@ -2,7 +2,7 @@
 export 'package:afalagi/features/auth/domain/repository/auth_repository.dart';
 export 'package:afalagi/features/comment/domain/repository/comment_repository.dart';
 export 'package:afalagi/features/post/domain/repository/post_repository.dart';
-export 'package:afalagi/features/success_stories/data/repository/success_story_repository.dart';
+export 'package:afalagi/features/success_stories/domain/repository/success_story_repository.dart';
 export 'package:afalagi/features/user/domain/repository/user_repository.dart';
 // usecases
 export 'package:afalagi/features/auth/domain/usecases/forgot_password.dart';

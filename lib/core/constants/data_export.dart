@@ -7,7 +7,7 @@ export 'package:afalagi/features/user/data/repository/user_repository_impl.dart'
 // services
 export 'package:afalagi/features/auth/data/services/remote/auth_services.dart';
 export 'package:afalagi/features/comment/data/services/comment_services.dart';
-export 'package:afalagi/features/post/data/services/post_services.dart';
+export 'package:afalagi/features/post/data/services/remote/post_services.dart';
 export 'package:afalagi/features/auth/data/services/local/storage_services.dart';
 export 'package:afalagi/features/success_stories/data/services/success_story_services.dart';
 export 'package:afalagi/features/user/data/services/user_services.dart';

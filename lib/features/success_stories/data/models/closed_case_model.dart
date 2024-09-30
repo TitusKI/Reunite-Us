@@ -11,7 +11,7 @@ class ClosedCaseModel {
   final String? foundThrough;
   final String? description;
   ClosedCaseModel({
-    required this.id,
+    this.id,
     this.foundCondition,
     this.foundDate,
     this.foundLocation,
@@ -21,7 +21,6 @@ class ClosedCaseModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
       'foundCondition': foundCondition,
       'foundDate': foundDate,
       'foundLocation': foundLocation,
@@ -48,7 +47,6 @@ class ClosedCaseModel {
 
   factory ClosedCaseModel.fromEntity(ClosedCaseEntity entity) {
     return ClosedCaseModel(
-      id: entity.id,
       foundCondition: entity.foundCondition,
       foundDate: entity.foundDate,
       foundLocation: entity.foundLocation,

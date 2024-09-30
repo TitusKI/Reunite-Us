@@ -5,13 +5,15 @@ import 'package:afalagi/features/user/data/services/user_services.dart';
 import 'package:afalagi/features/user/domain/repository/user_repository.dart';
 import 'package:dio/dio.dart';
 
+import '../../domain/entities/user_profile_entity.dart';
+
 class UserRepositoryImpl extends UserRepository {
   final UserServices _apiServices;
   UserRepositoryImpl(this._apiServices);
 
   @override
-  Future<void> buildUserProfile(UserProfile userProfile, File file) async {
-    await _apiServices.buildUserProfile(userProfile: userProfile, file: file);
+  Future<void> buildUserProfile(UserProfileEntity userProfile) async {
+    await _apiServices.buildUserProfile(userProfile: userProfile);
   }
 
   @override

@@ -91,6 +91,25 @@ enum PosterRelation {
   Other
 }
 
+enum FoundCondition {
+  Alive_Well,
+  Injured,
+  Sick,
+  Unresponsive,
+  Deceased,
+  Unknown
+}
+
+enum FoundThrough {
+  Afalagi,
+  Police,
+  Community_Search,
+  Family_Friends,
+  Social_Media,
+  Medical_Institutional,
+  Other
+}
+
 extension DisabilityExtension on Enum {
   String toShortString() {
     return toString().split('.').last;

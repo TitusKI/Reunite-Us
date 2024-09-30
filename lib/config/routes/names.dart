@@ -55,6 +55,8 @@ class AppRoutes {
   static const CHAT = '/chat';
   // chat page screen
   static const CHAT_PAGE = "/chat_page";
-  // succes stories page
+  // success stories page
   static const FOUND = '/found';
+  // success stories detail page
+  static const STORY_DETAIL = '/story_detail';
 }

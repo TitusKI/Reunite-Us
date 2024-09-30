@@ -50,7 +50,7 @@ class ProfileCubit extends Cubit<GenericState> {
     final imageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (imageFile != null) {
-      emit(state.copyWith(imageFile: File(imageFile.name)));
+      emit(state.copyWith(imageFile: File(imageFile.path)));
     }
   }
 
@@ -58,7 +58,7 @@ class ProfileCubit extends Cubit<GenericState> {
     emit(state.copyWith(isLoading: true, failure: null));
     try {
       final profile = await sl<UpdateProfilePicUsecase>().call(parms: formData);
-      emit(state.copyWith(isLoading: false, imageFile: profile));
+      emit(state.copyWith(isLoading: false, imageFile: File(profile!.path)));
     } catch (e) {
       emit(state.copyWith(
           isLoading: false, failure: 'Failed to update profile picture: $e'));

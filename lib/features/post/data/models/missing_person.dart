@@ -1,6 +1,7 @@
 import 'package:afalagi/features/user/data/models/user_model.dart';
 import 'package:afalagi/features/comment/data/models/comment_model.dart';
 import 'package:afalagi/features/post/domain/entities/missing_person_entity.dart';
+import 'package:dio/dio.dart';
 
 class MissingPerson {
   // final List<File> files;
@@ -32,6 +33,7 @@ class MissingPerson {
   final String? otherMedicalIssue;
   //
   final String gender;
+  final String? status;
 
   final String educationalLevel;
 //
@@ -46,6 +48,7 @@ class MissingPerson {
   final int? count;
 
   MissingPerson({
+    this.status,
     this.count,
     this.userId,
     this.id,
@@ -141,11 +144,11 @@ class MissingPerson {
       'gender': gender,
       'dateOfBirth': dateOfBirth,
       'educationalLevel': educationalLevel,
-// //
+
 //       'postImages': postImages,
-//       //
+
 //       'legalDocs': legalDocs,
-//       //
+      //
 //       'videoMessage': videoMessage,
     };
   }
@@ -180,6 +183,7 @@ class MissingPerson {
       videoMessage: json['videoMessage'],
       maritalStatus: json['maritalStatus'],
       posterRelation: json['posterRelation'],
+      status: json['status'],
       id: json['id'],
       userId: json['userId'],
       user: User.fromJson(json['user']),
@@ -192,6 +196,7 @@ class MissingPerson {
   // Convert to Domain Entity
   MissingPersonEntity toEntity() {
     return MissingPersonEntity(
+        status: status,
         maritalStatus: maritalStatus,
         posterRelation: posterRelation,
         postImages: postImages,

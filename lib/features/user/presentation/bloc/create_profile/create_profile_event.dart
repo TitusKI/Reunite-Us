@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:afalagi/core/resources/shared_event.dart';
-import 'package:afalagi/features/user/data/models/user_profile_model.dart';
 import 'package:afalagi/core/util/controller/enums.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+
+import '../../../domain/entities/user_profile_entity.dart';
 
 abstract class CreateProfileEvent extends SharedEvent {
   const CreateProfileEvent();
@@ -31,11 +30,9 @@ class PhoneNoValidationChanged extends CreateProfileEvent {
 }
 
 class ProfileSubmitEvent extends CreateProfileEvent {
-  final UserProfile userProfile;
-  final File file;
+  final UserProfileEntity userProfile;
   const ProfileSubmitEvent({
     required this.userProfile,
-    required this.file,
   });
 }
 

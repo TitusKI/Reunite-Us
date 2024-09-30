@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:afalagi/core/constants/constant.dart';
 import 'package:afalagi/core/resources/generic_state.dart';
 import 'package:afalagi/features/user/presentation/bloc/profile_cubit.dart';
@@ -23,22 +25,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _middleNameController;
   late TextEditingController _lastNameController;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // Initialize ProfileCubit to load data if necessary
-  //   context.read<ProfileCubit>().fetchProfile();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    // Initialize ProfileCubit to load data if necessary
+    context.read<ProfileCubit>().fetchProfile();
+  }
 
-  // @override
-  // void dispose() {
-  //   // Clean up controllers
-  //   _firstNameController.dispose();
-  //   _middleNameController.dispose();
-  //   _lastNameController.dispose();
-  //   context.read<ProfileCubit>().close();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    // Clean up controllers
+    _firstNameController.dispose();
+    _middleNameController.dispose();
+    _lastNameController.dispose();
+    context.read<ProfileCubit>().close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -218,9 +220,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final imageFile = context.read<ProfileCubit>().state.imageFile;
 
     // If an image was picked, update the profile picture as well
-    if (imageFile != null) {
+    if (imageFile != null && File(imageFile.path).existsSync()) {
       FormData formData = FormData.fromMap({
-        'profilePicture': await MultipartFile.fromFile(imageFile.path),
+        'profilePicture': MultipartFile.fromFileSync(imageFile.path,
+            filename: imageFile.path.split('/').last,
+            contentType: DioMediaType('image', 'png'))
       });
 
       context.read<ProfileCubit>().updateProfilePicture(formData).then((_) {

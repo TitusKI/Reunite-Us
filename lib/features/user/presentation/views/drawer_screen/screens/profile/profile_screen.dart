@@ -1,10 +1,7 @@
 import 'package:afalagi/core/constants/constant.dart';
-import 'package:afalagi/core/resources/generic_state.dart';
-import 'package:afalagi/features/user/presentation/bloc/profile_cubit.dart';
 import 'package:afalagi/features/user/data/models/user_profile_model.dart';
 import 'package:afalagi/core/constants/presentation_export.dart';
 import 'package:afalagi/config/theme/colors.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/common_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileScreen extends StatefulWidget {

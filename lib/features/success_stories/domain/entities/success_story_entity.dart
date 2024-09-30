@@ -5,7 +5,7 @@ import 'package:afalagi/features/success_stories/data/models/closed_case_model.d
 import 'package:afalagi/features/success_stories/data/models/likes_model.dart';
 
 class SuccessStoryEntity {
-  final String id;
+  final String? id;
   String? title;
   String? content;
   String? closedCaseId;
@@ -21,7 +21,7 @@ class SuccessStoryEntity {
     this.user,
     this.comments,
     this.likes,
-    required this.id,
+    this.id,
     this.title,
     this.content,
     this.closedCaseId,

@@ -13,6 +13,7 @@ class ReportFormEvent extends SharedEvent {
   final String? onRecognizableFeature;
   final String? onDescription;
   final EducationalLevel? onEducationalLevel;
+  final PosterRelation? onPosterRelation;
   final MaritalStatus? onMaritalStatus;
   final String? onVideoLink;
   final String? onClothingDescription;
@@ -30,6 +31,7 @@ class ReportFormEvent extends SharedEvent {
   final String? otherMedicalIssues;
 
   const ReportFormEvent({
+    this.onPosterRelation,
     this.onLanguageSpoken,
     this.onNationality,
     this.onGender,

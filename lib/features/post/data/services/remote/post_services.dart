@@ -1,6 +1,7 @@
 import 'package:afalagi/core/constants/constant.dart';
 import 'package:afalagi/core/constants/data_export.dart';
 import 'package:afalagi/core/constants/domain_export.dart';
+import 'package:afalagi/features/post/domain/entities/search_filter.dart';
 import 'package:afalagi/features/success_stories/data/models/closed_case_model.dart';
 
 import 'package:afalagi/injection_container.dart';
@@ -23,7 +24,7 @@ class PostServices {
           const pathsWithHeaders = [
             '/auth/refresh',
           ];
-          const String post = "/post";
+          const String post = "/post/";
 
           if (pathsWithHeaders.contains(options.path) ||
               (options.path.startsWith(post))) {
@@ -43,7 +44,7 @@ class PostServices {
               error.requestOptions.path != "/auth/refresh") {
             // Attempt to refresh the token
             try {
-              final newAccessToken = await sl<AuthServices>().refreshToken();
+              final newAccessToken = await refreshToken();
               // Update the header with the new access token
               error.requestOptions.headers['Authorization'] =
                   'Bearer $newAccessToken';
@@ -68,37 +69,38 @@ class PostServices {
       ),
     );
   }
-  // Future<String> refreshToken() async {
-  //   // storageService.clearTokens();
-  //   final refreshToken = await storageService.getRefreshToken();
-  //   if (refreshToken == null) {
-  //     throw Exception("No refresh token available");
-  //   }
-  //   try {
-  //     final response = await _dio.post(
-  //       "/auth/refresh",
-  //       data: {
-  //         'refresh_token': refreshToken,
-  //       },
-  //     );
+  Future<String> refreshToken() async {
+    // storageService.clearTokens();
+    final refreshToken = await storageService.getRefreshToken();
+    if (refreshToken == null) {
+      throw Exception("No refresh token available");
+    }
+    try {
+      final response = await _dio.post(
+        "/auth/refresh",
+        data: {
+          'refresh_token': refreshToken,
+        },
+      );
 
-  //     final data = response.data;
-  //     await storageService.storeToken(
-  //         accessToken: data['access_token'],
-  //         refreshToken: data['refresh_token']);
-  //     final getAccessToken = await storageService.getAccessToken();
-  //     return getAccessToken!;
-  //   } catch (e) {
-  //     print(e);
-  //     throw Exception("Failed to refresh token: ${e.toString()}");
-  //   }
-  // }
+      final data = response.data;
+      await storageService.storeToken(
+          accessToken: data['access_token'],
+          refreshToken: data['refresh_token']);
+      final getAccessToken = await storageService.getAccessToken();
+      return getAccessToken!;
+    } catch (e) {
+      print(e);
+      throw Exception("Failed to refresh token: ${e.toString()}");
+    }
+  }
 
   Future<void> createPost(MissingPersonEntity missingPerson) async {
     try {
       MissingPerson missingInfo = MissingPerson.fromEntity(missingPerson);
-      final formData = {
+      final formData = FormData.fromMap({
         ...missingInfo.toJson(),
+        // 'firstName': missingInfo.firstName,
         // Test on this post image toList and multipartfile format
         // How to send more than one missng person photo and document
         'postImages': await MultipartFile.fromFile(
@@ -108,7 +110,21 @@ class PostServices {
         'legalDocs': await MultipartFile.fromFile(
             missingPerson.legalDocs.toList().toString(),
             filename: 'legal_docs.jpg'),
-      };
+      });
+      for (int i = 0; i < missingPerson.postImages.length; i++) {
+        formData.files.add(MapEntry(
+          'postImages',
+          await MultipartFile.fromFile(missingPerson.postImages[i],
+              filename: missingPerson.postImages[i].split('/').last),
+        ));
+      }
+      for (int i = 0; i < missingPerson.legalDocs.length; i++) {
+        formData.files.add(MapEntry(
+          'legalDocs',
+          await MultipartFile.fromFile(missingPerson.legalDocs[i],
+              filename: 'legal_docs_${i + 1}'),
+        ));
+      }
       final response = await _dio.post(
         '/post',
         data: formData,
@@ -143,7 +159,8 @@ class PostServices {
   }
 
   Future<List<MissingPersonEntity>> getAllPosts() async {
-    final response = await _dio.get('/post');
+    final Dio dio = Dio(BaseOptions(baseUrl: AppConstant.BASE_URL));
+    final response = await dio.get('/post');
     if (response.statusCode == 200) {
       print(response.data['data']);
       print("THIS IS THE RESPONSE FOR GET ALL POSTS ");
@@ -167,14 +184,61 @@ class PostServices {
     }
   }
 
+  Future<List<MissingPersonEntity>> getFilteredPosts(
+      {SearchFilterEntity? filter}) async {
+    print('Debugging get All posts');
+    final queryParams = {
+      if (filter?.name != null) 'name': filter!.name,
+      if (filter?.nationality != null) 'nationality': filter!.nationality,
+      if (filter?.lastSeenLocation != null)
+        'location': filter!.lastSeenLocation,
+      if (filter?.ageRange != null) 'ageRange': filter!.ageRange,
+    };
+    final Dio dio = Dio(BaseOptions(
+      baseUrl: AppConstant.BASE_URL,
+      headers: {'Content-Type': 'application/json'},
+    ));
+    final response = await dio.get('/post', queryParameters: queryParams);
+    if (response.statusCode == 200) {
+      final data = response.data; // Avoid nested data access
+      if (data != null && data['data'] != null) {
+        // Handle potential missing data
+        print(data['data']);
+        print("THIS IS THE RESPONSE FOR GET ALL POSTS ");
+        final missingPersonModel = (data['data'] as List)
+            .map((json) => MissingPerson.fromJson(json))
+            .toList();
+        print(
+            missingPersonModel[0].maritalStatus); // Check null before accessing
+        // convert models into Entity
+        print("Posts data ");
+        print(missingPersonModel);
+        final List<MissingPersonEntity> missingPersons = missingPersonModel
+            .map((missingPersonModel) => missingPersonModel.toEntity())
+            .toList();
+        print("To Entity");
+        print(missingPersons);
+        return missingPersons;
+      } else {
+        // Handle empty response data
+        throw Exception('API response data is missing.');
+      }
+    } else {
+      throw Exception(
+          'Failed to load all posts (status code: ${response.statusCode})');
+    }
+  }
+
   Future<void> closePost(ClosedCaseEntity update) async {
-    final id = await storageService.getPostId();
-    print('Post id is $id');
+    // final id = await storageService.getPostId();
+    // print('Post id is $id');
     // what other data must be updates with the close case
+    print(update);
     final ClosedCaseModel updateModel = ClosedCaseModel.fromEntity(update);
+    print('Models $updateModel');
     try {
       Response response = await _dio.patch(
-        '/post/close/$id',
+        '/post/close/${update.id}',
         data: updateModel.toMap(),
       );
 

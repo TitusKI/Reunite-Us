@@ -29,6 +29,66 @@ AppBar buildAppBar(String type) {
   );
 }
 
+class NoInternetConnectionWidget extends StatelessWidget {
+  final VoidCallback onRetry;
+
+  const NoInternetConnectionWidget({super.key, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.wifi_off,
+            color:
+                Colors.grey, // You can use AppColors.secondaryColor if defined
+            size: 60.0,
+          ),
+          const SizedBox(height: 12.0),
+          const Text(
+            "No Internet Connection",
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.black, // Use AppColors.secondaryColor if defined
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8.0),
+          const Text(
+            "Please check your connection and try again.",
+            style: TextStyle(
+              fontSize: 14.0,
+              color: Colors
+                  .black54, // You can adjust the opacity or color as needed
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: onRetry,
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  Colors.blue, // Use AppColors.primaryColor if defined
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            ),
+            child: const Text(
+              "Try Again",
+              style: TextStyle(fontSize: 14.0, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 AppBar buildAppBarLarge(String type,
     {List<Widget> actions = const [], Widget? leading}) {
   return AppBar(

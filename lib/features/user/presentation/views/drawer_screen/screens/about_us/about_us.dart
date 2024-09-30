@@ -83,19 +83,24 @@ class AboutUsPage extends StatelessWidget {
             SizedBox(height: 10.0.h),
             // Example Team Member
             buildTeamMember(
-              'Kyle Johnsen',
+              'Kidanemariam Mazengiaw',
               'Founder & CEO',
-              'assets/temp/brotherOfMissing.jpg', // Replace with actual image
+              'assets/temp/kidan.jpg', // Replace with actual image
             ),
             buildTeamMember(
-              'Surafel Abihot',
+              'Kaleab Solomon',
               'CTO',
-              'assets/temp/foundMan.jpg', // Replace with actual image
+              'assets/temp/kaleab.jpeg', // Replace with actual image
             ),
             buildTeamMember(
-              'Titisha Jemberu',
+              'John Assefa',
               'Head of Operations',
-              'assets/temp/missingWoman.jpg', // Replace with actual image
+              'assets/temp/John.jpeg', // Replace with actual image
+            ),
+            buildTeamMember(
+              'Tsegaye Talegngeta',
+              'Project Manager',
+              'assets/temp/Tsegaye.jpg', // Replace with actual image
             ),
             SizedBox(height: 20.0.h),
             Text(
@@ -108,7 +113,7 @@ class AboutUsPage extends StatelessWidget {
             ),
             SizedBox(height: 10.0.h),
             Text(
-              'Email: info@afalagi.com\nPhone: +251-123-456-789\nAddress: 123 Main Street, Addis Ababa, Ethiopia',
+              'Email: info@afalagi.com\nPhone: +251-123-456-789\nAddress: Merkato, Teklehaymanot, Addis Ababa, Ethiopia',
               style: TextStyle(fontSize: 16.sp),
             ),
           ],

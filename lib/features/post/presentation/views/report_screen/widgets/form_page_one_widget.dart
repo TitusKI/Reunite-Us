@@ -1,24 +1,14 @@
 // ignore_for_file: unused_field
 
-import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_bloc.dart';
-import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_event.dart';
-import 'package:afalagi/features/post/presentation/bloc/report_form/report_form_state.dart';
 import 'package:afalagi/core/resources/shared_event.dart';
 import 'package:afalagi/core/util/controller/enum_utility.dart';
 import 'package:afalagi/core/util/controller/enums.dart';
 
 import 'package:afalagi/core/util/controller/sign_up_controller.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/date_of_birth_field.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/gener_field.dart';
-import 'package:afalagi/features/post/presentation/views/report_screen/screens/add_report.dart';
 
-import 'package:flutter/material.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/common_widgets.dart';
+import '../../../../../../core/constants/presentation_export.dart';
 
-import 'package:afalagi/features/auth/presentation/views/sign_up_screen/widgets/location_form_field.dart';
-import 'package:afalagi/features/auth/presentation/views/sign_up_screen/widgets/sign_up_widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FormPageOneWidget extends StatefulWidget {
@@ -41,8 +31,14 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   // final SkinColor skinColor = Skincolor;
-  final AddReport _addReport = const AddReport();
+  // final AddReport _addReport = const AddReport();
   final formKey = GlobalKey<FormState>();
+  late ReportFormBloc _bloc;
+  @override
+  void initState() {
+    super.initState();
+    _bloc = context.read<ReportFormBloc>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,9 +90,7 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         prefixIcon: const Icon(Icons.person),
                         inputType: TextInputType.name,
                         func: (value) {
-                          context
-                              .read<ReportFormBloc>()
-                              .add(NameChangedEvent(firstName: value));
+                          _bloc.add(NameChangedEvent(firstName: value));
                         },
                         formType: "report form",
                         context: context),
@@ -113,9 +107,24 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         prefixIcon: const Icon(Icons.person),
                         inputType: TextInputType.name,
                         func: (value) {
-                          context
-                              .read<ReportFormBloc>()
-                              .add(NameChangedEvent(middleName: value));
+                          _bloc.add(NameChangedEvent(middleName: value));
+                        },
+                        formType: "report form",
+                        context: context),
+                  ),
+                  reusableText("Last Name:"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: formField(
+                        textType: "report",
+                        fieldName: "lastName",
+                        value: state.lastName,
+                        controller: _signUpController.lastNameController,
+                        hintText: "Enter missing person full name",
+                        prefixIcon: const Icon(Icons.person),
+                        inputType: TextInputType.name,
+                        func: (value) {
+                          _bloc.add(NameChangedEvent(lastName: value));
                         },
                         formType: "report form",
                         context: context),
@@ -130,25 +139,6 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         hintText: "Select gender",
                         keyName: "genderR"),
                   ),
-                  reusableText("Last Name:"),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: formField(
-                        textType: "report",
-                        fieldName: "lastName",
-                        value: state.lastName,
-                        controller: _signUpController.lastNameController,
-                        hintText: "Enter missing person full name",
-                        prefixIcon: const Icon(Icons.person),
-                        inputType: TextInputType.name,
-                        func: (value) {
-                          context
-                              .read<ReportFormBloc>()
-                              .add(NameChangedEvent(lastName: value));
-                        },
-                        formType: "report form",
-                        context: context),
-                  ),
                   reusableText("Date of Birth:"),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
@@ -156,7 +146,8 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         context: context,
                         dateController: _dateOfBirthController,
                         date: dateOfBirth,
-                        dateType: "birth"),
+                        dateType: "birth",
+                        whoseBirth: 'missingBirth'),
                   ),
                   reusableText("Date of Disapperance:"),
                   SizedBox(
@@ -204,13 +195,12 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         prefixIcon: const Icon(Icons.description_rounded),
                         inputType: TextInputType.multiline,
                         func: (value) {
-                          context.read<ReportFormBloc>().add(
+                          _bloc.add(
                               ReportFormEvent(onClothingDescription: value));
                         },
                         formType: "report form",
                         context: context),
                   ),
-
                   reusableText("Nationality:"),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
@@ -222,9 +212,7 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         prefixIcon: const Icon(Icons.flag_rounded),
                         inputType: TextInputType.multiline,
                         func: (value) {
-                          context
-                              .read<ReportFormBloc>()
-                              .add(ReportFormEvent(onNationality: value));
+                          _bloc.add(ReportFormEvent(onNationality: value));
                         },
                         formType: "report form",
                         context: context),
@@ -240,14 +228,11 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         prefixIcon: const Icon(Icons.flag_rounded),
                         inputType: TextInputType.multiline,
                         func: (value) {
-                          context
-                              .read<ReportFormBloc>()
-                              .add(ReportFormEvent(onLanguageSpoken: value));
+                          _bloc.add(ReportFormEvent(onLanguageSpoken: value));
                         },
                         formType: "report form",
                         context: context),
                   ),
-
                   reusableText("Height:"),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
@@ -262,7 +247,7 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         prefixIcon: const Icon(Icons.height),
                         inputType: TextInputType.number,
                         func: (value) {
-                          context.read<ReportFormBloc>().add(
+                          _bloc.add(
                               ReportFormEvent(onHeight: double.parse(value)));
                         },
                         formType: "report form",
@@ -288,23 +273,6 @@ class _FormPageOneWidgetState extends State<FormPageOneWidget> {
                         hintText: "Select skin color",
                         keyName: 'skinColor'),
                   ),
-                  // SizedBox(
-                  //   width: MediaQuery.of(context).size.width * 0.9,
-                  //   child: formField(
-                  //       fieldName: "skinColor",
-                  //       value: state.skinColor,
-                  //       controller: _signUpController.skinColorController,
-                  //       hintText: "Enter color of the skin",
-                  //       prefixIcon: const Icon(Icons.color_lens_rounded),
-                  //       inputType: TextInputType.text,
-                  //       func: (value) {
-                  //         context
-                  //             .read<ReportFormBloc>()
-                  //             .add(ReportFormEvent(onSkinColor: value));
-                  //       },
-                  //       formType: "report form",
-                  //       context: context),
-                  // ),
                   const SizedBox(height: 25.0),
                   Center(
                     child: pageViewButton(

@@ -39,11 +39,13 @@ class MissingPersonEntity {
   //
   final String? videoMessage;
   final String? dateOfBirth;
+  final String? status;
   final UserEntity? user;
   final List<Comment>? comment;
   final int? count;
 
   MissingPersonEntity({
+    this.status,
     this.count,
     this.comment,
     this.user,

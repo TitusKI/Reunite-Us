@@ -1,3 +1,4 @@
+import 'package:afalagi/core/constants/data_export.dart';
 import 'package:afalagi/features/post/presentation/bloc/bottom_navigation/bottom_navigation_bloc.dart';
 import 'package:afalagi/config/routes/names.dart';
 import 'package:afalagi/features/user/presentation/views/chat/screens/chat.dart';
@@ -8,6 +9,7 @@ import 'package:afalagi/features/post/presentation/views/home_screen/screens/hom
 import 'package:afalagi/features/user/presentation/views/drawer_screen/screens/drawer.dart';
 import 'package:afalagi/features/post/presentation/views/report_screen/screens/report.dart';
 import 'package:afalagi/features/post/presentation/views/search_screen/screens/search.dart';
+import 'package:afalagi/injection_container.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +25,7 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final accessToken = sl<StorageService>().getAccessToken.toString();
   @override
   void initState() {
     super.initState();
@@ -51,17 +54,29 @@ class _MyHomePageState extends State<MyHomePage>
             appBarTitle = "Reunite-Us";
 
             appBarActions = [
-              IconButton(
-                  style: const ButtonStyle(
-                    foregroundColor:
-                        WidgetStatePropertyAll(AppColors.primaryBackground),
-                    // backgroundColor:
-                    //     WidgetStatePropertyAll(AppColors.primaryBackground),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.ADD_REPORT);
-                  },
-                  icon: const Icon(Icons.add_circle_outline_outlined))
+              accessToken == null
+                  ? IconButton(
+                      style: const ButtonStyle(
+                        foregroundColor:
+                            WidgetStatePropertyAll(AppColors.primaryBackground),
+                        // backgroundColor:
+                        //     WidgetStatePropertyAll(AppColors.primaryBackground),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
+                      },
+                      icon: const Icon(Icons.login_rounded))
+                  : IconButton(
+                      style: const ButtonStyle(
+                        foregroundColor:
+                            WidgetStatePropertyAll(AppColors.primaryBackground),
+                        // backgroundColor:
+                        //     WidgetStatePropertyAll(AppColors.primaryBackground),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
+                      },
+                      icon: const Icon(Icons.language_rounded))
             ];
             leading = IconButton(
               icon: Image.asset(
@@ -133,13 +148,16 @@ class _MyHomePageState extends State<MyHomePage>
                   .add(BottomNavigationEvent(i));
             },
           ),
-          body: TabBarView(controller: _tabController, children: const [
-            Home(),
-            SearchMissing(),
-            ReportMissing(),
-            ChatScreen(),
-            FoundPersons()
-          ]),
+          body: TabBarView(
+              controller: _tabController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                const Home(),
+                SearchMissing(),
+                const ReportMissing(),
+                const ChatScreen(),
+                const FoundPersons()
+              ]),
         );
       },
     );

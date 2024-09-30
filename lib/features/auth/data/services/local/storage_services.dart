@@ -69,7 +69,7 @@ class StorageService {
   }
 
   Future<String?> getAccessToken() async {
-    return _prefs.getString('access_token');
+    return _prefs.getString('access_token').toString();
   }
 
   Future<String?> getRefreshToken() async {

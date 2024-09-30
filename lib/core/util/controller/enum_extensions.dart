@@ -43,7 +43,7 @@ extension GenderExtension on Gender {
   static Gender fromString(String value) {
     return Gender.values.firstWhere(
       (e) => e.value == value.toUpperCase(),
-      orElse: () => Gender.Male, // default value
+      // default value
     );
   }
 }

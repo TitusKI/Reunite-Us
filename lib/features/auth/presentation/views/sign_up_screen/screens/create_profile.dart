@@ -6,7 +6,6 @@ import 'package:afalagi/features/user/presentation/bloc/create_profile/create_pr
 import 'package:afalagi/features/user/presentation/bloc/create_profile/create_profile_event.dart';
 import 'package:afalagi/features/user/presentation/bloc/create_profile/create_profile_state.dart';
 import 'package:afalagi/core/resources/shared_event.dart';
-import 'package:afalagi/features/user/data/models/user_profile_model.dart';
 import 'package:afalagi/config/routes/names.dart';
 import 'package:afalagi/core/util/controller/enum_extensions.dart';
 import 'package:afalagi/core/util/controller/enum_utility.dart';
@@ -24,6 +23,8 @@ import 'package:flutter/material.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+
+import '../../../../../user/domain/entities/user_profile_entity.dart';
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({super.key});
@@ -60,22 +61,29 @@ class _CreateProfileState extends State<CreateProfile> {
   }
 
   void _handleProfile() {
+    var bloc = _createProfileBloc.state;
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      final userProfile = UserProfile(
-        firstName: _signUpController.firstNameController.text,
-        middleName: _signUpController.middleNameController.text,
-        lastName: _signUpController.lastNameController.text,
-        birthDate: dateController.text,
-        country: _createProfileBloc.state.country,
-        state: _createProfileBloc.state.state,
-        city: _createProfileBloc.state.city,
-        phoneNumber: phoneNumberController.text,
-        gender: _createProfileBloc.state.selected!.value,
-      );
-      final file = _createProfileBloc.state.profileImage;
-      _createProfileBloc
-          .add(ProfileSubmitEvent(userProfile: userProfile, file: file!));
+      print('first name: ${bloc.firstName}');
+      print('date of Birth: ${bloc.dateOfBirth}');
+
+      print('Country: ${bloc.country}');
+
+      print('Gender: ${bloc.selected!.value}');
+
+      final userProfile = UserProfileEntity(
+          firstName: bloc.firstName,
+          middleName: bloc.middleName,
+          lastName: bloc.lastName,
+          birthDate: bloc.dateOfBirth,
+          country: bloc.country,
+          state: bloc.state,
+          city: bloc.city,
+          phoneNumber:
+              "${bloc.phoneNumber!.dialCode}${phoneNumberController.text}",
+          gender: bloc.selected!.value,
+          profilePicture: bloc.profileImage!.path);
+      _createProfileBloc.add(ProfileSubmitEvent(userProfile: userProfile));
     }
   }
 
@@ -94,13 +102,13 @@ class _CreateProfileState extends State<CreateProfile> {
             // });
           }
 
-          if (state.profileFailure != null) {
-            // Show error message
-            print("ERROR on build profile ${state.profileFailure}:");
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(content: Text(state.profileFailure!)),
-            // );
-          }
+          // if (state.profileFailure != null) {
+          //   // Show error message
+          //   print("ERROR on build profile ${state.profileFailure}:");
+          //   // ScaffoldMessenger.of(context).showSnackBar(
+          //   //   SnackBar(content: Text(state.profileFailure!)),
+          //   // );
+          // }
         },
         child:
             // String dateOfBirth = state.dateOfBirth;

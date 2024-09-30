@@ -1,33 +1,5 @@
 import 'enums.dart';
 
-String roleToString(Role role) {
-  switch (role) {
-    case Role.User:
-      return 'User';
-    case Role.Admin:
-      return 'Admin';
-    case Role.SuperAdmin:
-      return 'SuperAdmin';
-    case Role.Guest:
-      return 'Guest';
-  }
-}
-
-Role stringToRole(String role) {
-  switch (role) {
-    case 'User':
-      return Role.User;
-    case 'Admin':
-      return Role.Admin;
-    case 'SuperAdmin':
-      return Role.SuperAdmin;
-    case 'Guest':
-      return Role.Guest;
-    default:
-      throw ArgumentError('Invalid role: $role');
-  }
-}
-
 String genderToString(Gender gender) {
   switch (gender) {
     case Gender.Male:
@@ -111,6 +83,42 @@ String educationalLevelToString(EducationalLevel educationalLevel) {
   }
 }
 
+String foundConditionToString(FoundCondition condition) {
+  switch (condition) {
+    case FoundCondition.Alive_Well:
+      return 'Alive_Well';
+    case FoundCondition.Injured:
+      return 'Injured';
+    case FoundCondition.Sick:
+      return 'Sick';
+    case FoundCondition.Unresponsive:
+      return 'Unresponsive';
+    case FoundCondition.Deceased:
+      return 'Deceased';
+    case FoundCondition.Unknown:
+      return 'Unknown';
+  }
+}
+
+FoundCondition stringToFoundCondition(String conditionString) {
+  switch (conditionString) {
+    case 'Alive and Well':
+      return FoundCondition.Alive_Well;
+    case 'Injured':
+      return FoundCondition.Injured;
+    case 'Sick':
+      return FoundCondition.Sick;
+    case 'Unresponsive':
+      return FoundCondition.Unresponsive;
+    case 'Deceased':
+      return FoundCondition.Deceased;
+    case 'Unknown':
+      return FoundCondition.Unknown;
+    default:
+      throw ArgumentError('Invalid found condition: $conditionString');
+  }
+}
+
 EducationalLevel stringToEducationalLevel(String educationalLevel) {
   switch (educationalLevel) {
     case 'None':
@@ -168,44 +176,84 @@ SkinColor stringToSkinColor(String skinColor) {
   }
 }
 
+String foundThroughToString(FoundThrough foundThrough) {
+  switch (foundThrough) {
+    case FoundThrough.Afalagi:
+      return 'Afalgi';
+    case FoundThrough.Community_Search:
+      return 'Community_Search';
+    case FoundThrough.Police:
+      return 'Police';
+    case FoundThrough.Medical_Institutional:
+      return 'Medical_Institutional';
+    case FoundThrough.Other:
+      return 'Other';
+    case FoundThrough.Social_Media:
+      return 'Social_Media';
+    case FoundThrough.Family_Friends:
+      return 'Family_Friends';
+  }
+}
+
+FoundThrough stringToFoundThrough(String methodString) {
+  switch (methodString) {
+    case 'Afalagi':
+      return FoundThrough.Afalagi;
+    case 'Police':
+      return FoundThrough.Police;
+    case 'Community_Search':
+      return FoundThrough.Community_Search;
+    case 'Family_Friends':
+      return FoundThrough.Family_Friends;
+    case 'Social_Media':
+      return FoundThrough.Social_Media;
+    case 'Medical_Institution':
+      return FoundThrough.Medical_Institutional;
+    case 'Other':
+      return FoundThrough.Other;
+    default:
+      throw ArgumentError('Invalid medical issue: $methodString');
+  }
+}
+
 String medicalIssuesToString(MedicalIssues medicalIssues) {
   switch (medicalIssues) {
     case MedicalIssues.None:
-      return 'None';
+      return 'NONE';
     case MedicalIssues.Diabetes:
-      return 'Diabetes';
+      return 'DIABETES';
     case MedicalIssues.Asthma:
-      return 'Asthma';
+      return 'ASTHMA';
     case MedicalIssues.Hypertension:
-      return 'Hypertension';
+      return 'HYPERTENSION';
     case MedicalIssues.HeartDisease:
-      return 'HeartDisease';
+      return 'HEART_DISEASE';
     case MedicalIssues.AutoimmuneDisorder:
-      return 'AutoimmuneDisorder';
+      return 'AUTOIMMUNE_DISORDER';
     case MedicalIssues.Epilepsy:
-      return 'Epilepsy';
+      return 'EPILEPSY';
     case MedicalIssues.MultipleSclerosis:
-      return 'MultipleSclerosis';
+      return 'MULTIPLE_SCLEROSIS';
     case MedicalIssues.Lupus:
-      return 'Lupus';
+      return 'LUPUS';
     case MedicalIssues.CrohnsDisease:
-      return 'CrohnsDisease';
+      return 'CROHNS_DISEASE';
     case MedicalIssues.ChronicKidneyDisease:
-      return 'ChronicKidneyDisease';
+      return 'CHRONIC_KIDNEY_DISEASE';
     case MedicalIssues.Migraine:
-      return 'Migraine';
+      return 'MIGRAINE';
     case MedicalIssues.Fibromyalgia:
-      return 'Fibromyalgia';
+      return 'FIBROMYALGIA';
     case MedicalIssues.Psoriasis:
-      return 'Psoriasis';
+      return 'PSORIASIS';
     case MedicalIssues.IrritableBowelSyndrome:
-      return 'IrritableBowelSyndrome';
+      return 'IRRITABLE_BOWEL_SYNDROME';
     case MedicalIssues.ParkinsonsDisease:
-      return 'ParkinsonsDisease';
+      return 'PARKINSONS_DISEASE';
     case MedicalIssues.Cancer:
-      return 'Cancer';
+      return 'CANCER';
     case MedicalIssues.Other:
-      return 'Other';
+      return 'OTHER';
   }
 }
 

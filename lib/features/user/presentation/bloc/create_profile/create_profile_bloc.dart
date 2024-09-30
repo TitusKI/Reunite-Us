@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:afalagi/features/user/domain/entities/profile_enitity.dart';
 import 'package:afalagi/features/user/domain/usecases/build_user_profile.dart';
 import 'package:afalagi/injection_container.dart';
 import 'package:afalagi/features/user/presentation/bloc/create_profile/create_profile_event.dart';
@@ -33,9 +32,7 @@ class CreateProfileBloc extends Bloc<SharedEvent, CreateProfileState> {
     emit(state.copyWith(isProfileLoading: true));
 
     try {
-      await sl<BuildUserProfileUsecase>().call(
-          parms:
-              ProfileEnitity(userProfile: event.userProfile, file: event.file));
+      await sl<BuildUserProfileUsecase>().call(parms: event.userProfile);
       // On successful Profile-creation, update the state
       emit(state.copyWith(
         //  user: event.user, // Use the user returned from the repository

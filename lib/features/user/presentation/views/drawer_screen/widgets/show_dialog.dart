@@ -1,5 +1,3 @@
-import 'package:afalagi/core/resources/generic_state.dart';
-import 'package:afalagi/features/auth/presentation/bloc/sign_out/sign_out_cubit.dart';
 import 'package:afalagi/core/constants/presentation_export.dart';
 import 'package:afalagi/config/theme/colors.dart';
 import 'package:afalagi/features/auth/presentation/views/widgets/flutter_toast.dart';

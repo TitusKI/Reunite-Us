@@ -1,51 +1,42 @@
-import 'package:afalagi/core/constants/constant.dart';
-import 'package:afalagi/core/constants/data_export.dart';
-import 'package:afalagi/features/user/data/models/user_profile_model.dart';
-import 'package:afalagi/core/constants/presentation_export.dart';
-import 'package:afalagi/config/theme/colors.dart';
-import 'package:afalagi/injection_container.dart';
-import 'package:afalagi/features/user/presentation/views/drawer_screen/widgets/show_dialog.dart';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AppDrawer extends StatelessWidget {
+import '../../../../../../config/theme/colors.dart';
+import '../../../../../../core/constants/constant.dart';
+import '../../../../../../core/constants/presentation_export.dart';
+import '../../../../data/models/user_profile_model.dart';
+import '../widgets/animated_theme.dart';
+import '../widgets/show_dialog.dart';
+
+class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
 
-  // @override
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  late ProfileCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = context.read<ProfileCubit>();
+    _cubit.fetchProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
-    context.read<ProfileCubit>().fetchProfile();
     final themeCubit = context.read<ThemeCubit>();
-    // final storageService = sl<StorageService>();
-    // final email = storageService.getEmail().toString() as String?;
-
     final isDarkMode = themeCubit.state.brightness == Brightness.dark;
-    // context.read<ProfileCubit>().fetchProfile();
-
-    // if (state.isLoading) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
-
-    // if (state.failure != null) {
-    //   return Center(child: Text('Error: ${state.failure}'));
-    // }
-
-    // BlocProvider.of<ProfileCubit>(context).fetchProfile();
 
     return BlocBuilder<ProfileCubit, GenericState>(
       builder: (context, state) {
-        if (state.isLoading) {
-          // return const Center(child: CircularProgressIndicator());
-        }
-        // if (state.failure != null) {
-        //   return Center(child: Text('Error: ${state.failure}'));
-        // }
         final profile = state.data as UserProfile?;
-        print("Display on the Drawer");
-        print(profile);
         final profilePictureUrl = profile != null
             ? '${AppConstant.UPLOAD_BASE_URL}/profile/${profile.profilePicture}'
             : '';
+
         return Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -60,35 +51,48 @@ class AppDrawer extends StatelessWidget {
                   ),
                 ),
                 accountName: Text(
-                  profile?.firstName ?? 'Welcome Guest',
+                  profile?.firstName ?? 'Guest',
                   style: const TextStyle(
                     color: AppColors.primaryBackground,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 accountEmail: Text(
-                  profile!.email ?? 'guest@gmail.com',
+                  profile?.email ?? 'welcome!',
                   style: const TextStyle(
                     color: AppColors.primaryBackground,
                   ),
                 ),
                 currentAccountPicture: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.PROFILE);
+                    if (profile != null) {
+                      Navigator.of(context).pushNamed(AppRoutes.PROFILE);
+                    }
                   },
                   child: CircleAvatar(
                     backgroundColor: AppColors.primaryBackground,
-                    backgroundImage: profile.profilePicture != null
+                    backgroundImage: profile?.profilePicture != null
                         ? NetworkImage(profilePictureUrl)
                         : const AssetImage('assets/icons/user.png')
                             as ImageProvider,
                   ),
                 ),
+                otherAccountsPictures: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        themeCubit.toggleTheme();
+                      });
+                    },
+                    child: AnimatedMoonSunIcon(
+                        isDarkMode:
+                            themeCubit.state.brightness == Brightness.dark),
+                  ),
+                ],
               ),
               ListTile(
                 iconColor: AppColors.secondaryColor,
                 splashColor: AppColors.accentColor,
-                style: ListTileStyle.list,
                 leading: const Icon(Icons.settings),
                 title: const Text('Settings'),
                 onTap: () {
@@ -125,31 +129,20 @@ class AppDrawer extends StatelessWidget {
               ListTile(
                 iconColor: AppColors.secondaryColor,
                 splashColor: AppColors.accentColor,
-                leading: const Icon(Icons.logout),
-                title: const Text('Log out'),
+                leading: profile == null
+                    ? const Icon(Icons.login)
+                    : const Icon(Icons.logout),
+                title: profile == null
+                    ? const Text('Sign in')
+                    : const Text('Log out'),
                 onTap: () {
-                  showLogoutDialog(context);
+                  if (profile == null) {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, AppRoutes.SIGN_IN, (route) => false);
+                  } else {
+                    showLogoutDialog(context);
+                  }
                 },
-              ),
-              SizedBox(
-                height: 200.h,
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Dark Mode',
-                    ),
-                    Switch(
-                        value: isDarkMode,
-                        onChanged: (bool value) {
-                          themeCubit.toggleTheme();
-                        }),
-                  ],
-                ),
               ),
             ],
           ),

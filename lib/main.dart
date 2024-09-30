@@ -13,19 +13,21 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  AppPages appPages = AppPages();
+  final AppPages appPages = AppPages();
   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [...appPages.allBlocProvider(context)],
+      providers: [
+        ...appPages.allBlocProvider(context),
+        BlocProvider(create: (context) => ThemeCubit()),
+      ],
       child: ScreenUtilInit(
-        // designSize: const Size(375, 812),
         builder: (context, child) => BlocBuilder<ThemeCubit, ThemeData>(
           builder: (context, theme) {
             return MaterialApp(
-              theme: theme,
+              theme: theme, // Directly use the theme provided by ThemeCubit
               debugShowCheckedModeBanner: false,
               onGenerateRoute: appPages.generateRouteSettings,
             );

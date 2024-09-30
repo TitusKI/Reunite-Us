@@ -40,3 +40,5 @@ class PasswordEvent extends SharedEvent {
 }
 
 class PickImage extends SharedEvent {}
+
+class PickDocument extends SharedEvent {}

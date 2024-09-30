@@ -2,9 +2,7 @@ import 'package:afalagi/core/resources/shared_event.dart';
 import 'package:afalagi/core/constants/presentation_export.dart';
 import 'package:afalagi/core/util/controller/reset_password_controller.dart';
 import 'package:afalagi/config/theme/colors.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/common_widgets.dart';
 import 'package:afalagi/features/auth/presentation/views/widgets/flutter_toast.dart';
-import 'package:afalagi/features/auth/presentation/views/sign_up_screen/widgets/sign_up_widgets.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

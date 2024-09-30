@@ -55,6 +55,12 @@ Widget dropDownField<T extends Enum>(
                 .read<ReportFormBloc>()
                 .add(ReportFormEvent(onEducationalLevel: educationLevel));
             break;
+          case 'posterRelation':
+            final posterRelation = stringToPosterRelation(value!);
+            context!
+                .read<ReportFormBloc>()
+                .add(ReportFormEvent(onPosterRelation: posterRelation));
+            break;
           case 'maritalStatus':
             final maritalStatus = stringToMaritalStatus(value!);
             context!

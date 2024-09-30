@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/util/controller/report_form_controller.dart';
+
 Widget formField({
   required String formType,
   required BuildContext context,
@@ -67,10 +69,12 @@ String? _validator(BuildContext context, String? formType, String? value,
       return SignUpController().handleEmailSignUp(context, fieldName!, value!);
     case "report form":
       if (textType == "report") {
-        return SignUpController()
-            .handleProfileBuild(context, fieldName!, value!);
+        return ReportFormController()
+            .handleReportForm(context, fieldName!, value!);
+      } else {
+        return ReportFormController()
+            .handleVideoLink(context, fieldName!, value!);
       }
-      return SignUpController().handleVideoLink(context, fieldName!, value!);
     case "reset":
       if (fieldName == "password" || fieldName == "repassword") {
         return ResetPasswordController()

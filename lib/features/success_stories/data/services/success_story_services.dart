@@ -146,7 +146,7 @@ class SuccessStoryServices {
     try {
       final response = await _dio.get(
         '/success-story',
-        queryParameters: {'title': 'reunited'},
+        // queryParameters: {'title': 'reunited'},
       );
 
       if (response.statusCode == 200) {

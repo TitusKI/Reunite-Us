@@ -1,5 +1,4 @@
 import 'package:afalagi/config/theme/colors.dart';
-import 'package:afalagi/features/auth/presentation/views/widgets/common_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../../../core/constants/presentation_export.dart';

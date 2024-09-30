@@ -2,9 +2,16 @@
 
 import 'package:afalagi/core/util/controller/enums.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 enum MissignImagePickState {
   initialy,
+  picked,
+  failed,
+}
+
+enum MissingDocPickState {
+  initial,
   picked,
   failed,
 }
@@ -16,11 +23,13 @@ class ReportFormState {
   final String lastName;
   final String location;
 
-  final XFile? legalDocuments;
+  final List<PlatformFile>? legalDocuments;
   final XFile? postImages;
-
+  final MissingDocPickState? docPickState;
   final MissignImagePickState? imagePickState;
   final String? errorImage;
+  final String? errorDoc;
+
   final String country;
   final String state;
   final String city;
@@ -64,8 +73,10 @@ class ReportFormState {
   ReportFormState({
     this.posterRelation,
     this.postImages,
+    this.docPickState,
     this.imagePickState,
     this.errorImage,
+    this.errorDoc,
     this.legalDocuments,
     this.languageSpoken,
     this.page = 0,
@@ -108,9 +119,11 @@ class ReportFormState {
   ReportFormState.initial()
       : posterRelation = null,
         postImages = null,
+        docPickState = null,
         imagePickState = null,
         errorImage = null,
-        legalDocuments = null,
+        errorDoc = null,
+        legalDocuments = [],
         languageSpoken = null,
         page = 0,
         lastSeenDate = '',
@@ -147,20 +160,27 @@ class ReportFormState {
         isMissingLoading = false,
         isMissingSuccess = false,
         missingFailure = "";
-  factory ReportFormState.initialyy() {
-    return ReportFormState(
-      imagePickState: MissignImagePickState.initialy,
-    );
-    // phoneNumber: PhoneNumber(isoCode: "ET"));
-  }
-  factory ReportFormState.picked(XFile image) {
-    return ReportFormState(
-        imagePickState: MissignImagePickState.picked, postImages: image);
-  }
-  factory ReportFormState.failed(String error) {
-    return ReportFormState(
-        imagePickState: MissignImagePickState.failed, errorImage: error);
-  }
+  // factory ReportFormState.initialyy() {
+  //   return ReportFormState(
+  //     imagePickState: MissignImagePickState.initialy,
+  //     docPickState: MissingDocPickState.initial,
+  //   );
+  //   // phoneNumber: PhoneNumber(isoCode: "ET"));
+  // }
+  // factory ReportFormState.picked(XFile image, List<PlatformFile>? legalDocs) {
+  //   return ReportFormState(
+  //       imagePickState: MissignImagePickState.picked,
+  //       postImages: image,
+  //       docPickState: MissingDocPickState.picked,
+  //       legalDocuments: legalDocs);
+  // }
+  // factory ReportFormState.failed(String error) {
+  //   return ReportFormState(
+  //       imagePickState: MissignImagePickState.failed,
+  //       errorImage: error,
+  //       errorDoc: error,
+  //       docPickState: MissingDocPickState.failed);
+  // }
   ReportFormState copyWith(
       {List<PhysicalDisability>? selectedPhysicalDisability,
       List<MentalDisability>? selectedMentalDisability,
@@ -170,6 +190,7 @@ class ReportFormState {
       String? otherMedicalIssues,
       String? clothingDescription,
       int? age,
+      String? languageSpoken,
       double? height,
       HairColor? hairColor,
       SkinColor? skinColor,
@@ -188,10 +209,13 @@ class ReportFormState {
       String? location,
       String? dateOfBirth,
       String? dateOfDisappearance,
+      String? nationionality,
       MissignImagePickState? imagePickState,
+      MissingDocPickState? docPickState,
       String? errorImage,
+      String? errorDoc,
       XFile? postImages,
-      XFile? legalDocuments,
+      List<PlatformFile>? legalDocuments,
       String? country,
       String? state,
       String? city,
@@ -202,11 +226,12 @@ class ReportFormState {
       String? missingFailure}) {
     return ReportFormState(
       posterRelation: posterRelation ?? this.posterRelation,
-      isMissingLoading: isMissingLoading ?? isMissingLoading,
-      isMissingSuccess: isMissingSuccess ?? isMissingSuccess,
-      missingFailure: missingFailure ?? missingFailure,
+      isMissingLoading: isMissingLoading ?? this.isMissingLoading,
+      isMissingSuccess: isMissingSuccess ?? this.isMissingSuccess,
+      missingFailure: missingFailure ?? this.missingFailure,
       lastSeenDate: lastSeenDate,
       nationality: nationality,
+      languageSpoken: languageSpoken ?? this.languageSpoken,
       otherPhysicalDisability:
           otherPhysicalDisability ?? this.otherPhysicalDisability,
       otherMentalDisability:
@@ -241,6 +266,7 @@ class ReportFormState {
       legalDocuments: legalDocuments ?? this.legalDocuments,
       imagePickState: imagePickState ?? this.imagePickState,
       errorImage: errorImage ?? this.errorImage,
+      errorDoc: errorDoc ?? this.errorDoc,
       country: country ?? this.country,
       state: state ?? this.state,
       city: city ?? this.city,

@@ -8,12 +8,20 @@ export 'package:afalagi/features/auth/presentation/bloc/toogle_password/toggle_p
 export 'package:afalagi/features/auth/presentation/bloc/verification/verification_bloc.dart';
 export 'package:afalagi/features/auth/presentation/bloc/welcome/welcome_bloc.dart';
 export 'package:afalagi/features/auth/presentation/bloc/animation/animation_bloc.dart';
+export 'package:afalagi/features/auth/presentation/views/widgets/date_of_birth_field.dart';
+export 'package:afalagi/features/auth/presentation/views/widgets/gener_field.dart';
+
+export 'package:afalagi/features/auth/presentation/views/widgets/common_widgets.dart';
+
+export 'package:afalagi/features/post/presentation/bloc/report_form/report_form_event.dart';
+export 'package:afalagi/features/post/presentation/bloc/report_form/report_form_state.dart';
+export 'package:afalagi/features/auth/presentation/views/sign_up_screen/widgets/location_form_field.dart';
+export 'package:afalagi/features/auth/presentation/views/sign_up_screen/widgets/sign_up_widgets.dart';
 export 'package:afalagi/features/post/presentation/bloc/bottom_navigation/bottom_navigation_bloc.dart';
 export 'package:afalagi/features/auth/presentation/bloc/language/language_bloc.dart';
 export 'package:afalagi/features/auth/presentation/bloc/theme_cubit/theme_cubit.dart';
 export 'package:afalagi/features/post/presentation/bloc/posts_cubit.dart';
 export 'package:afalagi/features/post/presentation/bloc/report_form/report_form_bloc.dart';
-export 'package:afalagi/features/post/presentation/bloc/search/search_bloc.dart';
 export 'package:afalagi/features/post/presentation/bloc/upload_cubit/upload_cubit.dart';
 export 'package:afalagi/features/post/presentation/bloc/upload_cubit/upload_missing.dart';
 export 'package:afalagi/features/user/presentation/bloc/create_profile/create_profile_bloc.dart';

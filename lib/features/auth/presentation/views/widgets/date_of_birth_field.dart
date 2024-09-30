@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:afalagi/features/user/presentation/bloc/create_profile/create_profile_bloc.dart';
 import 'package:afalagi/core/resources/shared_event.dart';
 import 'package:afalagi/core/constants/presentation_export.dart';
 import 'package:afalagi/features/auth/presentation/views/widgets/build_textfield.dart';
@@ -16,9 +15,14 @@ Widget dateField(
       suffixIcon: IconButton(
           onPressed: () async {
             final DateTime now = DateTime.now();
-            final DateTime minDate = dateType == "birth"
-                ? DateTime(now.year - 10, now.month, now.day)
-                : DateTime.now();
+            DateTime minDate;
+            if (dateType == "birth" && whoseBirth == 'userBirth') {
+              minDate = DateTime(now.year - 10, now.month, now.day);
+            } else if (dateType == "birth" && whoseBirth == 'missingBirth') {
+              minDate = DateTime(now.year, now.month, now.day);
+            } else {
+              minDate = DateTime(now.year, now.month, now.day);
+            }
 
             final DateTime? picked = await showDatePicker(
                 context: context,
@@ -29,7 +33,7 @@ Widget dateField(
             if (picked != null) {
               dateController.text = "${picked.toLocal()}".split(' ')[0];
               if (dateType == "birth") {
-                if (whoseBirth == "missingDate") {
+                if (whoseBirth == "missingBirth") {
                   context
                       .read<ReportFormBloc>()
                       .add(DateEvent(dateOfBirth: dateController.text));
@@ -40,10 +44,11 @@ Widget dateField(
                   print("Users Date is :${dateController.text}");
                 }
               }
-
-              context
-                  .read<ReportFormBloc>()
-                  .add(DateEvent(dateOfDisapperance: dateController.text));
+              if (dateType == 'disapperance') {
+                context
+                    .read<ReportFormBloc>()
+                    .add(DateEvent(dateOfDisapperance: dateController.text));
+              }
             }
           },
           icon: const Icon(Icons.calendar_today)),
