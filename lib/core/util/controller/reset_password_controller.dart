@@ -1,4 +1,4 @@
-import 'package:afalagi/presentation/bloc/auth/reset_password/reset_password_bloc.dart';
+import 'package:afalagi/features/auth/presentation/bloc/reset_password/reset_password_bloc.dart';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

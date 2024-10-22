@@ -8,6 +8,7 @@ class AppColors {
   static const Color accentColor = Color(0xFF0097D3);
   static const Color cardColor = Color(0xFFE5E7EB);
   static const Color primarySecondaryText = Colors.grey;
+  static const Color loadingColor = Color.fromARGB(135, 232, 227, 227);
 
   static const Color primaryText = Color(0xFF0C0E0A);
 }

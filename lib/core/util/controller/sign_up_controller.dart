@@ -1,4 +1,4 @@
-import 'package:afalagi/presentation/bloc/auth/sign_up/sign_up_bloc.dart';
+import 'package:afalagi/features/auth/presentation/bloc/sign_up/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';

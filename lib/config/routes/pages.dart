@@ -1,11 +1,11 @@
 // The UNIFICATION Of BlocProvider and routes and pages
 
-import 'package:afalagi/data/services/local/storage_services.dart';
+import 'package:afalagi/features/auth/data/services/local/storage_services.dart';
 import 'package:afalagi/injection_container.dart';
-import 'package:afalagi/presentation/bloc/common/comment_cubit.dart';
-import 'package:afalagi/presentation/bloc/success_story/success_story_cubit.dart';
-import 'package:afalagi/presentation/views/post/home_screen/widgets/comment_section.dart';
-import 'package:afalagi/presentation/views/post/report_screen/screens/close_post.dart';
+import 'package:afalagi/features/comment/presentation/bloc/comment_cubit.dart';
+import 'package:afalagi/features/success_stories/presentation/bloc/success_story_cubit.dart';
+import 'package:afalagi/features/post/presentation/views/home_screen/widgets/comment_section.dart';
+import 'package:afalagi/features/post/presentation/views/report_screen/screens/close_post.dart';
 import '../../core/constants/presentation_export.dart';
 
 class AppPages {
@@ -17,52 +17,52 @@ class AppPages {
         route: AppRoutes.WELCOME,
         page: const Welcome(),
         bloc: BlocProvider(
-          create: (_) => WelcomeBloc(),
+          create: (_) => sl<WelcomeBloc>(),
         ),
       ),
       PageEntity(
           route: AppRoutes.MAIN,
-          page: MyHomePage(),
+          page: const MyHomePage(),
           bloc: BlocProvider(
-            create: (_) => BottomNavigationBloc(),
+            create: (_) => sl<BottomNavigationBloc>(),
           )),
       PageEntity(
         route: AppRoutes.SIGN_IN,
         page: const SignIn(),
         bloc: BlocProvider(
-          create: (_) => SignInBloc(),
+          create: (_) => sl<SignInBloc>(),
         ),
       ),
       PageEntity(
         route: AppRoutes.SIGN_UP,
         page: const SignUp(),
         bloc: BlocProvider(
-          create: (_) => SignUpBloc(),
+          create: (_) => sl<SignUpBloc>(),
         ),
       ),
       PageEntity(
           route: AppRoutes.SIGN_UP_VERIFICATION,
           page: const SignUpVerification(),
           bloc: BlocProvider(
-            create: (_) => VerificationBloc(),
+            create: (_) => sl<VerificationBloc>(),
           )),
       PageEntity(
         route: AppRoutes.CREATE_PROFILE,
         page: const CreateProfile(),
         bloc: BlocProvider(
-          create: (_) => CreateProfileBloc(),
+          create: (_) => sl<CreateProfileBloc>(),
         ),
       ),
       PageEntity(
         route: AppRoutes.RESET_PASSWORD,
         page: const ResetScreen(),
         bloc: BlocProvider(
-          create: (_) => ResetPasswordBloc(),
+          create: (_) => sl<ResetPasswordBloc>(),
         ),
       ),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => SignOutCubit(),
+        create: (_) => sl<SignOutCubit>(),
       )),
       // PageEntity(
       //     route: AppRoutes.RESET_SUCCESSFUL,
@@ -74,7 +74,7 @@ class AppPages {
           route: AppRoutes.HOME,
           page: const Home(),
           bloc: BlocProvider(
-            create: (_) => PostsCubit(),
+            create: (_) => sl<PostsCubit>(),
           )),
       // bloc: BlocProvider(create: (_) => HomeBloc()))
       PageEntity(page: const CommentSection()),
@@ -92,7 +92,7 @@ class AppPages {
           route: AppRoutes.PROFILE_DETAIL,
           page: const ProfileDetail(),
           bloc: BlocProvider(
-            create: (_) => PostsCubit(),
+            create: (_) => sl<PostsCubit>(),
           )
           // bloc: BlocProvider(create: (_) => HomeBloc()))
           ),
@@ -100,7 +100,7 @@ class AppPages {
           route: AppRoutes.MISSING_DETAIL,
           page: const MissingPersonDetail(),
           bloc: BlocProvider(
-            create: (_) => PostsCubit(),
+            create: (_) => sl<PostsCubit>(),
           )
           // bloc: BlocProvider(create: (_) => HomeBloc()))
           ),
@@ -146,7 +146,7 @@ class AppPages {
         route: AppRoutes.ADD_REPORT,
         page: const AddReport(),
         bloc: BlocProvider(
-          create: (_) => ReportFormBloc(),
+          create: (_) => sl<ReportFormBloc>(),
         ),
       ),
       PageEntity(
@@ -161,52 +161,52 @@ class AppPages {
           route: AppRoutes.FOUND,
           page: const FoundPersons(),
           bloc: BlocProvider(
-            create: (_) => SuccessStoryCubit(),
+            create: (_) => sl<SuccessStoryCubit>(),
           )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => TogglePasswordBloc(),
+        create: (_) => sl<TogglePasswordBloc>(),
       )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => AnimationBloc(),
+        create: (_) => sl<AnimationBloc>(),
       )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => LanguageBloc(),
+        create: (_) => sl<LanguageBloc>(),
       )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => SearchBloc(),
+        create: (_) => sl<SearchBloc>(),
       )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => ThemeCubit(),
+        create: (_) => sl<ThemeCubit>(),
       )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => UploadCubit(),
+        create: (_) => sl<UploadCubit>(),
       )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => ProfileCubit(),
+        create: (_) => sl<ProfileCubit>(),
       )),
       PageEntity(
           bloc: BlocProvider(
-        create: (_) => MissingPersonUploadCubit(),
+        create: (_) => sl<MissingPersonUploadCubit>(),
       )),
       PageEntity(
           // page: CommentSection(postId: postId),
           bloc: BlocProvider(
-        create: (_) => CommentCubit(),
+        create: (_) => sl<CommentCubit>(),
       )),
       PageEntity(
           route: AppRoutes.CLOSE_REPORT,
           page: const ClosePostScreen(),
           bloc: BlocProvider(
-            create: (_) => SuccessStoryCubit(),
+            create: (_) => sl<SuccessStoryCubit>(),
           )),
-      PageEntity(bloc: BlocProvider(create: (_) => PostsCubit()))
+      PageEntity(bloc: BlocProvider(create: (_) => sl<PostsCubit>()))
     ];
   }
 
@@ -238,7 +238,7 @@ class AppPages {
           if (getIsLoggedIn) {
             print("is logged in");
             return MaterialPageRoute(
-                builder: (_) => MyHomePage(), settings: settings);
+                builder: (_) => const MyHomePage(), settings: settings);
           }
           return MaterialPageRoute(
               builder: (_) => const SignIn(), settings: settings);

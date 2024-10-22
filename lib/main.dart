@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:afalagi/presentation/bloc/common/theme_cubit/theme_cubit.dart';
+import 'package:afalagi/features/auth/presentation/bloc/theme_cubit/theme_cubit.dart';
 import 'package:afalagi/config/routes/pages.dart';
 import 'package:afalagi/injection_container.dart';
 import 'package:flutter/material.dart';
